@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <title>Info windows</title>
+    <style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        height: 100%;
+      }
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 90%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+  </head>
+  <body>
+	<div id="logo"></div>
+    <div id="map"></div>
+    <script>
+
+      // This example displays a marker at the center of Australia.
+      // When the user clicks the marker, an info window opens.
+
+      function initMap() {
+		var zoomRate = 13;
+        var sanamluang = {lat: 13.754937, lng: 100.493058};
+		var chula = {lat: 13.738853, lng: 100.530538};
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: zoomRate,
+          center: sanamluang
+        });
+
+        var contentString = '<div id="content">'+
+            '<div id="siteNotice">'+
+            '</div>'+
+            '<h1 id="firstHeading" class="firstHeading">สนามหลวง</h1>'+
+            '<div id="bodyContent">'+
+            '<p><b>สนามหลวง</b>, เนื้อหาเนื้อหาเนื้อหา.</p>'+
+            '</div>'+
+            '</div>';
+
+        var infowindow = new google.maps.InfoWindow({
+          content: contentString
+        });
+		
+		var contentString2 = '<div id="content">'+
+            '<div id="siteNotice">'+
+            '</div>'+
+            '<h1 id="firstHeading" class="firstHeading">จุฬาฯ</h1>'+
+            '<div id="bodyContent">'+
+            '<p><b>จุฬาฯ</b>, เนื้อหาเนื้อหาเนื้อหา.</p>'+
+            '</div>'+
+            '</div>';
+
+        var infowindow2 = new google.maps.InfoWindow({
+          content: contentString2
+        });
+
+        var marker = new google.maps.Marker({
+          position: sanamluang,
+          map: map,
+          title: 'สนามหลวง'
+        });
+        marker.addListener('click', function() {
+          infowindow.open(map, marker);
+        });
+		
+		var chulaMarker =  new google.maps.Marker({
+          position: chula,
+          map: map,
+          title: 'จุฬาฯ'
+        });
+        chulaMarker.addListener('click', function() {
+          infowindow2.open(map, chulaMarker);
+        });
+      }
+    </script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBm253oNfhS4tZCPLNpR8x_butc4CLjNwo&callback=initMap">
+    </script>
+  </body>
+</html>
