@@ -19,55 +19,51 @@
         padding: 0;
       }
     </style>
-  </head>
-  <body>
-	<div id="logo"></div>
-    <div id="map"></div>
-	<!-- <script type="text/javascript" src="fileReader.js"></script> 
+      <!-- <script type="text/javascript" src="fileReader.js"></script> 
    -->  <script>
-		var list;
+    var list;
       function initMap() {
-		var scg = {lat: 13.918111, lng: 100.545001};
-		var infowindow = new google.maps.InfoWindow();
-		var map = new google.maps.Map(document.getElementById('map'), {
+    var scg = {lat: 13.918111, lng: 100.545001};
+    var infowindow = new google.maps.InfoWindow();
+    var map = new google.maps.Map(document.getElementById('map'), {
           zoom: 10,
           center: scg
         });
-		
-	   for(line in list)
-	   {
-		   if(line!=0)
-		   {
-				var eachLocation = list[line].split(',');
-				
-				var name = eachLocation[0];
-				
-				var coordinate = {lat: parseFloat(eachLocation[1]), lng: parseFloat(eachLocation[2])};
-				var contentString = "<IMG BORDER=\"0\" ALIGN=\"Left\" SRC=\""+eachLocation[4]+"\"> "+eachLocation[3];
-		
-				var marker = new google.maps.Marker({
-					position: coordinate,
-					map: map,
-					title: name
-				});
-				
-				google.maps.event.addListener(marker,'click', (function(marker,content,infowindow){ 
-					return function() {
-						infowindow.setContent(content)
-						infowindow.open(map,marker);
-					};
-				})(marker,contentString,infowindow));
-		   }
-	   }
-		
+    
+     for(line in list)
+     {
+       if(line!=0)
+       {
+        var eachLocation = list[line].split(',');
+        
+        var name = eachLocation[0];
+        
+        var coordinate = {lat: parseFloat(eachLocation[1]), lng: parseFloat(eachLocation[2])};
+        var contentString = "<IMG BORDER=\"0\" ALIGN=\"Left\" SRC=\""+eachLocation[4]+"\"> "+eachLocation[3];
+    
+        var marker = new google.maps.Marker({
+          position: coordinate,
+          map: map,
+          title: name
+        });
+        
+        google.maps.event.addListener(marker,'click', (function(marker,content,infowindow){ 
+          return function() {
+            infowindow.setContent(content)
+            infowindow.open(map,marker);
+          };
+        })(marker,contentString,infowindow));
+       }
+     }
+    
       }
-	  
-	  function readTextFile(file)
+    
+    function readTextFile(file)
 {
-	var allText;
-	var array;
+  var allText;
+  var array;
     var rawFile = new XMLHttpRequest();
-	
+  
     rawFile.open("GET", file, true);
     rawFile.onreadystatechange = function ()
     {
@@ -76,12 +72,12 @@
             if(rawFile.status === 200 || rawFile.status == 0)
             {
                 allText = rawFile.responseText;
-				list = allText.split("\n");
-				
+        list = allText.split("\n");
+        
             }
         }
     }
-	rawFile.send(null);
+  rawFile.send(null);
 }
 
 readTextFile("content_eng.csv");
@@ -89,5 +85,9 @@ readTextFile("content_eng.csv");
     <script async defer
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBm253oNfhS4tZCPLNpR8x_butc4CLjNwo&callback=initMap">
     </script>
+  </head>
+  <body>
+	<div id="logo"></div>
+    <div id="map"></div>
   </body>
 </html>
