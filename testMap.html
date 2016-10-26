@@ -21,6 +21,16 @@
     </style>
   </head>
   <body>
+  <div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v2.8";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));
+</script>
+
 	<div id="logo"></div>
     <div id="map"></div>
 	<!-- <script type="text/javascript" src="fileReader.js"></script> 
@@ -28,6 +38,7 @@
 		var list;
       function initMap() {
 		var scg = {lat: 13.918111, lng: 100.545001};
+		
 		var infowindow = new google.maps.InfoWindow();
 		var map = new google.maps.Map(document.getElementById('map'), {
           zoom: 10,
@@ -89,5 +100,6 @@ readTextFile("content_eng.csv");
     <script async defer
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBm253oNfhS4tZCPLNpR8x_butc4CLjNwo&callback=initMap">
     </script>
+	<div class="fb-comments" data-href="https://localhost/testMap.html/" data-numposts="5"></div>
   </body>
 </html>
