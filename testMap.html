@@ -52,7 +52,14 @@
         var name = eachLocation[0];
         
         var coordinate = {lat: parseFloat(eachLocation[1]), lng: parseFloat(eachLocation[2])};
-        var contentString = "<IMG BORDER=\"0\" ALIGN=\"Left\" SRC=\""+eachLocation[4]+"\"> "+eachLocation[3];
+
+        var check = checkCookies(eachLocation[3]);
+        var contentString = "<IMG BORDER=\"0\" ALIGN=\"Left\" SRC=\""+eachLocation[4]+"\"> "+eachLocation[3]
+                +"<br/><input type=\"checkbox\" " +
+                "name=\""+eachLocation[3]+"\" " +
+                "value=\""+eachLocation[3]+"\" " +
+                "onclick='handleClick(this);' "+
+                 check+" >I've been here before</input><br/>";
     
         var marker = new google.maps.Marker({
           position: coordinate,
@@ -66,10 +73,42 @@
             infowindow.open(map,marker);
           };
         })(marker,contentString,infowindow));
+
+           function checkCookies(name) {
+               if(getCookie(name)=="true") {
+                   alert(name+" "+getCookie(name));
+                   return "checked";
+               }
+               else return "";
+           }
        }
      }
     
       }
+
+    function handleClick(cb) {
+        setCookie(cb.name,cb.checked)
+        alert(getCookie(cb.name));
+    }
+
+    function setCookie(cname, cvalue) {
+        document.cookie = cname + "=" + cvalue + ";path=/";
+    }
+
+    function getCookie(cname) {
+        var name = cname + "=";
+        var ca = document.cookie.split(';');
+        for(var i = 0; i <ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0)==' ') {
+                c = c.substring(1);
+            }
+            if (c.indexOf(name) == 0) {
+                return c.substring(name.length,c.length);
+            }
+        }
+        return "";
+    }
     
     function readTextFile(file)
 {
@@ -92,7 +131,7 @@
     }
   rawFile.send(null);
 }
-
+alert(document.cookie);
 readTextFile("content_eng.csv");
     </script>
     <script async defer
