@@ -20,7 +20,6 @@
             padding: 0;
         }
     </style>
-    </head>
     <div id="fb-root"></div>
     <script>(function (d, s, id) {
         var js, fjs = d.getElementsByTagName(s)[0];
@@ -41,7 +40,8 @@
             var infowindow = new google.maps.InfoWindow();
             var map = new google.maps.Map(document.getElementById('map'), {
                 zoom: 10,
-                center: scg
+                center: scg,
+                mapTypeControl: false
             });
 
             for (line in list) {
@@ -74,6 +74,7 @@
                     })(marker, contentString, infowindow));
 
                     function checkCookies(name) {
+
                         if (getCookie(name) == "true") {
                             //                 alert(name+" "+getCookie(name));
                             return "checked";
@@ -126,7 +127,7 @@
             rawFile.send(null);
         }
      //   alert(document.cookie);
-        readTextFile("content_eng.csv");
+        readTextFile("content_thai.csv");
     </script>
     <script async defer
             src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBm253oNfhS4tZCPLNpR8x_butc4CLjNwo&callback=initMap">
