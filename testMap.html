@@ -5,7 +5,8 @@
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <meta charset="utf-8">
-    <title>Info windows</title>
+    <title>The King Map Site</title>
+    <link rel="shortcut icon" type="image/x-icon" href="image/marker.png" />`
     <style>
         /* Always set the map height explicitly to define the size of the div
          * element that contains the map. */
@@ -34,6 +35,8 @@
 
     <script>
         var list;
+        var iconBase = 'image/';
+
         function initMap() {
 
             var scg = {lat: 13.918111, lng: 100.545001};
@@ -44,6 +47,14 @@
                 mapTypeControl: false
             });
 
+            var icons = {
+                firstMarker : {
+                url: iconBase + "marker.png", // url
+              //  scaledSize: new google.maps.Size(25, 25), // scaled size
+                origin: new google.maps.Point(0, 0), // origin
+                anchor: new google.maps.Point(0, 0) // anchor
+            }
+        };
             for (line in list) {
                 if (line != 0) {
                     var eachLocation = list[line].split(',');
@@ -61,6 +72,7 @@
                             check + " >I've been here before</input><br/>";
 
                     var marker = new google.maps.Marker({
+                        icon: icons['firstMarker'],
                         position: coordinate,
                         map: map,
                         title: name
