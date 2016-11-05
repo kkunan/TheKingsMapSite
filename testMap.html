@@ -1,146 +1,141 @@
 <!DOCTYPE html>
 <html>
-  <head>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <meta charset="utf-8">
     <title>Info windows</title>
     <style>
-      /* Always set the map height explicitly to define the size of the div
-       * element that contains the map. */
-      #map {
-        height: 100%;
-      }
-      /* Optional: Makes the sample page fill the window. */
-      html, body {
-        height: 90%;
-        margin: 0;
-        padding: 0;
-      }
+        /* Always set the map height explicitly to define the size of the div
+         * element that contains the map. */
+        #map {
+            height: 100%;
+        }
+
+        /* Optional: Makes the sample page fill the window. */
+        html, body {
+            height: 90%;
+            margin: 0;
+            padding: 0;
+        }
     </style>
-  </head>
-  <body>
-  <div id="fb-root"></div>
-<script>(function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) return;
-  js = d.createElement(s); js.id = id;
-  js.src = "//connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v2.8";
-  fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));
-</script>
+    </head>
+    <div id="fb-root"></div>
+    <script>(function (d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s);
+        js.id = id;
+        js.src = "//connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v2.8";
+        fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+    </script>
 
-	<div id="logo"></div>
-    <div id="map"></div><script>
-    var list;
-      function initMap() {
 
-    var scg = {lat: 13.918111, lng: 100.545001};
-    var infowindow = new google.maps.InfoWindow();
-    var map = new google.maps.Map(document.getElementById('map'), {
-          zoom: 10,
-          center: scg
-        });
-    
-     for(line in list)
-     {
-       if(line!=0)
-       {
-        var eachLocation = list[line].split(',');
-        
-        var name = eachLocation[0];
-        
-        var coordinate = {lat: parseFloat(eachLocation[1]), lng: parseFloat(eachLocation[2])};
+    <script>
+        var list;
+        function initMap() {
 
-        var check = checkCookies(eachLocation[3]);
-        var contentString = "<IMG BORDER=\"0\" ALIGN=\"Left\" SRC=\""+eachLocation[4]+"\"> "+eachLocation[3]
-                +"<br/><input type=\"checkbox\" " +
-                "name=\""+eachLocation[3]+"\" " +
-                "value=\""+eachLocation[3]+"\" " +
-                "onclick='handleClick(this);' "+
-                 check+" >I've been here before</input><br/>";
-    
-        var marker = new google.maps.Marker({
-          position: coordinate,
-          map: map,
-          title: name
-        });
-        
-        google.maps.event.addListener(marker,'click', (function(marker,content,infowindow){ 
-          return function() {
-            infowindow.setContent(content)
-            infowindow.open(map,marker);
-          };
-        })(marker,contentString,infowindow));
+            var scg = {lat: 13.918111, lng: 100.545001};
+            var infowindow = new google.maps.InfoWindow();
+            var map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 10,
+                center: scg
+            });
 
-           function checkCookies(name) {
-               if(getCookie(name)=="true") {
-                   alert(name+" "+getCookie(name));
-                   return "checked";
-               }
-               else return "";
-           }
-       }
-     }
-    
-      }
+            for (line in list) {
+                if (line != 0) {
+                    var eachLocation = list[line].split(',');
 
-    function handleClick(cb) {
-        setCookie(cb.name,cb.checked)
-        alert(getCookie(cb.name));
-    }
+                    var name = eachLocation[0];
 
-    function setCookie(cname, cvalue) {
-        document.cookie = cname + "=" + cvalue + ";path=/";
-    }
+                    var coordinate = {lat: parseFloat(eachLocation[1]), lng: parseFloat(eachLocation[2])};
 
-    function getCookie(cname) {
-        var name = cname + "=";
-        var ca = document.cookie.split(';');
-        for(var i = 0; i <ca.length; i++) {
-            var c = ca[i];
-            while (c.charAt(0)==' ') {
-                c = c.substring(1);
+                    var check = checkCookies(eachLocation[3]);
+                    var contentString = "<IMG BORDER=\"0\" ALIGN=\"Left\" SRC=\"" + eachLocation[4] + "\"> " + eachLocation[3]
+                            + "<br/><input type=\"checkbox\" " +
+                            "name=\"" + eachLocation[3] + "\" " +
+                            "value=\"" + eachLocation[3] + "\" " +
+                            "onclick='handleClick(this);' " +
+                            check + " >I've been here before</input><br/>";
+
+                    var marker = new google.maps.Marker({
+                        position: coordinate,
+                        map: map,
+                        title: name
+                    });
+
+                    google.maps.event.addListener(marker, 'click', (function (marker, content, infowindow) {
+                        return function () {
+                            infowindow.setContent(content)
+                            infowindow.open(map, marker);
+                        };
+                    })(marker, contentString, infowindow));
+
+                    function checkCookies(name) {
+                        if (getCookie(name) == "true") {
+                            //                 alert(name+" "+getCookie(name));
+                            return "checked";
+                        }
+                        else return "";
+                    }
+                }
             }
-            if (c.indexOf(name) == 0) {
-                return c.substring(name.length,c.length);
-            }
+
         }
-        return "";
-    }
-    
-    function readTextFile(file)
-{
-  var allText;
-  var array;
-    var rawFile = new XMLHttpRequest();
-  
-    rawFile.open("GET", file, true);
-    rawFile.onreadystatechange = function ()
-    {
-        if(rawFile.readyState === 4)
-        {
-            if(rawFile.status === 200 || rawFile.status == 0)
-            {
-                allText = rawFile.responseText;
-        list = allText.split("\n");
-        
-            }
+
+        function handleClick(cb) {
+            setCookie(cb.name, cb.checked)
+            //     alert(getCookie(cb.name));
         }
-    }
-  rawFile.send(null);
-}
-alert(document.cookie);
-readTextFile("content_eng.csv");
+
+        function setCookie(cname, cvalue) {
+            document.cookie = cname + "=" + cvalue + ";path=/";
+        }
+
+        function getCookie(cname) {
+            var name = cname + "=";
+            var ca = document.cookie.split(';');
+            for (var i = 0; i < ca.length; i++) {
+                var c = ca[i];
+                while (c.charAt(0) == ' ') {
+                    c = c.substring(1);
+                }
+                if (c.indexOf(name) == 0) {
+                    return c.substring(name.length, c.length);
+                }
+            }
+            return "";
+        }
+
+        function readTextFile(file) {
+            var allText;
+            var rawFile = new XMLHttpRequest();
+
+            rawFile.open("GET", file, true);
+            rawFile.onreadystatechange = function () {
+                if (rawFile.readyState === 4) {
+                    if (rawFile.status === 200 || rawFile.status == 0) {
+                        allText = rawFile.responseText;
+                        list = allText.split("\n");
+
+                    }
+                }
+            }
+            rawFile.send(null);
+        }
+     //   alert(document.cookie);
+        readTextFile("content_eng.csv");
     </script>
     <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBm253oNfhS4tZCPLNpR8x_butc4CLjNwo&callback=initMap">
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBm253oNfhS4tZCPLNpR8x_butc4CLjNwo&callback=initMap">
     </script>
-	<div class="fb-comments" data-href="https://localhost/testMap.html/" data-numposts="5"></div>
-  </head>
-  <body>
-	<div id="logo"></div>
-    <div id="map"></div>
-  </body>
+   </head>
+    <body>
+        <div id="logo"></div>
+        <div id="map"></div>
+        <div class="fb-comments" data-href="https://localhost/testMap.html/" data-numposts="5"></div>
+
+    </body>
 </html>
