@@ -1,5 +1,5 @@
 var list;
-        var iconBase = 'image/';
+var iconBase = 'image/';
 
 var textThai =
     'จุฬาฯ,13.738853,100.530538,จุฬาลงกรณ์มหาวิทยาลัย,king09.jpg'+'\n' +
@@ -8,6 +8,7 @@ var textThai =
 var textEng =
     'ChulalongKorn University,13.738853,100.530538,CU,king09.jpg'+"\n"+
     'Sanamluang,13.754937,100.493058,Sanamluang description,king01.jpg';
+list = textThai.split("\n");
 
         function initMap() {
 
@@ -28,7 +29,6 @@ var textEng =
             }
         };
 
-        list = textThai.split("\n");
 
             for (line in list) {
       //          if (line != 0) {
@@ -65,12 +65,11 @@ var textEng =
                         if (getCookie(name) == "true") {
                             //                 alert(name+" "+getCookie(name));
                             return "checked";
-                        }
+                       }
                         else return "";
                     }
      //           }
             }
-
         }
 
         function handleClick(cb) {
@@ -96,6 +95,8 @@ var textEng =
             }
             return "";
         }
+
+
 
      //    function readTextFile(file) {
      //        var allText;
