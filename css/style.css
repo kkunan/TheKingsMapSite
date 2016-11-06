@@ -33,14 +33,14 @@ body {
             float: right;
         }
 
-        #my-progress-bar:after {
-            content: '';
-            display: block;
-            background: #3c97d3; /*url("../image/bg_progress01.jpg")*/;
-            width: 50%;
-            height: 100%;
-            border-radius: 3px;
-        }
+        /*#my-progress-bar:after {*/
+            /*content: '';*/
+            /*display: block;*/
+            /*background: #3c97d3; !*url("../image/bg_progress01.jpg")*!;*/
+            /*width: 50%;*/
+            /*height: 100%;*/
+            /*border-radius: 3px;*/
+        /*}*/
         #progress-bar .label {
             float: right;
             margin: 0;

@@ -1,6 +1,14 @@
 var list;
         var iconBase = 'image/';
 
+var textThai =
+    'จุฬาฯ,13.738853,100.530538,จุฬาลงกรณ์มหาวิทยาลัย,king09.jpg'+'\n' +
+    'สนามหลวง,13.754937,100.493058,สนามหลวง เนื้อหา,king01.jpg';
+
+var textEng =
+    'ChulalongKorn University,13.738853,100.530538,CU,king09.jpg'+"\n"+
+    'Sanamluang,13.754937,100.493058,Sanamluang description,king01.jpg';
+
         function initMap() {
 
             var scg = {lat: 13.918111, lng: 100.545001};
@@ -19,8 +27,11 @@ var list;
                 anchor: new google.maps.Point(0, 0) // anchor
             }
         };
+
+        list = textThai.split("\n");
+
             for (line in list) {
-                if (line != 0) {
+      //          if (line != 0) {
                     var eachLocation = list[line].split(',');
 
                     var name = eachLocation[0];
@@ -57,7 +68,7 @@ var list;
                         }
                         else return "";
                     }
-                }
+     //           }
             }
 
         }
@@ -86,21 +97,37 @@ var list;
             return "";
         }
 
-        function readTextFile(file) {
-            var allText;
-            var rawFile = new XMLHttpRequest();
+     //    function readTextFile(file) {
+     //        var allText;
+     //        var rawFile = new XMLHttpRequest();
+     //
+     //        var boolean = false;
+     // //       do {
+     //            rawFile.open("GET", file, true);
+     //            rawFile.onreadystatechange = function () {
+     //                if (rawFile.readyState === 4) {
+     //                    if (rawFile.status === 200 || rawFile.status == 0) {
+     //                        allText = rawFile.responseText;
+     //                        list = allText.split("\n");
+     //
+     //                        boolean = true;
+     //                    }
+     //                }
+     //            }
+     //            rawFile.send(null);
+     // //           alert(rawFile.readyState);
+     // //       }while(!boolean);
+     //        // var reader = new FileReader();
+     //        //
+     //        // reader.onload = function(e) {
+     //        //     list = reader.result.split("\n");
+     //        // }
+     //        //
+     //        // reader.readAsText(file, "utf-8");
+     //
+     //    }
 
-            rawFile.open("GET", file, true);
-            rawFile.onreadystatechange = function () {
-                if (rawFile.readyState === 4) {
-                    if (rawFile.status === 200 || rawFile.status == 0) {
-                        allText = rawFile.responseText;
-                        list = allText.split("\n");
 
-                    }
-                }
-            }
-            rawFile.send(null);
-        }
+
      //   alert(document.cookie);
-        readTextFile("content_thai.csv");
+    //    readTextFile("content_thai.csv");
