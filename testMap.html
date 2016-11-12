@@ -1,65 +1,69 @@
 <!DOCTYPE html>
 <html>
-    <head>
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-      <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
-      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-      <meta charset="utf-8">
-      <title>เดินตามรอยพ่อ</title>
-      <link rel="shortcut icon" type="image/x-icon" href="image/marker.png" />
-      <link rel="stylesheet" type="text/css" href="css/style.css">
-      <link href="https://fonts.googleapis.com/css?family=Pridi:400,600" rel="stylesheet">
-      <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBm253oNfhS4tZCPLNpR8x_butc4CLjNwo&callback=initMap"></script>
-      <script src="js/initMap.js"></script>
-      <script>(function (d, s, id) {
-          var js, fjs = d.getElementsByTagName(s)[0];
-          if (d.getElementById(id)) return;
-          js = d.createElement(s);
-          js.id = id;
-          js.src = "//connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v2.8";
-          fjs.parentNode.insertBefore(js, fjs);
-      }(document, 'script', 'facebook-jssdk'));
-      </script>
-   </head>
-    <body>
-      <div id="header">
-        <p id="logo">เดินตามรอยพ่อ</p>
-      </div>
-      <div id="content">
-        <div id="map"></div>
-      </div>
-      <div id="footer">
-        <div id="progress-bar">
-          <progress id="my-progress-bar" class = "my-progress-bar" max="100"></progress>
-         <p id = "progress-label" class="label"></p>
-        </div>
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta charset="utf-8">
+    <title>เดินตามรอยพ่อ</title>
+    <link rel="shortcut icon" type="image/x-icon" href="image/marker.png"/>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css?family=Pridi:400,600" rel="stylesheet">
+    <script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBm253oNfhS4tZCPLNpR8x_butc4CLjNwo&callback=initMap"></script>
+    <script src="js/initMap.js"></script>
+    <script>
+        /* Facebook comment code */
+        (function (d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) return;
+            js = d.createElement(s);
+            js.id = id;
+            js.src = "//connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v2.8";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+    </script>
+</head>
 
-        <script>
-          var ca = document.cookie.split(';');
-          var count = 0;
-          for (var i = 0; i < ca.length; i++) {
+<body>
+<div id="header">
+    <p id="logo">เดินตามรอยพ่อ</p>
+</div>
+<div id="content">
+    <div id="map"></div>
+</div>
+<div id="footer">
+    <div id="progress-bar">
+        <progress id="my-progress-bar" class="my-progress-bar" max="100"></progress>
+        <p id="progress-label" class="label"></p>
+    </div>
+
+    <script>
+        /* Cookie organizer */
+        var ca = document.cookie.split(';');
+        var count = 0;
+        for (var i = 0; i < ca.length; i++) {
             var c = ca[i];
             while (c.charAt(0) == ' ') {
-              c = c.substring(1);
+                c = c.substring(1);
             }
             if (c.indexOf(name) == 0) {
-              if(c.substring(name.length, c.length).split('=')[1]=='true') {
-                count++;
-       //         alert(true);
-              }
+                if (c.substring(name.length, c.length).split('=')[1] == 'true') {
+                    count++;
+                    //         alert(true);
+                }
             }
-          }
-       //   alert(count+' '+list.length);
-          var progressBar = document.getElementById("my-progress-bar");
-          var percentValue = count/list.length*100;
-          progressBar.value = percentValue;
-          document.getElementById('progress-label').textContent = 'ความก้าวหน้า '+percentValue+'% แล้ว !';
-        </script>
-        <div id="comment-section">
-          <div id="fb-root"></div>
-          <div class="fb-comments" data-href="https://localhost/testMap.html/" data-numposts="5"></div>
-        </div>
-      </div>
-
-    </body>
+        }
+        //   alert(count+' '+list.length);
+        var progressBar = document.getElementById("my-progress-bar");
+        var percentValue = count / list.length * 100;
+        progressBar.value = percentValue;
+        document.getElementById('progress-label').textContent = 'ความก้าวหน้า ' + percentValue + '% แล้ว !';
+    </script>
+    <div id="comment-section">
+        <div id="fb-root"></div>
+        <div class="fb-comments" data-href="https://localhost/testMap.html/" data-numposts="5"></div>
+    </div>
+</div>
+</body>
 </html>

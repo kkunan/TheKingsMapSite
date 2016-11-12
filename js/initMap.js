@@ -1,17 +1,21 @@
 var list;
 var iconBase = 'image/';
 
+/*Thai content*/
 var textThai =
     'จุฬาฯ,13.738853,100.530538,จุฬาลงกรณ์มหาวิทยาลัย,king09.jpg'+'\n' +
     'สนามหลวง,13.754937,100.493058,สนามหลวง เนื้อหา,king01.jpg'+'\n' +
     'โรงพยาบาลเมาท์ออร์เบิร์น,42.37396,-71.13412,สถานที่พระราชสมภพ,king01.jpg'
     ;
-
+/*English content*/
 var textEng =
     'ChulalongKorn University,13.738853,100.530538,CU,king09.jpg'+"\n"+
     'Sanamluang,13.754937,100.493058,Sanamluang description,king01.jpg';
 list = textThai.split("\n");
 
+        /*
+        * All map contents are created in here
+        * */
         function initMap() {
 
           //  var scg = {lat: 13.918111, lng: 100.545001};
@@ -24,25 +28,35 @@ list = textThai.split("\n");
                 mapTypeControl: false
             });
 
+            /*
+            * Add new marker icon here
+            */
             var icons = {
                 firstMarker : {
                 url: iconBase + "marker.png", // url
-              //  scaledSize: new google.maps.Size(25, 25), // scaled size
-                origin: new google.maps.Point(0, 0), // origin
-                anchor: new google.maps.Point(0, 0) // anchor
-            }
-        };
+            //  origin: new google.maps.Point(0, 0), // origin
+            //  anchor: new google.maps.Point(0, 0) // anchor
+                }
+                //secondMarker : {
+                //url: iconBase + 'imageName.png',
+                //}
+            };
 
 
+            /*
+            * Create each marker from the content
+            * */
             for (line in list) {
-      //          if (line != 0) {
+
+                    /* Pre-process data*/
                     var eachLocation = list[line].split(',');
-
                     var name = eachLocation[0];
-
                     var coordinate = {lat: parseFloat(eachLocation[1]), lng: parseFloat(eachLocation[2])};
 
+                    /* Get cookie value */
                     var check = checkCookies(eachLocation[3]);
+
+                    /* Set InfoWindow text */
                     var contentString =
                             /* Title */
                             eachLocation[0]+'<br/>'+
@@ -60,6 +74,7 @@ list = textThai.split("\n");
                             '<button>next</button><br/>'
                         ;
 
+                    /* create marker */
                     var marker = new google.maps.Marker({
                         icon: icons['firstMarker'],
                         position: coordinate,
@@ -67,8 +82,10 @@ list = textThai.split("\n");
                         title: name
                     });
 
+                    /* extend the view by this marker position */
                     bounds.extend(marker.getPosition());
 
+                    /* make the infoWindow pops up when click on the marker */
                     google.maps.event.addListener(marker, 'click', (function (marker, content, infowindow) {
                         return function () {
                             infowindow.setContent(content)
@@ -76,28 +93,26 @@ list = textThai.split("\n");
                         };
                     })(marker, contentString, infowindow));
 
+                    /* if the user have been here before, return checked in the checkbox*/
                     function checkCookies(name) {
-
                         if (getCookie(name) == "true") {
-                            //                 alert(name+" "+getCookie(name));
-                            return "checked";
+                             return "checked";
                        }
                         else return "";
                     }
-     //           }
-            }
+             }
             map.fitBounds(bounds);
         }
 
+        /* set cookie when the checkboxes are clicked */
         function handleClick(cb) {
             setCookie(cb.name, cb.checked)
-            //     alert(getCookie(cb.name));
         }
-
         function setCookie(cname, cvalue) {
             document.cookie = cname + "=" + cvalue + ";path=/";
         }
 
+        /* get cookie from the name */
         function getCookie(cname) {
             var name = cname + "=";
             var ca = document.cookie.split(';');
@@ -112,8 +127,6 @@ list = textThai.split("\n");
             }
             return "";
         }
-
-
 
      //    function readTextFile(file) {
      //        var allText;
@@ -144,8 +157,6 @@ list = textThai.split("\n");
      //        // reader.readAsText(file, "utf-8");
      //
      //    }
-
-
 
      //   alert(document.cookie);
     //    readTextFile("content_thai.csv");
