@@ -3,7 +3,9 @@ var iconBase = 'image/';
 
 var textThai =
     'จุฬาฯ,13.738853,100.530538,จุฬาลงกรณ์มหาวิทยาลัย,king09.jpg'+'\n' +
-    'สนามหลวง,13.754937,100.493058,สนามหลวง เนื้อหา,king01.jpg';
+    'สนามหลวง,13.754937,100.493058,สนามหลวง เนื้อหา,king01.jpg'+'\n' +
+    'โรงพยาบาลเมาท์ออร์เบิร์น,42.37396,-71.13412,สถานที่พระราชสมภพ,king01.jpg'
+    ;
 
 var textEng =
     'ChulalongKorn University,13.738853,100.530538,CU,king09.jpg'+"\n"+
@@ -12,11 +14,13 @@ list = textThai.split("\n");
 
         function initMap() {
 
-            var scg = {lat: 13.918111, lng: 100.545001};
+          //  var scg = {lat: 13.918111, lng: 100.545001};
+            var bounds = new google.maps.LatLngBounds();
+
             var infowindow = new google.maps.InfoWindow();
             var map = new google.maps.Map(document.getElementById('map'), {
-                zoom: 10,
-                center: scg,
+          //      zoom: 10,
+         //       center: scg,
                 mapTypeControl: false
             });
 
@@ -39,12 +43,22 @@ list = textThai.split("\n");
                     var coordinate = {lat: parseFloat(eachLocation[1]), lng: parseFloat(eachLocation[2])};
 
                     var check = checkCookies(eachLocation[3]);
-                    var contentString = "<IMG BORDER=\"0\" ALIGN=\"Left\" SRC=\"" + eachLocation[4] + "\"> " + eachLocation[3]
-                            + "<br/><input type=\"checkbox\" " +
-                            "name=\"" + eachLocation[3] + "\" " +
-                            "value=\"" + eachLocation[3] + "\" " +
-                            "onclick='handleClick(this);' " +
-                            check + " >I've been here before</input><br/>";
+                    var contentString =
+                            /* Title */
+                            eachLocation[0]+'<br/>'+
+                            /* Image */
+                            '<IMG BORDER="0" ALIGN="Left" SRC="' + eachLocation[4] +' "><br/> ' +
+                            /* Content */
+                            eachLocation[3] +
+                            /* CheckBox */
+                            '<br/><input type="checkbox" ' +
+                                'name="' + eachLocation[3] + '" ' +
+                                'value="' + eachLocation[3] + '" ' +
+                                'onclick=handleClick(this); ' +
+                                 check + " >I've been here before</input><br/>"+
+                            /* Next Button */
+                            '<button>next</button><br/>'
+                        ;
 
                     var marker = new google.maps.Marker({
                         icon: icons['firstMarker'],
@@ -52,6 +66,8 @@ list = textThai.split("\n");
                         map: map,
                         title: name
                     });
+
+                    bounds.extend(marker.getPosition());
 
                     google.maps.event.addListener(marker, 'click', (function (marker, content, infowindow) {
                         return function () {
@@ -70,6 +86,7 @@ list = textThai.split("\n");
                     }
      //           }
             }
+            map.fitBounds(bounds);
         }
 
         function handleClick(cb) {
