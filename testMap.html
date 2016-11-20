@@ -9,9 +9,10 @@
     <link rel="shortcut icon" type="image/x-icon" href="image/marker.png"/>
     <link rel="stylesheet" type="text/css" href="css/style.css">
     <link href="https://fonts.googleapis.com/css?family=Pridi:400,600" rel="stylesheet">
-    <script async defer
-            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBm253oNfhS4tZCPLNpR8x_butc4CLjNwo&callback=initMap"></script>
     <script src="js/initMap.js"></script>
+    <script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBm253oNfhS4tZCPLNpR8x_butc4CLjNwo&callback=readThai"></script>
+
     <script>
         /* Facebook comment code */
         (function (d, s, id) {
@@ -40,6 +41,9 @@
 
     <script>
         /* Cookie organizer */
+        function  cookies() {
+
+
         var ca = document.cookie.split(';');
         var count = 0;
         for (var i = 0; i < ca.length; i++) {
@@ -58,7 +62,8 @@
         var progressBar = document.getElementById("my-progress-bar");
         var percentValue = count / list.length * 100;
         progressBar.value = percentValue;
-        document.getElementById('progress-label').textContent = 'ความก้าวหน้า ' + percentValue + '% แล้ว !';
+        document.getElementById('progress-label').textContent = 'ความก้าวหน้า ' + Math.round(percentValue*100)/100 + '% แล้ว !';
+        }
     </script>
     <div id="comment-section">
         <div id="fb-root"></div>

@@ -1,21 +1,26 @@
 var list;
 var iconBase = 'image/';
+var markerList = [];
 
 /*Thai content*/
-var textThai =
-    'จุฬาฯ,13.738853,100.530538,จุฬาลงกรณ์มหาวิทยาลัย,king09.jpg'+'\n' +
-    'สนามหลวง,13.754937,100.493058,สนามหลวง เนื้อหา,king01.jpg'+'\n' +
-    'โรงพยาบาลเมาท์ออร์เบิร์น,42.37396,-71.13412,สถานที่พระราชสมภพ,king01.jpg'
-    ;
-/*English content*/
-var textEng =
-    'ChulalongKorn University,13.738853,100.530538,CU,king09.jpg'+"\n"+
-    'Sanamluang,13.754937,100.493058,Sanamluang description,king01.jpg';
-list = textThai.split("\n");
+// var textThai =
+//     'จุฬาฯ,13.738853,100.530538,จุฬาลงกรณ์มหาวิทยาลัย,king09.jpg'+'\n' +
+//     'สนามหลวง,13.754937,100.493058,สนามหลวง เนื้อหา,king01.jpg'+'\n' +
+//     'โรงพยาบาลเมาท์ออร์เบิร์น,42.37396,-71.13412,สถานที่พระราชสมภพ,king01.jpg'
+//     ;
+// /*English content*/
+// var textEng =
+//     'ChulalongKorn University,13.738853,100.530538,CU,king09.jpg'+"\n"+
+//     'Sanamluang,13.754937,100.493058,Sanamluang description,king01.jpg';
+// list = textThai.split("\n");
 
         /*
         * All map contents are created in here
         * */
+
+        function readThai(){
+            readTextFile('content_thai.txt');
+        }
         function initMap() {
 
           //  var scg = {lat: 13.918111, lng: 100.545001};
@@ -33,7 +38,7 @@ list = textThai.split("\n");
             */
             var icons = {
                 firstMarker : {
-                url: iconBase + "marker.png", // url
+                url: iconBase + "marker.png" // url
             //  origin: new google.maps.Point(0, 0), // origin
             //  anchor: new google.maps.Point(0, 0) // anchor
                 }
@@ -56,6 +61,7 @@ list = textThai.split("\n");
                     /* Get cookie value */
                     var check = checkCookies(eachLocation[3]);
 
+                console.log(eachLocation[5]);
                     /* Set InfoWindow text */
                     var contentString =
                             /* Title */
@@ -71,7 +77,7 @@ list = textThai.split("\n");
                                 'onclick=handleClick(this); ' +
                                  check + " >I've been here before</input><br/>"+
                             /* Next Button */
-                            '<button>next</button><br/>'
+                            '<button onclick= clickNext('+eachLocation[5].trim()+')>next</button><br/>'
                         ;
 
                     /* create marker */
@@ -82,13 +88,15 @@ list = textThai.split("\n");
                         title: name
                     });
 
+
+
                     /* extend the view by this marker position */
                     bounds.extend(marker.getPosition());
 
                     /* make the infoWindow pops up when click on the marker */
                     google.maps.event.addListener(marker, 'click', (function (marker, content, infowindow) {
                         return function () {
-                            infowindow.setContent(content)
+                            infowindow.setContent(content);
                             infowindow.open(map, marker);
                         };
                     })(marker, contentString, infowindow));
@@ -100,8 +108,18 @@ list = textThai.split("\n");
                        }
                         else return "";
                     }
+
+                    markerList.push(marker);
              }
             map.fitBounds(bounds);
+        }
+
+        function clickNext(line) {
+            //alert(markerList);
+            console.log(line);
+            google.maps.event.trigger(markerList[(line)%list.length], 'click');
+           //var next =  markerList[(line+1)%list.length];
+            //next.click();
         }
 
         /* set cookie when the checkboxes are clicked */
@@ -128,35 +146,40 @@ list = textThai.split("\n");
             return "";
         }
 
-     //    function readTextFile(file) {
-     //        var allText;
-     //        var rawFile = new XMLHttpRequest();
-     //
-     //        var boolean = false;
-     // //       do {
-     //            rawFile.open("GET", file, true);
-     //            rawFile.onreadystatechange = function () {
-     //                if (rawFile.readyState === 4) {
-     //                    if (rawFile.status === 200 || rawFile.status == 0) {
-     //                        allText = rawFile.responseText;
-     //                        list = allText.split("\n");
-     //
-     //                        boolean = true;
-     //                    }
-     //                }
-     //            }
-     //            rawFile.send(null);
-     // //           alert(rawFile.readyState);
-     // //       }while(!boolean);
-     //        // var reader = new FileReader();
-     //        //
-     //        // reader.onload = function(e) {
-     //        //     list = reader.result.split("\n");
-     //        // }
-     //        //
-     //        // reader.readAsText(file, "utf-8");
-     //
-     //    }
+        function readTextFile(file) {
+            var allText;
+            var rawFile = new XMLHttpRequest();
+
+            var boolean = false;
+     //       do {
+                rawFile.open("GET", file, true);
+                rawFile.onreadystatechange = function () {
+                    if (rawFile.readyState === 4) {
+                        if (rawFile.status === 200 || rawFile.status == 0) {
+                            allText = rawFile.responseText;
+
+                            list = allText.split("\n");
+
+                            //console.log(list);
+
+                            initMap();
+                            cookies();
+                            boolean = true;
+                        }
+                    }
+                }
+                rawFile.send(null);
+     //           alert(rawFile.readyState);
+     //       }while(!boolean);
+            // var reader = new FileReader();
+            //
+            // reader.onload = function(e) {
+            //     list = reader.result.split("\n");
+            // }
+            //
+            // reader.readAsText(file, "utf-8");
+
+        }
 
      //   alert(document.cookie);
     //    readTextFile("content_thai.csv");
