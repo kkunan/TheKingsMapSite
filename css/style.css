@@ -8,18 +8,40 @@ body {
     position: relative;
     height: 100vh;
 }
+p {
+    margin: 0;
+}
 #header {
-    height: 8%;
+    height: 60px;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    z-index: 999;
     padding: 10px;
+    background: url("../image/bg_01.png") #333;
+    box-shadow: 0 5px 10px;
 }
     #logo {
         text-align: center;
+        height: 100%;
+        padding: 10px;
+        box-sizing: border-box;
     }
+        #logo img {
+            height:  100%;
+        }
 #content {
     height: 82%;
 }
-    #map { height: 100%;}
-#footer {}
+    #map { height: 100vh;}
+#footer {
+    height: 50px;
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    z-index: 999;
+    background: #fff;
+}
     #progress-bar {
         padding: 10px 10px 40px;
     }

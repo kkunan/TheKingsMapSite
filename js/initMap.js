@@ -65,19 +65,19 @@ var markerList = [];
                     /* Set InfoWindow text */
                     var contentString =
                             /* Title */
-                            eachLocation[0]+'<br/>'+
+                            '<p class="pop_title">' + eachLocation[0] + '</p>'+
                             /* Image */
-                            '<IMG BORDER="0" ALIGN="Left" SRC="' + eachLocation[4] +' "><br/> ' +
+                            '<p class="pop_img"><IMG BORDER="0" ALIGN="Left" SRC="' + eachLocation[4] +'"/></p> ' +
                             /* Content */
-                            eachLocation[3] +
+                            '<p class="pop_content">' + eachLocation[3] + '</p>' +
                             /* CheckBox */
-                            '<br/><input type="checkbox" ' +
+                            '<p class="pop_check"><input type="checkbox" ' +
                                 'name="' + eachLocation[3] + '" ' +
                                 'value="' + eachLocation[3] + '" ' +
                                 'onclick=handleClick(this); ' +
-                                 check + " >I've been here before</input><br/>"+
+                                 check + " >ฉันเคยไปที่นี่แล้ว</input></p>"+
                             /* Next Button */
-                            '<button onclick= clickNext('+eachLocation[5].trim()+')>next</button><br/>'
+                            '<p class="pop_next"><button onclick= clickNext('+eachLocation[5].trim()+')>next</button></p>'
                         ;
 
                     /* create marker */
