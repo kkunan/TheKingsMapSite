@@ -93,11 +93,14 @@ var markerList = [];
                     /* extend the view by this marker position */
                     bounds.extend(marker.getPosition());
 
+
                     /* make the infoWindow pops up when click on the marker */
                     google.maps.event.addListener(marker, 'click', (function (marker, content, infowindow) {
                         return function () {
                             infowindow.setContent(content);
                             infowindow.open(map, marker);
+                            bounds.extend(infowindow);
+                            map.fitBounds(bounds);
                         };
                     })(marker, contentString, infowindow));
 
