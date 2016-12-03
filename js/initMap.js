@@ -53,6 +53,7 @@ var markerList = [];
             * */
             for (line in list) {
 
+                try {
                     /* Pre-process data*/
                     var eachLocation = list[line].split(',');
                     var name = eachLocation[0];
@@ -61,23 +62,23 @@ var markerList = [];
                     /* Get cookie value */
                     var check = checkCookies(eachLocation[3]);
 
-                console.log(eachLocation[5]);
+                    console.log(eachLocation[5]);
                     /* Set InfoWindow text */
                     var contentString =
                             /* Title */
-                            '<p class="pop_title">' + eachLocation[0] + '</p>'+
+                            '<p class="pop_title">' + eachLocation[0] + '</p>' +
                             /* Image */
-                            '<p class="pop_img"><IMG BORDER="0" ALIGN="Left" SRC="' + 'image/'+eachLocation[4] +'"/></p> ' +
+                            '<p class="pop_img"><IMG BORDER="0" ALIGN="Left" SRC="' + 'image/' + eachLocation[4] + '"/></p> ' +
                             /* Content */
                             '<p class="pop_content">' + eachLocation[3] + '</p>' +
                             /* CheckBox */
                             '<p class="pop_check"><input type="checkbox" ' +
-                                'name="' + eachLocation[3] + '" ' +
-                                'value="' + eachLocation[3] + '" ' +
-                                'onclick=handleClick(this); ' +
-                                 check + " >ฉันเคยไปที่นี่แล้ว</input></p>"+
+                            'name="' + eachLocation[3] + '" ' +
+                            'value="' + eachLocation[3] + '" ' +
+                            'onclick=handleClick(this); ' +
+                            check + " >ฉันเคยไปที่นี่แล้ว</input></p>" +
                             /* Next Button */
-                            '<p class="pop_next"><button onclick= clickNext('+eachLocation[5].trim()+')>next</button></p>'
+                            '<p class="pop_next"><button onclick= clickNext(' + eachLocation[5].trim() + ')>next</button></p>'
                         ;
 
                     /* create marker */
@@ -87,7 +88,6 @@ var markerList = [];
                         map: map,
                         title: name
                     });
-
 
 
                     /* extend the view by this marker position */
@@ -107,14 +107,17 @@ var markerList = [];
                     /* if the user have been here before, return checked in the checkbox*/
                     function checkCookies(name) {
                         if (getCookie(name) == "true") {
-                             return "checked";
-                       }
+                            return "checked";
+                        }
                         else return "";
                     }
 
                     markerList.push(marker);
-             }
-            map.fitBounds(bounds);
+                }
+                catch(er){}
+                map.fitBounds(bounds);
+
+            }
         }
 
         function clickNext(line) {
