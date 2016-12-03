@@ -67,7 +67,7 @@ var markerList = [];
                             /* Title */
                             '<p class="pop_title">' + eachLocation[0] + '</p>'+
                             /* Image */
-                            '<p class="pop_img"><IMG BORDER="0" ALIGN="Left" SRC="' + iconBase+eachLocation[4] +'"/></p> ' +
+                            '<p class="pop_img"><IMG BORDER="0" ALIGN="Left" SRC="' + "image/"+eachLocation[4] +'"/></p> ' +
                             /* Content */
                             '<p class="pop_content">' + eachLocation[3] + '</p>' +
                             /* CheckBox */
