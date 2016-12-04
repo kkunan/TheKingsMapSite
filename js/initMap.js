@@ -62,24 +62,37 @@ var markerList = [];
                     /* Get cookie value */
                     var check = checkCookies(eachLocation[3]);
 
-                    console.log(eachLocation[5]);
+                  //  console.log(eachLocation[5]);
                     /* Set InfoWindow text */
-                    var contentString =
-                            /* Title */
-                            '<p class="pop_title">' + eachLocation[0] + '</p>' +
-                            /* Image */
-                            '<div class="pop_content"><p class="pop_img"><IMG BORDER="0" ALIGN="Left" SRC="' + 'image/' + eachLocation[4] + '"/></p> ' +
-                            /* Content */
-                            '<p class="pop_txt">' + eachLocation[3] + '</p></div>' +
-                            /* CheckBox */
-                            '<p class="pop_check"><input type="checkbox" ' +
-                            'name="' + eachLocation[3] + '" ' +
-                            'value="' + eachLocation[3] + '" ' +
-                            'onclick=handleClick(this); ' +
-                            check + " >ฉันเคยไปที่นี่แล้ว</input></p>" +
-                            /* Next Button */
-                            '<p class="pop_next" onclick= clickNext(' + eachLocation[5].trim() + ')><IMG SRC="image/btn_next01.png"/></p>'
-                        ;
+                    var title = '<p class="pop_title">' + eachLocation[0] + '</p>';
+                    var image = '<div class="pop_content"><p class="pop_img"><IMG BORDER="0" ALIGN="Left" SRC="' + 'image/' + eachLocation[4] + '"/></p> ';
+                    var content = '<p class="pop_txt">' + eachLocation[3] + '</p></div>';
+
+                    var next = '<p class="pop_next" onclick= clickNext(' + eachLocation[5].trim() + ')><IMG SRC="image/btn_next01.png"/></p>';
+                    var previous = '<button onclick = clickPrevious('+(line-1)+') >Previous</button>';
+
+
+                    var firstChunk = title+image+content;
+                    var secondChunk = next+previous;
+                    var cookieValue = eachLocation[3];
+
+                    // var contentString =
+                    //         /* Title */
+                    //         '<p class="pop_title">' + eachLocation[0] + '</p>' +
+                    //         /* Image */
+                    //         '<div class="pop_content"><p class="pop_img"><IMG BORDER="0" ALIGN="Left" SRC="' + 'image/' + eachLocation[4] + '"/></p> ' +
+                    //         /* Content */
+                    //         '<p class="pop_txt">' + eachLocation[3] + '</p></div>' +
+                    //         /* CheckBox */
+                    //         '<p class="pop_check"><input type="checkbox" ' +
+                    //         'name="' + eachLocation[3] + '" ' +
+                    //         'value="' + eachLocation[3] + '" ' +
+                    //         'onclick=handleClick(this); ' +
+                    //         check + " >ฉันเคยไปที่นี่แล้ว</input></p>" +
+                    //         /* Next Button */
+                    //         '<p class="pop_next" onclick= clickNext(' + eachLocation[5].trim() + ')><IMG SRC="image/btn_next01.png"/></p>' +
+                    //         '<button onclick = clickPrevious('+(line-1)+') >Previous</button>'
+                    //     ;
 
                     /* create marker */
                     var marker = new google.maps.Marker({
@@ -94,15 +107,26 @@ var markerList = [];
                     bounds.extend(marker.getPosition());
 
 
+
                     /* make the infoWindow pops up when click on the marker */
-                    google.maps.event.addListener(marker, 'click', (function (marker, content, infowindow) {
+                    google.maps.event.addListener(marker, 'click', (function (marker, firstChunk,cookieValue, secondChunk, infowindow) {
                         return function () {
+
+                            var content = firstChunk+
+                                '<p class="pop_check"><input type="checkbox" ' +
+                                'name="' + cookieValue + '" ' +
+                                'value="' + cookieValue + '" ' +
+                                'onclick=handleClick(this); ' +
+                                checkCookies(cookieValue) + " >ฉันเคยไปที่นี่แล้ว</input></p>" +
+                                secondChunk
                             infowindow.setContent(content);
                             infowindow.open(map, marker);
                             bounds.extend(infowindow);
                             map.fitBounds(bounds);
-                        };
-                    })(marker, contentString, infowindow));
+
+                                }
+                        }
+                    )(marker, firstChunk,cookieValue,secondChunk, infowindow));
 
                     /* if the user have been here before, return checked in the checkbox*/
                     function checkCookies(name) {
@@ -122,15 +146,26 @@ var markerList = [];
 
         function clickNext(line) {
             //alert(markerList);
-            console.log(line);
+        //    console.log(line);
             google.maps.event.trigger(markerList[(line)%list.length], 'click');
            //var next =  markerList[(line+1)%list.length];
+            //next.click();
+        }
+
+        function clickPrevious(line) {
+            //alert(markerList);
+            if(line==-1)
+                line = list.length-1;
+                console.log('Prev ' +line);
+            google.maps.event.trigger(markerList[(line)%list.length], 'click');
+            //var next =  markerList[(line+1)%list.length];
             //next.click();
         }
 
         /* set cookie when the checkboxes are clicked */
         function handleClick(cb) {
             setCookie(cb.name, cb.checked)
+            cookies();
         }
         function setCookie(cname, cvalue) {
             document.cookie = cname + "=" + cvalue + ";path=/";
