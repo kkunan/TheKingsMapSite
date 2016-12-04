@@ -68,9 +68,9 @@ var markerList = [];
                             /* Title */
                             '<p class="pop_title">' + eachLocation[0] + '</p>' +
                             /* Image */
-                            '<p class="pop_img"><IMG BORDER="0" ALIGN="Left" SRC="' + 'image/' + eachLocation[4] + '"/></p> ' +
+                            '<div class="pop_content"><p class="pop_img"><IMG BORDER="0" ALIGN="Left" SRC="' + 'image/' + eachLocation[4] + '"/></p> ' +
                             /* Content */
-                            '<p class="pop_content">' + eachLocation[3] + '</p>' +
+                            '<p class="pop_txt">' + eachLocation[3] + '</p></div>' +
                             /* CheckBox */
                             '<p class="pop_check"><input type="checkbox" ' +
                             'name="' + eachLocation[3] + '" ' +
@@ -78,7 +78,7 @@ var markerList = [];
                             'onclick=handleClick(this); ' +
                             check + " >ฉันเคยไปที่นี่แล้ว</input></p>" +
                             /* Next Button */
-                            '<p class="pop_next"><button onclick= clickNext(' + eachLocation[5].trim() + ')>next</button></p>'
+                            '<p class="pop_next" onclick= clickNext(' + eachLocation[5].trim() + ')><IMG SRC="image/btn_next01.png"/></p>'
                         ;
 
                     /* create marker */
