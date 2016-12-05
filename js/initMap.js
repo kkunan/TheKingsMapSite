@@ -69,7 +69,7 @@ var markerList = [];
                     var content = '<p class="pop_txt">' + eachLocation[3] + '</p></div>';
 
                     var next = '<p class="pop_next" onclick= clickNext(' + eachLocation[5].trim() + ')><IMG SRC="image/btn_next01.png"/></p>';
-                    var previous = '<button onclick = clickPrevious('+(line-1)+') >Previous</button>';
+                    var previous = '<p class="pop_prev" onclick= clickNext(' +(line-1)+')><IMG SRC="image/btn_prev01.png"/></p>';
 
 
                     var firstChunk = title+image+content;
