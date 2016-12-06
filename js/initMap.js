@@ -1,5 +1,6 @@
 var list;
 var iconBase = 'image/';
+var imageRoot = 'KingsImages/';
 var markerList = [];
 
 /*Thai content*/
@@ -65,7 +66,7 @@ var markerList = [];
                   //  console.log(eachLocation[5]);
                     /* Set InfoWindow text */
                     var title = '<p class="pop_title">' + eachLocation[0] + '</p>';
-                    var image = '<div class="pop_content"><p class="pop_img"><IMG BORDER="0" ALIGN="Left" SRC="' + 'image/' + eachLocation[4] + '"/></p> ';
+                    var image = '<div class="pop_content"><p class="pop_img"><IMG BORDER="0" height="200" ALIGN="Left" SRC="' + imageRoot + eachLocation[4] + '"/></p> ';
                     var content = '<p class="pop_txt">' + eachLocation[3] + '</p></div>';
 
                     var next = '<p class="pop_next" onclick= clickNext(' + eachLocation[5].trim() + ')><IMG SRC="image/btn_next01.png"/></p>';
