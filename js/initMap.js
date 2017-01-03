@@ -54,7 +54,7 @@ var markerList = [];
             * */
             for (line in list) {
 
-                try {
+          //      try {
                     /* Pre-process data*/
                     var eachLocation = list[line].split(',');
                     var name = eachLocation[0];
@@ -69,11 +69,14 @@ var markerList = [];
                     var image = '<div class="pop_content"><p class="pop_img"><IMG BORDER="0" height="200" ALIGN="Left" SRC="' + imageRoot + eachLocation[4] + '"/></p> ';
                     var content = '<p class="pop_txt">' + eachLocation[3] + '</p></div>';
 
+
+                    /*THIS HAS TO BE FIXED, SHOULD BE STORED IN THE MARKER CONTENT INSTEAD!!!*/
                     var next = '<p class="pop_next" onclick= clickNext(' + eachLocation[5].trim() + ')><IMG SRC="image/btn_next01.png"/></p>';
-                    var previous = '<p class="pop_prev" onclick= clickNext(' +(line-1)+')><IMG SRC="image/btn_prev01.png"/></p>';
+                    var previous = '<p class="pop_prev" onclick= clickNext(' +(eachLocation[5]-2)+')><IMG SRC="image/btn_prev01.png"/></p>';
 
+                    var date = eachLocation[6];
 
-                    var firstChunk = title+image+content;
+                    var firstChunk = image+content;
                     var secondChunk = next+previous;
                     var cookieValue = eachLocation[3];
 
@@ -96,38 +99,91 @@ var markerList = [];
                     //     ;
 
                     /* create marker */
-                    var marker = new google.maps.Marker({
-                        icon: icons['firstMarker'],
-                        position: coordinate,
-                        map: map,
-                        title: name
-                    });
 
+                    var found = false;
+
+                    for(var i in markerList)
+                    {
+                        var stored = markerList[i];
+
+                        // console.log(eachLocation[0]);
+                        // console.log(stored['title']);
+
+                        if(eachLocation[0] == stored['title'])
+                        {
+                            stored['count']++;
+                            stored['content'].push({'date':date,'firstChunk':firstChunk,'secondChunk':secondChunk});
+                            console.log('found');
+                            found = true;
+
+                            break;
+                        }
+
+                    }
+
+                    // console.log(found);
+                    //
+                    // if(found)
+                    // {
+                    //     for(var i in markerList)
+                    //     {
+                    //         var stored = markerList[i];
+                    //
+                    //         console.log(stored['count']);
+                    //
+                    //     }
+                    // }
+
+                    if(!found) {
+                        var marker = new google.maps.Marker({
+                            icon: icons['firstMarker'],
+                            position: coordinate,
+                            httpTitle: title,
+                            content: [{
+                                'date' : date,
+                                'firstChunk': firstChunk,
+                                'secondChunk': secondChunk
+                            }],
+                            map: map,
+                            count: 1,
+                            title: name
+                        });
+                        bounds.extend(marker.getPosition());
+
+
+
+                        /* make the infoWindow pops up when click on the marker */
+                        google.maps.event.addListener(marker, 'click', (function (marker,cookieValue, infowindow) {
+                                return function () {
+
+                        //            console.log(marker['count']);
+
+                                    var content = marker['httpTitle'];
+                                    var contentList = marker.content;
+                                    for(var i in contentList)
+                                              {
+                                        content += contentList[i]['firstChunk']+"<br/>";
+
+                                    }
+                                    content += '<p class="pop_check"><input type="checkbox" ' +
+                                        'name="' + cookieValue + '" ' +
+                                        'value="' + cookieValue + '" ' +
+                                        'onclick=handleClick(this); ' +
+                                        checkCookies(cookieValue) + " >ฉันเคยไปที่นี่แล้ว</input></p>" +
+                                        contentList[i]['secondChunk'];
+
+                                    infowindow.setContent(content);
+                                    infowindow.open(map, marker);
+                                    //     bounds.extend(infowindow);
+                                    //      map.fitBounds(bounds);
+                                    map.setCenter(infowindow.position);
+                                }
+                            }
+                        )(marker,cookieValue, infowindow));
+                        markerList.push(marker);
+                    }
 
                     /* extend the view by this marker position */
-                    bounds.extend(marker.getPosition());
-
-
-
-                    /* make the infoWindow pops up when click on the marker */
-                    google.maps.event.addListener(marker, 'click', (function (marker, firstChunk,cookieValue, secondChunk, infowindow) {
-                        return function () {
-
-                            var content = firstChunk+
-                                '<p class="pop_check"><input type="checkbox" ' +
-                                'name="' + cookieValue + '" ' +
-                                'value="' + cookieValue + '" ' +
-                                'onclick=handleClick(this); ' +
-                                checkCookies(cookieValue) + " >ฉันเคยไปที่นี่แล้ว</input></p>" +
-                                secondChunk
-                            infowindow.setContent(content);
-                            infowindow.open(map, marker);
-                            bounds.extend(infowindow);
-                            map.fitBounds(bounds);
-
-                                }
-                        }
-                    )(marker, firstChunk,cookieValue,secondChunk, infowindow));
 
                     /* if the user have been here before, return checked in the checkbox*/
                     function checkCookies(name) {
@@ -137,17 +193,38 @@ var markerList = [];
                         else return "";
                     }
 
-                    markerList.push(marker);
-                }
-                catch(er){}
+        //        }
+       //         catch(er){}
+                console.log(markerList.length);
                 map.fitBounds(bounds);
 
             }
         }
 
+function clickLink(i,firstChunk,secondChunk,map,marker)
+{
+    var rawContent = marker['content'][i];
+    var content = rawContent['firstChunk']+'<p class="pop_check"><input type="checkbox" ' +
+        'name="' + cookieValue + '" ' +
+        'value="' + cookieValue + '" ' +
+        'onclick=handleClick(this); ' +
+        checkCookies(cookieValue) + " >ฉันเคยไปที่นี่แล้ว</input></p>" +
+        secondChunk;
+
+    infowindow.setContent(content);
+    infowindow.open(map, marker);
+    //     bounds.extend(infowindow);
+    //      map.fitBounds(bounds);
+    map.setCenter(infowindow.position);
+}
+
         function clickNext(line) {
             //alert(markerList);
-        //    console.log(line);
+
+
+            if(line<0)
+                line+=markerList.length;
+         //   console.log(line%list.length);
             google.maps.event.trigger(markerList[(line)%list.length], 'click');
            //var next =  markerList[(line+1)%list.length];
             //next.click();
