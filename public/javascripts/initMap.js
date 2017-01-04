@@ -1,19 +1,8 @@
 var list;
 var iconBase = 'images/';
 var imageRoot = 'images/';
+var $ = jQuery;
 var markerList = [];
-
-/*Thai content*/
-// var textThai =
-//     'จุฬาฯ,13.738853,100.530538,จุฬาลงกรณ์มหาวิทยาลัย,king09.jpg'+'\n' +
-//     'สนามหลวง,13.754937,100.493058,สนามหลวง เนื้อหา,king01.jpg'+'\n' +
-//     'โรงพยาบาลเมาท์ออร์เบิร์น,42.37396,-71.13412,สถานที่พระราชสมภพ,king01.jpg'
-//     ;
-// /*English content*/
-// var textEng =
-//     'ChulalongKorn University,13.738853,100.530538,CU,king09.jpg'+"\n"+
-//     'Sanamluang,13.754937,100.493058,Sanamluang description,king01.jpg';
-// list = textThai.split("\n");
 
         /*
         * All map contents are created in here
@@ -21,6 +10,20 @@ var markerList = [];
 
         function readThai(){
             readTextFile('content_thai.txt');
+        }
+        // function createMarker(map, lat, lon, title, icon) {
+var createMarker = function(arr) {
+            $.each(arr, function(index, value) {
+                console.log(index + " :: " + value);
+            });
+            // var marker = new google.maps.Marker({
+            //     position: {lat: lat, lng: lon},
+            //     map: map,
+            //     title: title,
+            //     icon: icon
+            // })
+
+            // return marker;
         }
         function initMap() {
 
@@ -43,15 +46,13 @@ var markerList = [];
             //  origin: new google.maps.Point(0, 0), // origin
             //  anchor: new google.maps.Point(0, 0) // anchor
                 }
-                //secondMarker : {
-                //url: iconBase + 'imageName.png',
-                //}
             };
 
 
             /*
             * Create each marker from the content
             * */
+
             for (line in list) {
 
                 try {
@@ -146,11 +147,7 @@ var markerList = [];
         }
 
         function clickNext(line) {
-            //alert(markerList);
-        //    console.log(line);
             google.maps.event.trigger(markerList[(line)%list.length], 'click');
-           //var next =  markerList[(line+1)%list.length];
-            //next.click();
         }
 
         function clickPrevious(line) {
@@ -188,6 +185,23 @@ var markerList = [];
             return "";
         }
 
+var getStoriesData = function(callback) {
+            var stories;
+            $.ajax({
+                url: '/data',
+                method: 'GET',
+                datatype: 'json',
+                beforeSend: function(err) {
+                    console.log('retrieve stories data');
+                }
+            }).done(function(data) {
+                console.log('retrieve stories data success');
+                callback(data);
+            }).fail(function(jqXHR, textStatus) {
+                console.log('retrieve stories data failed')
+            });
+        }
+
         function readTextFile(file) {
             var allText;
             var rawFile = new XMLHttpRequest();
@@ -198,11 +212,7 @@ var markerList = [];
                     if (rawFile.readyState === 4) {
                         if (rawFile.status === 200 || rawFile.status == 0) {
                             allText = rawFile.responseText;
-
                             list = allText.split("\n");
-
-                            //console.log(list);
-
                             initMap();
                             cookies();
                             boolean = true;

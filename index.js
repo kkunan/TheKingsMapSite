@@ -2,8 +2,8 @@ var express = require('express');
 var cool = require('cool-ascii-faces');
 var app = express();
 var MongoClient = require('mongodb').MongoClient, assert = require('assert');
-// var dburl = 'mongodb://localhost:27017/contents' //dev side
-var dburl = 'mongodb://site:9ramaking@ds045031.mlab.com:45031/heroku_2khfgvtb'
+var dburl = 'mongodb://localhost:27017/contents' //dev side
+// var dburl = 'mongodb://site:9ramaking@ds045031.mlab.com:45031/heroku_2khfgvtb'
 var assert = require('assert');
 
 app.set('port', (process.env.PORT || 5000));
