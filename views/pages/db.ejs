@@ -1,23 +1,59 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <% include ../partials/header.ejs %>
 </head>
-
+  <% include ../partials/temp_header.ejs %>
 <body>
-
-<% include ../partials/nav.ejs %>
-
 <div class="container">
-<h2>Database Results</h2>
+
+<div id="header">
+    <p id="logo"><img src="images/banner.png" alt="เดินตามรอยพ่อ"></p>
+</div>
+<div id="content">
+    <div id="map"></div>
+</div>
+<div id="footer">
+    <div id="progress-bar">
+        <progress id="my-progress-bar" class="my-progress-bar" max="100"></progress>
+        <p id="progress-label" class="label"></p>
+    </div>
+
+    <script>
+        /* Cookie organizer */
+        function  cookies() {
+
+
+        var ca = document.cookie.split(';');
+        var count = 0;
+        for (var i = 0; i < ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) == ' ') {
+                c = c.substring(1);
+            }
+            if (c.indexOf(name) == 0) {
+                if (c.substring(name.length, c.length).split('=')[1] == 'true') {
+                    count++;
+                    //         alert(true);
+                }
+            }
+        }
+        //   alert(count+' '+list.length);
+        var progressBar = document.getElementById("my-progress-bar");
+        var percentValue = count / list.length * 100;
+        progressBar.value = percentValue;
+        document.getElementById('progress-label').textContent = 'ฉันเคยไป ' + Math.round(percentValue*100)/100 + '% แล้ว !';
+        }
+    </script>
+</div>
+</body>
+</html>
+
+
+
+<!-- <h2>Database Results</h2>
 
 <ul>
     <% results.forEach(function(r) { %>
-        <li><%= r.id %> - <%= r.name %></li>
+        <li><%= r.detailTH %></li>
     <% }); %>
-</ul>
-
-</div>
-
-</body>
-</html>
+</ul> -->
