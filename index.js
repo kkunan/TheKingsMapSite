@@ -2,7 +2,8 @@ var express = require('express');
 var cool = require('cool-ascii-faces');
 var app = express();
 var MongoClient = require('mongodb').MongoClient, assert = require('assert');
-var dburl = 'mongodb://localhost:27017/contents'
+// var dburl = 'mongodb://localhost:27017/contents' //dev side
+var dburl = 'mongodb://site:9ramaking@ds045031.mlab.com:45031/heroku_2khfgvtb'
 var assert = require('assert');
 
 app.set('port', (process.env.PORT || 5000));
@@ -23,20 +24,22 @@ app.get('/data', function(request, response) {
     collection = db.collection('stories');
     collection.find().toArray(function(err,results) {
       assert.equal(err, null);
-      console.log("Found the following records");
-      console.log(results)
+      console.log("Retrieve Stories");
+      response.setHeader('Content-type','application/json')
+      response.send(JSON.stringify(results));
+    });
+    db.close();
+  });
+});
+
+app.get('/map', function(request, response) {
+  MongoClient.connect(dburl, function(err, db) {
+    assert.equal(null, err);
+    collection = db.collection('stories');
+    collection.find().toArray(function(err,results) {
+      assert.equal(err, null);
       response.render('pages/db',{results : results});
     });
-    // response.render('pages/db', {results : results});
-
-  // db.query("db.stories.find()", function(err, result) {
-  //   done();
-  //   if (err)
-  //     {console.error(err); response.send("Error " + err); }
-  //   else
-  //     { response.render('pages/data', { results : result.rows}); }
-  // });
-    console.log("Connected successfully to server");
     db.close();
   });
 });
