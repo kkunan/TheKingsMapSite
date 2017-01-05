@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <% include ../partials/nheader.ejs %>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h3>Story contents</h3>
+  </div>
+  <div class="tool-bar"><i class="fa fa-pencil"></i><i class="fa fa-plus-circle"></i></div>
+  <div class="table">
+      <% results.forEach(function(r) { %>
+        <div class="story">
+        <div class="image"><img src="images/<%= r.pictures %>"/></div>
+        <div class="contain text"><p><%= r.detailTH %></></div>
+        <div class="contain text"><p><%= r.detailEN %></></div>
+        <div class="contain tags"><p><%= r.tags %></></div>
+        <div class="contain tail"><p><%= r.data %></></div>
+        </div>
+      <% }); %>
+    </table>
+  </div>
+</div>
+</body>
+</html>
