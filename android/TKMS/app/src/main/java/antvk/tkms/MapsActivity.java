@@ -181,6 +181,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public boolean onMarkerClick(Marker marker) {
 
                 //System.out.println("Marker Click!");
+                selectedMarker = marker;
                 marker.showInfoWindow();
                 return false;
             }
@@ -202,9 +203,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 Intent intent = new Intent(MapsActivity.this, DescriptionActivity.class);
                 Bundle b = new Bundle();
+
                 b.putInt(MARKER_KEY, markerList.indexOf(marker)); //Your id
+
+                System.out.println("marker index "+markerList.indexOf(marker));
+
                 intent.putExtras(b); //Put your id to your next Intent
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(intent);
                 finish();
             }

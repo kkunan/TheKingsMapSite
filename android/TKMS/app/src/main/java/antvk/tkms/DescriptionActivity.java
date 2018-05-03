@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.support.v7.app.AppCompatActivity;
@@ -27,19 +28,19 @@ public class DescriptionActivity extends AppCompatActivity{
         {
             e.printStackTrace();
         }
-
         Bundle b = getIntent().getExtras();
         value = -1; // or other values
         if(b != null)
             value = b.getInt(MARKER_KEY);
 
+        System.out.println("value "+value);
+
         if(value!=-1)
-        item = MapsActivity.markerInformationItemMap.get(
-                MapsActivity.markerList.get(value)
-        );
+            item = MapsActivity.markerInformationItemMap.get(
+                    MapsActivity.markerList.get(value)
+            );
 
         setupContentView();
-
     }
 
     void setupContentView()
