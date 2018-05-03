@@ -1,12 +1,15 @@
 package antvk.tkms;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.icu.text.IDNA;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -33,14 +36,19 @@ import java.nio.Buffer;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import static android.content.Intent.FLAG_ACTIVITY_SINGLE_TOP;
+import static antvk.tkms.DescriptionActivity.MARKER_KEY;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    Map<String, Drawable> imageDrawables;
-    Map<Marker, InformationItem> markerInformationItemMap;
+    public static Map<String, Drawable> imageDrawables;
+    public static List<Marker> markerList;
+    public static LinkedHashMap<Marker, InformationItem> markerInformationItemMap;
 
     GoogleMap.InfoWindowAdapter infoWindowAdapter;
 
@@ -48,6 +56,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     static final String imageFolder = "kings_images";
     static final String infoFile = "info.json";
+    static Marker selectedMarker;
+
+    int value;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +71,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
 
         gson = new GsonBuilder().setPrettyPrinting().create();
-        markerInformationItemMap = new HashMap<>();
+        markerInformationItemMap = new LinkedHashMap<>();
+
+        Bundle b = getIntent().getExtras();
+        value = -1; // or other values
+        if(b != null) {
+            value = b.getInt(MARKER_KEY);
+        }
     }
 
     private GoogleMap.InfoWindowAdapter setInfoWindowAdapter() {
@@ -86,27 +103,48 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 // Getting reference to the TextView to set latitude
                 TextView header = (TextView) v.findViewById(R.id.header_text);
-                TextView latlngtext = (TextView) v.findViewById(R.id.location_text);
+             //   TextView latlngtext = (TextView) v.findViewById(R.id.location_text);
 
-                TextView description = v.findViewById(R.id.description_text);
-                ImageView imageView = v.findViewById(R.id.image_text);
-
+               ImageView imageView = v.findViewById(R.id.image_text);
                 InformationItem item = markerInformationItemMap.get(arg0);
-
                 header.setText(item.header);
-                latlngtext.setText(latLng.latitude+", "+latLng.longitude);
-                description.setText(item.description);
-
-                System.out.println("image drawable: "+imageDrawables.get(item.imageName));
-
                 imageView.setImageDrawable(imageDrawables.get(item.imageName));
-//                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(50,50);
-//                imageView.setLayoutParams(params);
 
                 return v;
 
             }
         };
+    }
+
+    public void OnNavigateButtonClick(View view)
+    {
+        if(selectedMarker==null && markerList.size()>0)
+        {
+            selectMarker(markerList.get(0));
+        }
+
+        else
+        {
+            int offset = 0;
+            if(view.getId() == R.id.right_button)
+            {
+                offset =1;
+            }
+            else if(view.getId() == R.id.left_button)
+            {
+                offset = -1;
+            }
+            int markerIndex = (markerList.indexOf(selectedMarker)+markerList.size()+offset)%markerList.size();
+            if(markerIndex < markerList.size())
+                selectMarker(markerList.get(markerIndex));
+        }
+    }
+
+    public void selectMarker(Marker marker)
+    {
+        selectedMarker = marker;
+        selectedMarker.showInfoWindow();
+        mMap.animateCamera(CameraUpdateFactory.newLatLng(marker.getPosition()), 250, null);
     }
 
 
@@ -136,11 +174,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         }
 
+        markerList = new ArrayList<>(markerInformationItemMap.keySet());
+
         mMap.setOnMarkerClickListener( new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
 
-                System.out.println("Marker Click!");
+                //System.out.println("Marker Click!");
                 marker.showInfoWindow();
                 return false;
             }
@@ -148,13 +188,32 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         try {
             String[] imageFile = getAssets().list(imageFolder);
-            imageDrawables = getDrawables(this,imageFile);
+            imageDrawables = Utils.getDrawables(this,imageFolder,imageFile);
 
         } catch (IOException e) {
             e.printStackTrace();
         };
         infoWindowAdapter = setInfoWindowAdapter();
         mMap.setInfoWindowAdapter(infoWindowAdapter);
+
+        GoogleMap.OnInfoWindowClickListener infoWindowClickListener = new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+
+                Intent intent = new Intent(MapsActivity.this, DescriptionActivity.class);
+                Bundle b = new Bundle();
+                b.putInt(MARKER_KEY, markerList.indexOf(marker)); //Your id
+                intent.putExtras(b); //Put your id to your next Intent
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(intent);
+                finish();
+            }
+        };
+
+        mMap.setOnInfoWindowClickListener(infoWindowClickListener);
+
+        if(value!=-1)
+            selectMarker(markerList.get((value+markerList.size())%markerList.size()));
     }
 
     public Marker createMarker(InformationItem informationItem)
@@ -197,32 +256,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         return items;
     }
 
-
-    public Map<String, Drawable> getDrawables(Context context, String[] names) {
-        Map<String, Drawable> da = new HashMap<>();
-        for (String name : names) {
-            try {
-                Drawable d = getDrawable(context, name);
-                if (d != null) da.put(name, d);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return da;
-    }
-
-    // this is just a temporary method put here to load in the images
-    public Drawable getDrawable(Context context, String name) {
-        try {
-            InputStream inputstream = context.getAssets().open(imageFolder + "/" + name);
-            System.out.println("input stream: "+inputstream);
-            Drawable drawable = Drawable.createFromStream(inputstream, null);
-            System.out.println("drawable: "+drawable);            return drawable;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
 
 
 }

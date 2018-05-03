@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/darker_gray"
     android:orientation="vertical"
     >
 
@@ -11,39 +12,55 @@
         android:layout_height="wrap_content"
         android:text="test"
         android:textAlignment="center"
-        android:textSize="30dp"
+        android:textSize="20dp"
         android:textStyle="bold"
         android:textColor="@android:color/black"
         />
 
-    <TextView
-        android:id="@+id/location_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAlignment="center"
-        android:textSize="20dp"
-        android:text="test2"
-        />
+    <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:background="@android:color/holo_blue_light"-->
+        <!--android:orientation="horizontal"-->
+        <!--android:weightSum="1"-->
+        <!--&gt;-->
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="1"
+        <!--<Button-->
+            <!--android:id="@+id/button_left"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_gravity="start"-->
+            <!--android:layout_weight="0.2"-->
+            <!--android:text="Button" />-->
 
-        >
-        <ImageView
-            android:id="@+id/image_text"
+        <LinearLayout
+            android:layout_gravity="center_horizontal"
+            android:id="@+id/content_view"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="0.5"
-            />
-        <TextView
-            android:id="@+id/description_text"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="0.5"
-            />
-    </LinearLayout>
+            android:background="@android:color/holo_green_dark"
+            android:weightSum="1"
+            android:orientation="vertical">
+
+            <ImageView
+                android:contentDescription="Image"
+                android:layout_gravity="center"
+                android:id="@+id/image_text"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5" />
+
+        </LinearLayout>
+
+
+        <!--<Button-->
+            <!--android:id="@+id/button_right"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_gravity="end"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_weight="0.2"-->
+            <!--android:text="Button"-->
+            <!--/>-->
+    <!--</LinearLayout>-->
 
 </LinearLayout>
