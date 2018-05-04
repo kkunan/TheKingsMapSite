@@ -7,24 +7,39 @@
     android:focusableInTouchMode="true"
     android:orientation="vertical">
 
-
     <LinearLayout
-        android:orientation="vertical"
-        android:id="@+id/marker_image"
+        android:id="@+id/overall_marker"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal" >
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
 
-    <TextView
-        android:id="@+id/marker_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:padding="8dp"
-        android:text="dgdfgdfg"
-        android:textColor="@android:color/black"
-        android:textStyle="bold" />
+        >
+
+        <LinearLayout
+            android:id="@+id/left_background"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal" />
+
+        <LinearLayout
+            android:id="@+id/marker_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/marker_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:padding="8dp"
+                android:text="dgdfgdfg"
+                android:textColor="@android:color/black"
+                android:textStyle="bold" />
+        </LinearLayout>
     </LinearLayout>
+
 
 
 </RelativeLayout>

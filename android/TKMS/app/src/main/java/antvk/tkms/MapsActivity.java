@@ -19,11 +19,16 @@ import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -48,12 +53,13 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import antvk.tkms.Utils.ImageUtils;
 import antvk.tkms.Utils.LocationUtils;
 import antvk.tkms.Utils.MarkerUtils;
 
 import static antvk.tkms.DescriptionActivity.MARKER_KEY;
 
-public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMapClickListener{
 
 
     private final int MY_PERMISSIONS_REQUEST_FINE_LOCATION = 1111;
@@ -64,7 +70,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public static List<Marker> markerList;
     public static LinkedHashMap<Marker, InformationItem> markerInformationItemMap;
 
-
     LocationManager locationManager;
 
     GoogleMap.InfoWindowAdapter infoWindowAdapter;
@@ -72,12 +77,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     Gson gson;
 
+    static double belowPortion = 0.3;
+
     static final String imageFolder = "kings_images";
     static final String infoFile = "info.json";
     static Marker selectedMarker;
 
     int value;
-    static boolean firstRun = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,6 +143,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         };
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     public void OnNavigateButtonClick(View view)
     {
         if(selectedMarker==null && markerList.size()>0)
@@ -161,10 +168,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     public void selectMarker(Marker marker)
     {
         selectedMarker = marker;
         selectedMarker.showInfoWindow();
+        MarkerUtils.enableMarker(getLayoutInflater(),
+                getApplicationContext(),
+                marker);
+
+        animateCameraTo(selectedMarker.getPosition(),15);
+        showInfoWindowBelow(marker);
     }
 
     static void animateCameraTo(LatLng latLng, int zoom)
@@ -213,7 +227,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 selectedMarker = marker;
 
                 MarkerUtils.enableMarker(getLayoutInflater(),getApplicationContext(),selectedMarker);
-                selectedMarker.showInfoWindow();
+                //selectedMarker.showInfoWindow();
+                showInfoWindowBelow(marker);
                 return false;
             }
         });
@@ -232,16 +247,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onInfoWindowClick(Marker marker) {
 
-                Intent intent = new Intent(MapsActivity.this, DescriptionActivity.class);
-                Bundle b = new Bundle();
+                gotoDescriptionPage(marker);
 
-                b.putInt(MARKER_KEY, markerList.indexOf(marker)); //Your id
-
-                System.out.println("marker index "+markerList.indexOf(marker));
-
-                intent.putExtras(b); //Put your id to your next Intent
-                startActivity(intent);
-                finish();
             }
         };
 
@@ -251,6 +258,38 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             selectMarker(markerList.get((value+markerList.size())%markerList.size()));
 
         enableLocationOnMap();
+    }
+
+    void gotoDescriptionPage(Marker marker){
+        Intent intent = new Intent(MapsActivity.this, DescriptionActivity.class);
+        Bundle b = new Bundle();
+
+        b.putInt(MARKER_KEY, markerList.indexOf(marker)); //Your id
+
+        System.out.println("marker index "+markerList.indexOf(marker));
+
+        intent.putExtras(b); //Put your id to your next Intent
+        startActivity(intent);
+        finish();
+    }
+
+    public void OnBelowWindowClick(View view){
+        gotoDescriptionPage(selectedMarker);
+    }
+
+    void showInfoWindowBelow(Marker marker){
+        View mapView = findViewById(R.id.map);
+        LinearLayout.LayoutParams mapViewParams = (LinearLayout.LayoutParams) mapView.getLayoutParams();
+        mapViewParams.weight = (float) (1f-belowPortion);
+
+        System.out.println("get info contents");
+
+        TextView header = (TextView) findViewById(R.id.below_info_header_text);
+//        ImageView imageView = findViewById(R.id.image_text);
+        InformationItem item = markerInformationItemMap.get(marker);
+        header.setText(item.header.replaceAll("\\ ","\n"));
+//        imageView.setImageDrawable(imageDrawables.get(item.imageName));
+
     }
 
     void enableLocationOnMap()
@@ -285,6 +324,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap.setMyLocationEnabled(true);
         Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
+        mMap.setOnMapClickListener(this);
 //        1: World
 //        5: Landmass/continent
 //        10: City
@@ -302,7 +342,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .icon(
                         BitmapDescriptorFactory.fromBitmap(MarkerUtils
                                 .createStoreMarker(getLayoutInflater(),this.getApplicationContext()
-                        ,"pin_inactive.png",informationItem.header))
+                        , MarkerUtils.INACTIVE_NAME, MarkerUtils.INACTIVE_BG_NAME,informationItem.header))
                 )
                 ;
 
@@ -341,6 +381,21 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         return items;
     }
 
+    @Override
+    public void onMapClick(LatLng latLng) {
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                //Do what you want on obtained latLng
 
+                System.out.println("onclick!");
 
+                View mapLayout =  findViewById(R.id.map);
+                LinearLayout.LayoutParams mapParams = (LinearLayout.LayoutParams) mapLayout.getLayoutParams();
+                mapParams.weight = 1;
+                mapLayout.setLayoutParams(mapParams);
+
+            }
+        });
+    }
 }

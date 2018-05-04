@@ -26,6 +26,7 @@ public class DescriptionActivity extends AppCompatActivity{
         try {
             android.support.v7.app.ActionBar actionBar = getSupportActionBar();
             actionBar.setDisplayHomeAsUpEnabled(true);
+
         }catch (NullPointerException e)
         {
             e.printStackTrace();
