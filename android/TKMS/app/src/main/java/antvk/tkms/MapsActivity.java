@@ -1,23 +1,36 @@
 package antvk.tkms;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.res.AssetManager;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
-import android.icu.text.IDNA;
-import android.support.v4.app.FragmentActivity;
+import android.location.Location;
+import android.location.LocationManager;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
+import android.support.v4.app.ActivityCompat;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -26,31 +39,36 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
-import java.nio.Buffer;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static android.content.Intent.FLAG_ACTIVITY_SINGLE_TOP;
+import antvk.tkms.Utils.LocationUtils;
+import antvk.tkms.Utils.MarkerUtils;
+
 import static antvk.tkms.DescriptionActivity.MARKER_KEY;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
-    private GoogleMap mMap;
+
+    private final int MY_PERMISSIONS_REQUEST_FINE_LOCATION = 1111;
+    private final int MY_PERMISSIONS_REQUEST_COARSE_LOCATION = 1112;
+
+    public static GoogleMap mMap;
     public static Map<String, Drawable> imageDrawables;
     public static List<Marker> markerList;
     public static LinkedHashMap<Marker, InformationItem> markerInformationItemMap;
 
+
+    LocationManager locationManager;
+
     GoogleMap.InfoWindowAdapter infoWindowAdapter;
+    static LocationUtils locationUtils;
 
     Gson gson;
 
@@ -59,12 +77,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     static Marker selectedMarker;
 
     int value;
+    static boolean firstRun = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-
+        locationUtils = new LocationUtils();
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -78,6 +97,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if(b != null) {
             value = b.getInt(MARKER_KEY);
         }
+
+
     }
 
     private GoogleMap.InfoWindowAdapter setInfoWindowAdapter() {
@@ -144,7 +165,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     {
         selectedMarker = marker;
         selectedMarker.showInfoWindow();
-        mMap.animateCamera(CameraUpdateFactory.newLatLng(marker.getPosition()), 250, null);
+    }
+
+    static void animateCameraTo(LatLng latLng, int zoom)
+    {
+        if(mMap!=null && latLng!=null) {
+            CameraUpdate cameraUpdateFactory = CameraUpdateFactory.newLatLngZoom(latLng, zoom);
+            mMap.animateCamera(cameraUpdateFactory);
+        }
     }
 
 
@@ -157,6 +185,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      * it inside the SupportMapFragment. This method will only be triggered once the user has
      * installed Google Play services and returned to the app.
      */
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -182,14 +211,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 //System.out.println("Marker Click!");
                 selectedMarker = marker;
-                marker.showInfoWindow();
+
+                MarkerUtils.enableMarker(getLayoutInflater(),getApplicationContext(),selectedMarker);
+                selectedMarker.showInfoWindow();
                 return false;
             }
         });
 
         try {
             String[] imageFile = getAssets().list(imageFolder);
-            imageDrawables = Utils.getDrawables(this,imageFolder,imageFile);
+            imageDrawables = LocationUtils.getDrawables(this,imageFolder,imageFile);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -218,14 +249,61 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         if(value!=-1)
             selectMarker(markerList.get((value+markerList.size())%markerList.size()));
+
+        enableLocationOnMap();
     }
 
+    void enableLocationOnMap()
+    {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+
+            ActivityCompat.requestPermissions(MapsActivity.this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    MY_PERMISSIONS_REQUEST_FINE_LOCATION);
+
+            ActivityCompat.requestPermissions(MapsActivity.this,
+                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                    MY_PERMISSIONS_REQUEST_COARSE_LOCATION);
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityActivityCompat.requestPermissions(WarningActivity.this,
+            //                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+            //                    MY_PERMISSIONS_REQUEST_FINE_LOCATION);Compat#requestPermissions for more details.
+        }
+
+
+        locationManager = (LocationManager)getSystemService(LOCATION_SERVICE);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+                0,
+                0, locationUtils.locationListener);
+
+        mMap.setMyLocationEnabled(true);
+        Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
+//        1: World
+//        5: Landmass/continent
+//        10: City
+//        15: Streets
+//        20: Buildings
+        animateCameraTo(new LatLng(location.getLatitude(),location.getLongitude()),10);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     public Marker createMarker(InformationItem informationItem)
     {
-        MarkerOptions options = new MarkerOptions()
+       MarkerOptions options = new MarkerOptions()
                 .title(informationItem.header)
                 .position(informationItem.location)
-
+                .icon(
+                        BitmapDescriptorFactory.fromBitmap(MarkerUtils
+                                .createStoreMarker(getLayoutInflater(),this.getApplicationContext()
+                        ,"pin_inactive.png",informationItem.header))
+                )
                 ;
 
         Marker marker = mMap.addMarker(options);
@@ -233,6 +311,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         markerInformationItemMap.put(marker,informationItem);
         return marker;
     }
+
+
+
 
     public List<InformationItem> getAllItems(Context context)
     {

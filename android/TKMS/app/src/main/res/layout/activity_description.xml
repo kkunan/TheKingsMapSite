@@ -4,6 +4,15 @@
     android:layout_height="match_parent"
     android:weightSum="1"
     >
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Button"
+        android:onClick="onVideoClick"
+        />
+
     <TextView
         android:id="@+id/title_text"
         android:layout_width="match_parent"

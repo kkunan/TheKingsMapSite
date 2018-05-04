@@ -1,15 +1,17 @@
 package antvk.tkms;
 
-import android.app.ActionBar;
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
-import android.widget.Button;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.support.v7.app.AppCompatActivity;
+
+import antvk.tkms.Utils.LocationUtils;
 
 
 public class DescriptionActivity extends AppCompatActivity{
@@ -52,7 +54,7 @@ public class DescriptionActivity extends AppCompatActivity{
             TextView descriptionText = findViewById(R.id.description_text);
             descriptionText.setText(item.description);
 
-            Drawable drawable = Utils.getDrawable(this.getApplicationContext(), MapsActivity.imageFolder, item.imageName);
+            Drawable drawable = LocationUtils.getDrawable(this.getApplicationContext(), MapsActivity.imageFolder, item.imageName);
             ImageView imageView = findViewById(R.id.imageView);
 
             imageView.setImageDrawable(drawable);
@@ -72,4 +74,13 @@ public class DescriptionActivity extends AppCompatActivity{
         return true;
     }
 
+    public void onVideoClick(View v) {
+
+        if(item.url!=null && item.url.length()>0) {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(item.url)));
+            Log.i("Video", "Video Playing....");
+        }
+    }
 }
+
+
