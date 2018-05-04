@@ -172,7 +172,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void selectMarker(Marker marker)
     {
         selectedMarker = marker;
-        selectedMarker.showInfoWindow();
+       // selectedMarker.showInfoWindow();
         MarkerUtils.enableMarker(getLayoutInflater(),
                 getApplicationContext(),
                 marker);
@@ -240,19 +240,19 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         } catch (IOException e) {
             e.printStackTrace();
         };
-        infoWindowAdapter = setInfoWindowAdapter();
-        mMap.setInfoWindowAdapter(infoWindowAdapter);
-
-        GoogleMap.OnInfoWindowClickListener infoWindowClickListener = new GoogleMap.OnInfoWindowClickListener() {
-            @Override
-            public void onInfoWindowClick(Marker marker) {
-
-                gotoDescriptionPage(marker);
-
-            }
-        };
-
-        mMap.setOnInfoWindowClickListener(infoWindowClickListener);
+//        infoWindowAdapter = setInfoWindowAdapter();
+//        mMap.setInfoWindowAdapter(infoWindowAdapter);
+//
+//        GoogleMap.OnInfoWindowClickListener infoWindowClickListener = new GoogleMap.OnInfoWindowClickListener() {
+//            @Override
+//            public void onInfoWindowClick(Marker marker) {
+//
+//                gotoDescriptionPage(marker);
+//
+//            }
+//        };
+//
+//        mMap.setOnInfoWindowClickListener(infoWindowClickListener);
 
         if(value!=-1)
             selectMarker(markerList.get((value+markerList.size())%markerList.size()));
