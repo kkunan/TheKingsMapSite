@@ -14,6 +14,7 @@ import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.LinearLayoutManager;
@@ -23,7 +24,13 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.location.places.GeoDataClient;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.PlaceBufferResponse;
+import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.todddavies.components.progressbar.ProgressWheel;
 
 import java.io.IOError;
@@ -34,6 +41,7 @@ import java.util.Locale;
 import antvk.tkms.InformationItem;
 import antvk.tkms.MapVisitedInformation;
 import antvk.tkms.R;
+import antvk.tkms.Utils.GooglePlaceUtils;
 import antvk.tkms.Utils.ImageUtils;
 import antvk.tkms.Utils.LocationUtils;
 import antvk.tkms.ViewManager.EventView.EventViewAdapter;
@@ -180,14 +188,52 @@ public class MarkerEventListActivity extends ActivityWithBackButton {
                 MapsActivity.imageFolder,
                 item.placeImage));
 
-        String address = "Address unavailable";
-        try {
-            String ret = getPlaceAddress(item.location);
-           if(ret.length()>0)
-               address = ret;
-        }catch (IOException e){}
-        TextView addressView = (TextView) findViewById(R.id.place_address);
-        addressView.setText(address);
+        final String[] address = {"Address unavailable"};
+//        try {
+//            String ret = getPlaceAddress(item.location);
+//           if(ret.length()>0)
+//               address = ret;
+//        }catch (IOException e){}
+
+
+        final TextView descriptionView = (TextView) findViewById(R.id.place_description);
+
+        GeoDataClient mGeoDataClient = Places.getGeoDataClient(getApplicationContext());
+        final Place[] myPlace = new Place[1];
+        mGeoDataClient.getPlaceById(item.placeID).addOnCompleteListener(new OnCompleteListener<PlaceBufferResponse>() {
+            @Override
+            public void onComplete(@NonNull Task<PlaceBufferResponse> task) {
+                if (task.isSuccessful()) {
+                    PlaceBufferResponse places = task.getResult();
+                    myPlace[0] = places.get(0);
+                    System.out.println( "Place found: " + myPlace[0].getName());
+                    Place place = myPlace[0];
+                    String desscriptionText = "";
+                    if(place!=null) {
+                        item.placeDescription =
+                                "Name: "+place.getName()+
+                                "\nPhone number: "+place.getPhoneNumber()
+                        +"\nrating: "+place.getRating()
+                        ;
+                        address[0] = place.getAddress().toString();
+                    }
+                    runOnUiThread(
+                            new Runnable() {
+                                @Override
+                                public void run() {
+                                    descriptionView.setText(item.placeDescription);
+                                    TextView addressView = (TextView) findViewById(R.id.place_address);
+                                    addressView.setText(address[0]);
+                                }
+                            }
+                    );
+
+                    places.release();
+                } else {
+
+                }
+            }
+        });
 
         ImageView heartView = (ImageView) findViewById(R.id.heart_item_page);
 
@@ -204,8 +250,6 @@ public class MarkerEventListActivity extends ActivityWithBackButton {
             heartView.setImageDrawable(getDrawable(R.drawable.grey_heart));
         }
 
-        TextView descriptionView = (TextView) findViewById(R.id.place_description);
-        descriptionView.setText(item.placeDescription);
 
         TextView placeNameOverlay = (TextView) findViewById(R.id.place_name_overlay);
         placeNameOverlay.setText(item.header);
@@ -214,6 +258,7 @@ public class MarkerEventListActivity extends ActivityWithBackButton {
     public String getPlaceAddress(LatLng location) throws IOException
     {
         StringBuffer buffer = new StringBuffer();
+
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
         List<Address> addresses = geocoder.getFromLocation(location.latitude, location.longitude, 1);
         if(addresses.size()>0) {

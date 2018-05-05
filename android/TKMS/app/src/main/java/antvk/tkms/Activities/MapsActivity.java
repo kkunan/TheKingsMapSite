@@ -77,7 +77,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     static LocationUtils locationUtils;
     static MapVisitedInformation mapVisitedInformation;
 
-    static Gson gson;
+    public static Gson gson;
 
     static double belowPortion = 0.3;
 

@@ -1,5 +1,6 @@
 package antvk.tkms;
 
+import android.content.Context;
 import android.location.Address;
 import android.location.Geocoder;
 import android.test.suitebuilder.annotation.MediumTest;
@@ -17,6 +18,6 @@ public class GeocodeTest {
 
     @Test
     public void test(){
-        System.out.println("split "+GooglePlaceUtils.getPlaceID(new LatLng(13.748170, 100.533846),"AIzaSyBJQQlTagxTCriUnnDG8RD_wZcVdBE3cPI"));
+       // System.out.println("split "+GooglePlaceUtils.getPlaceDescription(new Cont,"AIzaSyBJQQlTagxTCriUnnDG8RD_wZcVdBE3cPI"));
     }
 }
