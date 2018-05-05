@@ -60,19 +60,19 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private final int MY_PERMISSIONS_REQUEST_FINE_LOCATION = 1111;
     private final int MY_PERMISSIONS_REQUEST_COARSE_LOCATION = 1112;
 
-    int mapIndex;
+    static int mapIndex;
     public static GoogleMap mMap;
     public static Map<String, Drawable> imageDrawables;
     public static List<Marker> markerList;
     public static LinkedHashMap<Marker, InformationItem> markerInformationItemMap;
 
     LocationManager locationManager;
-    SharedPreferences preferences;
+    static SharedPreferences preferences;
 
     static LocationUtils locationUtils;
     static MapVisitedInformation mapVisitedInformation;
 
-    Gson gson;
+    static Gson gson;
 
     static double belowPortion = 0.3;
 
@@ -208,6 +208,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         {
             mapVisitedInformation = MapVisitedInformation.getInitialMapVisitedInformation(
                     informationItems);
+
+
         }
 
         else

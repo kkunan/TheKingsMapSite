@@ -1,12 +1,21 @@
 package antvk.tkms.Activities;
 
+import android.Manifest;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.RequiresApi;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
@@ -22,16 +31,31 @@ import java.util.List;
 import java.util.Locale;
 
 import antvk.tkms.InformationItem;
+import antvk.tkms.MapVisitedInformation;
 import antvk.tkms.R;
 import antvk.tkms.Utils.ImageUtils;
+import antvk.tkms.Utils.LocationUtils;
 import antvk.tkms.ViewManager.EventView.EventViewAdapter;
 import antvk.tkms.ViewManager.EventView.RecyclerItemClickListener;
 
+import static antvk.tkms.Activities.MapsActivity.gson;
+import static antvk.tkms.Activities.MapsActivity.locationUtils;
+import static antvk.tkms.Activities.MapsActivity.mapIndex;
+import static antvk.tkms.Activities.MapsActivity.mapVisitedInformation;
+import static antvk.tkms.Activities.MapsActivity.preferences;
 
-public class MarkerEventListActivity extends ActivityWithBackButton{
+
+@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+public class MarkerEventListActivity extends ActivityWithBackButton {
 
     public static InformationItem item;
+    LocationManager manager;
     int value;
+
+    static final double CHECKIN_AVALABLE_RANGE = 20.0;
+
+    boolean prevShow = false;
+    boolean inRange = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +64,7 @@ public class MarkerEventListActivity extends ActivityWithBackButton{
 
         value = getExtra(MARKER_KEY);
 
-        if(value!=-1) {
+        if (value != -1) {
             item = MapsActivity.markerInformationItemMap.get(
                     MapsActivity.markerList.get(value)
             );
@@ -48,9 +72,79 @@ public class MarkerEventListActivity extends ActivityWithBackButton{
             setTitle(item.header);
             setPlaceContent();
             initializeRecycleView();
-
+            sortOutLocationStuff();
         }
     }
+
+    private void sortOutLocationStuff()
+    {
+        manager = (LocationManager) getSystemService(LOCATION_SERVICE);
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        manager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+                0,
+                0, new LocationListener() {
+                    @Override
+                    public void onLocationChanged(Location location) {
+                        double distance = LocationUtils.quickDistance(
+                                new LatLng(location.getLatitude(),location.getLongitude()
+                                ), item.location
+                        );
+
+                        boolean visited = mapVisitedInformation.getVisitedAt(item.placeID);
+                        boolean inDistance = distance <= CHECKIN_AVALABLE_RANGE;
+                        inRange = inDistance;
+                        sortoutUIByStatus(visited,inDistance);
+                    }
+
+                    @Override
+                    public void onStatusChanged(String s, int i, Bundle bundle) {
+
+                    }
+
+                    @Override
+                    public void onProviderEnabled(String s) {
+
+                    }
+
+                    @Override
+                    public void onProviderDisabled(String s) {
+
+                    }
+                });
+
+    }
+
+    private void sortoutUIByStatus(boolean visited, boolean inDistance) {
+
+        ImageView heartView = findViewById(R.id.heart_item_page);
+        if(!visited)
+        {
+            if(!inDistance)
+            {
+                heartView.setVisibility(View.GONE);
+                prevShow = false;
+            }
+
+            else
+            {
+                if(!prevShow)
+                {
+                    heartView.setVisibility(View.VISIBLE);
+                }
+            }
+        }
+    }
+
 
     public void setPlaceContent()
     {
@@ -68,12 +162,24 @@ public class MarkerEventListActivity extends ActivityWithBackButton{
         TextView addressView = findViewById(R.id.place_address);
         addressView.setText(address);
 
+        ImageView heartView = findViewById(R.id.heart_item_page);
+
+        if(mapVisitedInformation.getVisitedAt(item.placeID))
+        {
+            heartView.setImageDrawable(getDrawable(R.drawable.pink_heart));
+            heartView.setVisibility(View.VISIBLE);
+        }
+
+        else
+        {
+            heartView.setImageDrawable(getDrawable(R.drawable.grey_heart));
+        }
+
         TextView descriptionView = findViewById(R.id.place_description);
         descriptionView.setText(item.placeDescription);
 
         TextView placeNameOverlay = findViewById(R.id.place_name_overlay);
         placeNameOverlay.setText(item.header);
-
     }
 
     public String getPlaceAddress(LatLng location) throws IOException
@@ -144,6 +250,68 @@ public class MarkerEventListActivity extends ActivityWithBackButton{
             arrow.setRotation(0);
         }
     }
+
+    public void onHeartClick(View view) {
+        boolean visited = mapVisitedInformation.getVisitedAt(item.placeID);
+        if(!visited)
+        {
+            DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    switch (which){
+                        case DialogInterface.BUTTON_POSITIVE:
+                            mapVisitedInformation.setVisit(item.placeID,true);
+                            preferences.edit().putString(mapIndex+"",
+                                    gson.toJson(mapVisitedInformation)
+                                    ).apply();
+
+                            sortoutUIByStatus(true,true);
+                            break;
+
+                        case DialogInterface.BUTTON_NEGATIVE:
+                            break;
+                    }
+                }
+            };
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
+            builder.setMessage(
+                    getString(R.string.checkin)+item.header+"?"
+            ).setPositiveButton("Yes", dialogClickListener)
+                    .setNegativeButton("No", dialogClickListener).show();
+        }
+
+        else
+        {
+            DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    switch (which){
+                        case DialogInterface.BUTTON_POSITIVE:
+                            mapVisitedInformation.setVisit(item.placeID,false);
+                            preferences.edit().putString(mapIndex+"",
+                                    gson.toJson(mapVisitedInformation)
+                            ).apply();
+
+                            sortoutUIByStatus(false,inRange);
+
+                            break;
+
+                        case DialogInterface.BUTTON_NEGATIVE:
+                            break;
+                    }
+                }
+            };
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
+            builder.setMessage(
+                    getString(R.string.checkin)+item.header+"?"
+            ).setPositiveButton("Yes", dialogClickListener)
+                    .setNegativeButton("No", dialogClickListener).show();
+        }
+    }
+
+
 }
 
 
