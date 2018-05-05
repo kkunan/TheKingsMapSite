@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">TKMS</string>
+    <string name="title_activity_maps">Home</string>
+    <string name="address_word">Address</string>
+    <string name="more_details_word">click for more details</string>
+    <string name="events_word">Events</string>
+</resources>

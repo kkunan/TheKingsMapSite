@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@layout/infowindow_bg"
+    android:orientation="vertical"
+    >
+
+    <TextView
+        android:id="@+id/header_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="test"
+        android:textAlignment="center"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
+        />
+
+    <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:background="@android:color/holo_blue_light"-->
+        <!--android:orientation="horizontal"-->
+        <!--android:weightSum="1"-->
+        <!--&gt;-->
+
+        <!--<Button-->
+            <!--android:id="@+id/button_left"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_gravity="start"-->
+            <!--android:layout_weight="0.2"-->
+            <!--android:text="Button" />-->
+
+        <LinearLayout
+            android:layout_gravity="center_horizontal"
+            android:id="@+id/content_view"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@android:color/holo_green_dark"
+            android:weightSum="1"
+            android:orientation="vertical">
+
+            <ImageView
+                android:contentDescription="Image"
+                android:layout_gravity="center"
+                android:id="@+id/image_text"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5" />
+
+        </LinearLayout>
+
+
+        <!--<Button-->
+            <!--android:id="@+id/button_right"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_gravity="end"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_weight="0.2"-->
+            <!--android:text="Button"-->
+            <!--/>-->
+    <!--</LinearLayout>-->
+
+</LinearLayout>
