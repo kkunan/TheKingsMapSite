@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
+<RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:weightSum="1"
     >
 
     <fragment xmlns:android="http://schemas.android.com/apk/res/android"
@@ -15,43 +14,42 @@
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
         tools:context=".Activities.MapsActivity" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+
         >
         <include layout="@layout/below_infowindow" />
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.2"
-        android:orientation="horizontal"
-        android:visibility="gone"
-        android:weightSum="1"
-        >
+    <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="0dp"-->
+        <!--android:orientation="horizontal"-->
+        <!--android:visibility="gone"-->
+        <!--android:weightSum="1"-->
+        <!--&gt;-->
 
-        <!--<Button-->
-            <!--android:id="@+id/left_button"-->
-            <!--android:layout_width="0dp"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:layout_weight="0.5"-->
-            <!--android:onClick="OnNavigateButtonClick"-->
-            <!--android:visibility="gone"-->
-            <!--android:background="@drawable/ic_chevron_left_black_24dp" />-->
+        <!--&lt;!&ndash;<Button&ndash;&gt;-->
+            <!--&lt;!&ndash;android:id="@+id/left_button"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:layout_width="0dp"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:layout_height="match_parent"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:layout_weight="0.5"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:onClick="OnNavigateButtonClick"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:visibility="gone"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:background="@drawable/ic_chevron_left_black_24dp" />&ndash;&gt;-->
 
-        <!--<Button-->
-            <!--android:id="@+id/right_button"-->
-            <!--android:layout_width="0dp"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:layout_weight="0.5"-->
-            <!--android:onClick="OnNavigateButtonClick"-->
-            <!--android:visibility="gone"-->
-            <!--android:background="@drawable/ic_chevron_right_black_24dp" />-->
-    </LinearLayout>
-</LinearLayout>
+        <!--&lt;!&ndash;<Button&ndash;&gt;-->
+            <!--&lt;!&ndash;android:id="@+id/right_button"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:layout_width="0dp"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:layout_height="match_parent"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:layout_weight="0.5"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:onClick="OnNavigateButtonClick"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:visibility="gone"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:background="@drawable/ic_chevron_right_black_24dp" />&ndash;&gt;-->
+    <!--</LinearLayout>-->
+</RelativeLayout>
 
