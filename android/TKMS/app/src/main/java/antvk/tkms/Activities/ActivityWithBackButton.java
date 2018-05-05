@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 public class ActivityWithBackButton extends AppCompatActivity {
+    public static final String MAP_ID_KEY = "mapID";
     public static final String MARKER_KEY = "markerKey";
     public static final String EVENT_KEY = "eventKey";
     @Override

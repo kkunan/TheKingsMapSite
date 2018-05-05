@@ -1,4 +1,4 @@
-package antvk.tkms;
+package antvk.tkms.Struct.Information;
 
 import java.util.ArrayList;
 import java.util.List;

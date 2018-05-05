@@ -1,4 +1,4 @@
-package antvk.tkms;
+package antvk.tkms.Struct.Information;
 
 import android.annotation.SuppressLint;
 

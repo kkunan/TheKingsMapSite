@@ -10,12 +10,9 @@ import android.widget.TextView;
 
 import com.google.android.gms.maps.model.Marker;
 
-import java.util.Map;
-
-import antvk.tkms.InformationItem;
 import antvk.tkms.R;
 import antvk.tkms.Utils.ImageUtils;
-import antvk.tkms.InformationItem.Event;
+import antvk.tkms.Struct.Information.InformationItem.Event;
 
 public class DescriptionActivity extends ActivityWithBackButton{
 

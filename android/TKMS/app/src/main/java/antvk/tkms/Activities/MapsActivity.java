@@ -2,6 +2,7 @@ package antvk.tkms.Activities;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -47,13 +48,15 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import antvk.tkms.InformationItem;
-import antvk.tkms.MapVisitedInformation;
+import antvk.tkms.Constants;
+import antvk.tkms.Struct.Information.InformationItem;
+import antvk.tkms.Struct.Information.MapVisitedInformation;
 import antvk.tkms.R;
 import antvk.tkms.Utils.ImageUtils;
 import antvk.tkms.Utils.LocationUtils;
 import antvk.tkms.Utils.MarkerUtils;
 
+import static antvk.tkms.Activities.ActivityWithBackButton.MAP_ID_KEY;
 import static antvk.tkms.Activities.MarkerEventListActivity.MARKER_KEY;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMapClickListener {
@@ -87,7 +90,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mapIndex = 0;
         setContentView(R.layout.activity_maps);
         locationUtils = new LocationUtils();
         setupLocationService();
@@ -103,6 +105,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         value = -1; // or other values
         if (b != null) {
             value = b.getInt(MARKER_KEY);
+            mapIndex = b.getInt(MAP_ID_KEY);
         }
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -246,12 +249,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
      * it inside the SupportMapFragment. This method will only be triggered once the user has
      * installed Google Play services and returned to the app.
      */
+    @TargetApi(Build.VERSION_CODES.N)
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        List<InformationItem> informationItems = getAllItems(this);
+        List<InformationItem> informationItems = getAllItems(this, Constants.getFileName(mapIndex));
         for (InformationItem item : informationItems) {
             Marker marker = createMarker(item);
             mMap.moveCamera(CameraUpdateFactory.newLatLng(marker.getPosition()));
@@ -372,11 +376,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
 
-    public List<InformationItem> getAllItems(Context context) {
+    public List<InformationItem> getAllItems(Context context, String file) {
 
         List<InformationItem> items = new ArrayList<>();
         try {
-            InputStream inputStream = context.getAssets().open(infoFile);
+            InputStream inputStream = context.getAssets().open(file);
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
             String st = "";
