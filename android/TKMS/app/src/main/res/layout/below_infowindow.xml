@@ -52,8 +52,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         app:itemBackground="?attr/colorPrimary"
-        app:itemIconTint="@android:color/white"
-        app:itemTextColor="@android:color/white"
+        app:itemIconTint="@color/dark_grey"
+        app:itemTextColor="@color/dark_grey"
         app:menu="@menu/bottombar_menu"/>
     <!--<LinearLayout-->
         <!--android:layout_marginTop="20dp"-->
