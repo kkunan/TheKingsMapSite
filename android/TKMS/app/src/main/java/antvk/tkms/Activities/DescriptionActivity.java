@@ -46,15 +46,15 @@ public class DescriptionActivity extends ActivityWithBackButton{
     void setupContentView()
     {
         if(event!=null) {
-            TextView titleView = findViewById(R.id.title_text);
+            TextView titleView = (TextView) findViewById(R.id.title_text);
             titleView.setText(event.title);
 
-            TextView descriptionText = findViewById(R.id.description_text);
+            TextView descriptionText = (TextView) findViewById(R.id.description_text);
             descriptionText.setText(event.description);
 
             if(event.imageName.length()>0) {
                 Drawable drawable = ImageUtils.getDrawable(this.getApplicationContext(), MapsActivity.imageFolder, event.imageName);
-                ImageView imageView = findViewById(R.id.imageView);
+                ImageView imageView = (ImageView) findViewById(R.id.imageView);
                 imageView.setImageDrawable(drawable);
             }
         }

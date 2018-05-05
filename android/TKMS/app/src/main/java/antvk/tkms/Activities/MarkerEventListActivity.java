@@ -66,8 +66,6 @@ public class MarkerEventListActivity extends ActivityWithBackButton {
 
         value = getExtra(MARKER_KEY);
 
-//        ProgressWheel pw = findViewById(R.id.pw_spinner);
-//        pw.incrementProgress((int)(0.6 * 360));
 
         if (value != -1) {
             item = MapsActivity.markerInformationItemMap.get(
@@ -131,7 +129,7 @@ public class MarkerEventListActivity extends ActivityWithBackButton {
 
     private void sortoutUIByStatus(boolean visited, boolean inDistance) {
 
-        ImageView heartView = findViewById(R.id.heart_item_page);
+        ImageView heartView = (ImageView) findViewById(R.id.heart_item_page);
         if(!visited)
         {
             if(!inDistance)
@@ -177,7 +175,7 @@ public class MarkerEventListActivity extends ActivityWithBackButton {
 
     public void setPlaceContent()
     {
-        ImageView placeImageView = findViewById(R.id.place_image);
+        ImageView placeImageView = (ImageView) findViewById(R.id.place_image);
         placeImageView.setImageDrawable(ImageUtils.getDrawable(getApplicationContext(),
                 MapsActivity.imageFolder,
                 item.placeImage));
@@ -188,10 +186,10 @@ public class MarkerEventListActivity extends ActivityWithBackButton {
            if(ret.length()>0)
                address = ret;
         }catch (IOException e){}
-        TextView addressView = findViewById(R.id.place_address);
+        TextView addressView = (TextView) findViewById(R.id.place_address);
         addressView.setText(address);
 
-        ImageView heartView = findViewById(R.id.heart_item_page);
+        ImageView heartView = (ImageView) findViewById(R.id.heart_item_page);
 
         if(mapVisitedInformation.getVisitedAt(item.placeID))
         {
@@ -206,10 +204,10 @@ public class MarkerEventListActivity extends ActivityWithBackButton {
             heartView.setImageDrawable(getDrawable(R.drawable.grey_heart));
         }
 
-        TextView descriptionView = findViewById(R.id.place_description);
+        TextView descriptionView = (TextView) findViewById(R.id.place_description);
         descriptionView.setText(item.placeDescription);
 
-        TextView placeNameOverlay = findViewById(R.id.place_name_overlay);
+        TextView placeNameOverlay = (TextView) findViewById(R.id.place_name_overlay);
         placeNameOverlay.setText(item.header);
     }
 
@@ -268,8 +266,8 @@ public class MarkerEventListActivity extends ActivityWithBackButton {
 
 
     public void OnMoreDetailsClick(View view) {
-        ImageView arrow = findViewById(R.id.arrow);
-        TextView placeDescriptionView = findViewById(R.id.place_description);
+        ImageView arrow = (ImageView) findViewById(R.id.arrow);
+        TextView placeDescriptionView = (TextView) findViewById(R.id.place_description);
         if(placeDescriptionView.getVisibility() == View.GONE)
         {
             placeDescriptionView.setVisibility(View.VISIBLE);
@@ -307,7 +305,7 @@ public class MarkerEventListActivity extends ActivityWithBackButton {
 
             AlertDialog.Builder builder = new AlertDialog.Builder(MarkerEventListActivity.this);
             builder.setMessage(
-                    getString(R.string.checkin)+item.header+"?"
+                    getString(R.string.checkin)+" "+item.header+"?"
             ).setPositiveButton("Yes", dialogClickListener)
                     .setNegativeButton("No", dialogClickListener).show();
         }
@@ -336,7 +334,7 @@ public class MarkerEventListActivity extends ActivityWithBackButton {
 
             AlertDialog.Builder builder = new AlertDialog.Builder(MarkerEventListActivity.this);
             builder.setMessage(
-                    getString(R.string.uncheck)+item.header+"?"
+                    getString(R.string.uncheck)+" "+item.header+"?"
             ).setPositiveButton("Yes", dialogClickListener)
                     .setNegativeButton("No", dialogClickListener).show();
         }

@@ -14,6 +14,9 @@ public class MapVisitedInformation {
     public double getVisitedPercentage(){
         double total = (double)informationList.size();
 
+        if(total==0)
+            return 0;
+
         double visitedCount = 0.0;
         for(VisitedInformation information : informationList)
         {

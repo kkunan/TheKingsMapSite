@@ -12,10 +12,13 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -33,6 +36,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.todddavies.components.progressbar.ProgressWheel;
 
 import org.w3c.dom.Text;
 
@@ -136,6 +140,30 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
                 0,
                 0, locationUtils.locationListener);
+
+        BottomNavigationView bottomNavigationView;
+        bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation_view);
+        bottomNavigationView.setOnNavigationItemSelectedListener(
+                new BottomNavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.bottombaritem_mymap:
+                                // TODO
+                                return true;
+                            case R.id.bottombaritem_history:
+                                // TODO
+                                return true;
+                            case R.id.bottombaritem_profile:
+                                // TODO
+                                return true;
+                            case R.id.bottombaritem_settings:
+                                // TODO
+                                return true;
+                        }
+                        return false;
+                    }
+                });
     }
 
     private GoogleMap.InfoWindowAdapter setInfoWindowAdapter() {
@@ -240,14 +268,16 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         {
             mapVisitedInformation = MapVisitedInformation.getInitialMapVisitedInformation(
                     informationItems);
-
-
         }
 
         else
         {
             mapVisitedInformation = gson.fromJson(checkinInfo, MapVisitedInformation.class);
         }
+
+
+        ProgressWheel pw = (ProgressWheel) findViewById(R.id.pw_spinner);
+        pw.incrementProgress((int)(mapVisitedInformation.getVisitedPercentage()* 360));
 
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
@@ -299,7 +329,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 //        mapViewParams.weight = (float) (1f - belowPortion);
 //        mapView.setLayoutParams(mapViewParams);
 
-        LinearLayout headerLayout =   findViewById(R.id.header_content);
+        LinearLayout headerLayout = (LinearLayout) findViewById(R.id.header_content);
         headerLayout.setVisibility(View.VISIBLE);
 
         TextView header = (TextView) findViewById(R.id.below_info_header_text);

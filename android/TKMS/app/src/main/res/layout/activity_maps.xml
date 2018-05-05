@@ -5,7 +5,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    xmlns:ProgressWheel="http://schemas.android.com/apk/res-auto"
+    >
+
 
     <fragment
         android:id="@+id/map"
@@ -13,6 +16,21 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".Activities.MapsActivity" />
+
+    <com.todddavies.components.progressbar.ProgressWheel
+        android:id="@+id/pw_spinner"
+        android:background="@drawable/pink_heart"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp"
+        ProgressWheel:pwRimColor="#330097D6"
+        ProgressWheel:pwBarLength="60dp"
+        ProgressWheel:pwBarColor="#0097D6"
+        ProgressWheel:pwBarWidth="5dp"
+        ProgressWheel:pwRimWidth="2dp"/>
 
     <LinearLayout
         android:background="@android:color/white"
