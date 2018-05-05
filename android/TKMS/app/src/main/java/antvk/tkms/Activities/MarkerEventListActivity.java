@@ -6,9 +6,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import antvk.tkms.InformationItem;
 import antvk.tkms.R;
+import antvk.tkms.Utils.ImageUtils;
 import antvk.tkms.ViewManager.EventView.EventViewAdapter;
 import antvk.tkms.ViewManager.EventView.RecyclerItemClickListener;
 
@@ -31,31 +34,54 @@ public class MarkerEventListActivity extends ActivityWithBackButton{
                     MapsActivity.markerList.get(value)
             );
 
-            RecyclerView recList = (RecyclerView) findViewById(R.id.eventListView);
-            recList.setHasFixedSize(true);
-            recList.addOnItemTouchListener(
-                    new RecyclerItemClickListener(getApplicationContext(), recList ,new RecyclerItemClickListener.OnItemClickListener() {
-                        @Override public void onItemClick(View view, int position) {
+            setTitle(item.header);
+            setPlaceContent();
+            initializeRecycleView();
 
-                            Bundle b = setExtra(MARKER_KEY,value);
-                            b = setExtra(EVENT_KEY,position, b);
-
-                            Intent intent = new Intent(getApplicationContext(),DescriptionActivity.class);
-                            intent.putExtras(b);
-                            startActivity(intent);
-                        }
-
-                        @Override public void onLongItemClick(View view, int position) {
-                            // do whatever
-                        }
-                    }));
-
-            LinearLayoutManager llm = new LinearLayoutManager(this);
-            llm.setOrientation(LinearLayoutManager.VERTICAL);
-            recList.setLayoutManager(llm);
-            EventViewAdapter adapter = new EventViewAdapter(item.events);
-            recList.setAdapter(adapter);
         }
+    }
+
+    public void setPlaceContent()
+    {
+        ImageView placeImageView = findViewById(R.id.place_image);
+        placeImageView.setImageDrawable(ImageUtils.getDrawable(getApplicationContext(),
+                MapsActivity.imageFolder,
+                item.placeImage));
+
+        TextView addressView = findViewById(R.id.place_address);
+        addressView.setText(item.placeDescription);
+
+        TextView descriptionView = findViewById(R.id.place_description);
+        descriptionView.setText(item.placeDescription);
+    }
+
+    public void initializeRecycleView()
+    {
+        RecyclerView recList = (RecyclerView) findViewById(R.id.eventListView);
+        recList.setHasFixedSize(true);
+        recList.addOnItemTouchListener(
+                new RecyclerItemClickListener(getApplicationContext(), recList ,new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override public void onItemClick(View view, int position) {
+
+                        Bundle b = setExtra(MARKER_KEY,value);
+                        b = setExtra(EVENT_KEY,position, b);
+
+                        Intent intent = new Intent(getApplicationContext(),DescriptionActivity.class);
+                        intent.putExtras(b);
+                        startActivity(intent);
+                    }
+
+                    @Override public void onLongItemClick(View view, int position) {
+                        // do whatever
+                    }
+                }));
+
+        LinearLayoutManager llm = new LinearLayoutManager(this);
+        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        recList.setLayoutManager(llm);
+        EventViewAdapter adapter = new EventViewAdapter(item.events);
+        recList.setAdapter(adapter);
+
     }
 
     @Override
@@ -69,6 +95,20 @@ public class MarkerEventListActivity extends ActivityWithBackButton{
     }
 
 
+    public void OnMoreDetailsClick(View view) {
+        ImageView arrow = findViewById(R.id.arrow);
+        TextView placeDescriptionView = findViewById(R.id.place_description);
+        if(placeDescriptionView.getVisibility() == View.GONE)
+        {
+            placeDescriptionView.setVisibility(View.VISIBLE);
+            arrow.setRotation(90);
+        }
+
+        else{
+            placeDescriptionView.setVisibility(View.GONE);
+            arrow.setRotation(0);
+        }
+    }
 }
 
 

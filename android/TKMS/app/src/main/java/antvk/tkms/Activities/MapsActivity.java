@@ -375,7 +375,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
     }
 
-    protected void onLocationIconClick(View view)
+    public void onLocationIconClick(View view)
     {
         // Create a Uri from an intent string. Use the result to create an Intent.
         InformationItem item = markerInformationItemMap.get(selectedMarker);
@@ -388,4 +388,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 // Attempt to start an activity that can handle the Intent
         startActivity(mapIntent);
     }
+
+
 }
