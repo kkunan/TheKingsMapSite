@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -46,46 +46,54 @@
             />
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_marginTop="20dp"
+    <android.support.design.widget.BottomNavigationView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="3"
-        android:orientation="horizontal"
-        android:weightSum="1"
-        >
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        app:itemBackground="?attr/colorPrimary"
+        app:itemIconTint="@android:color/white"
+        app:itemTextColor="@android:color/white"
+        app:menu="@menu/bottombar_menu"/>
+    <!--<LinearLayout-->
+        <!--android:layout_marginTop="20dp"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="0dp"-->
+        <!--android:layout_weight="3"-->
+        <!--android:orientation="horizontal"-->
+        <!--android:weightSum="1"-->
+        <!--&gt;-->
 
-        <ImageView
-            android:id="@+id/location_icon"
-            android:layout_width="0dp"
-            android:layout_weight="0.25"
-            android:layout_height="match_parent"
-            android:src="@mipmap/menu_1_button"
-            android:onClick="onLocationIconClick"
-            />
-        <ImageView
-            android:layout_width="0dp"
-            android:layout_weight="0.25"
-            android:layout_height="match_parent"
-            android:src="@mipmap/menu_2_button"
-            />
-        <ImageView
-            android:layout_width="0dp"
-            android:layout_weight="0.25"
-            android:layout_height="match_parent"
-            android:src="@mipmap/menu_3_button"
-            />
-        <!--<Button-->
+        <!--<ImageView-->
+            <!--android:id="@+id/location_icon"-->
             <!--android:layout_width="0dp"-->
             <!--android:layout_weight="0.25"-->
-            <!--android:background="@mipmap/menu_4_button"-->
-            <!--android:layout_height="match_parent" />-->
-        <ImageView
-            android:layout_width="0dp"
-            android:layout_weight="0.25"
-            android:layout_height="match_parent"
-            android:src="@mipmap/menu_4_button"
-            />
+            <!--android:layout_height="match_parent"-->
+            <!--android:src="@mipmap/menu_1_button"-->
+            <!--android:onClick="onLocationIconClick"-->
+            <!--/>-->
+        <!--<ImageView-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_weight="0.25"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:src="@mipmap/menu_2_button"-->
+            <!--/>-->
+        <!--<ImageView-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_weight="0.25"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:src="@mipmap/menu_3_button"-->
+            <!--/>-->
+        <!--&lt;!&ndash;<Button&ndash;&gt;-->
+            <!--&lt;!&ndash;android:layout_width="0dp"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:layout_weight="0.25"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:background="@mipmap/menu_4_button"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:layout_height="match_parent" />&ndash;&gt;-->
+        <!--<ImageView-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_weight="0.25"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:src="@mipmap/menu_4_button"-->
+            <!--/>-->
 
-    </LinearLayout>
+    <!--</LinearLayout>-->
 </LinearLayout>

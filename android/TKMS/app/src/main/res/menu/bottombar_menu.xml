@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/bottombaritem_mymap"
+        android:icon="@mipmap/menu_1_button"
+        android:title="My map"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/bottombaritem_history"
+        android:icon="@mipmap/menu_2_button"
+        android:title="History"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/bottombaritem_profile"
+        android:icon="@mipmap/menu_3_button"
+        android:title="Profile"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/bottombaritem_settings"
+        android:icon="@mipmap/menu_4_button"
+        android:title="Settings"
+        app:showAsAction="ifRoom"/>
+
+</menu>
