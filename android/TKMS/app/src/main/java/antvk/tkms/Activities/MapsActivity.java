@@ -3,12 +3,14 @@ package antvk.tkms.Activities;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
+import android.preference.PreferenceManager;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.os.Bundle;
@@ -31,6 +33,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
+import org.w3c.dom.Text;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -42,6 +46,7 @@ import java.util.List;
 import java.util.Map;
 
 import antvk.tkms.InformationItem;
+import antvk.tkms.MapVisitedInformation;
 import antvk.tkms.R;
 import antvk.tkms.Utils.ImageUtils;
 import antvk.tkms.Utils.LocationUtils;
@@ -55,15 +60,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private final int MY_PERMISSIONS_REQUEST_FINE_LOCATION = 1111;
     private final int MY_PERMISSIONS_REQUEST_COARSE_LOCATION = 1112;
 
+    int mapIndex;
     public static GoogleMap mMap;
     public static Map<String, Drawable> imageDrawables;
     public static List<Marker> markerList;
     public static LinkedHashMap<Marker, InformationItem> markerInformationItemMap;
 
     LocationManager locationManager;
+    SharedPreferences preferences;
 
-    GoogleMap.InfoWindowAdapter infoWindowAdapter;
     static LocationUtils locationUtils;
+    static MapVisitedInformation mapVisitedInformation;
 
     Gson gson;
 
@@ -78,6 +85,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mapIndex = 0;
         setContentView(R.layout.activity_maps);
         locationUtils = new LocationUtils();
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -94,6 +102,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             value = b.getInt(MARKER_KEY);
         }
 
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
     }
 
@@ -185,11 +194,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        // Add a marker in Sydney and move the camera
-//        LatLng sydney = new LatLng(-34, 151);
-//        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-//        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-
         List<InformationItem> informationItems = getAllItems(this);
         for (InformationItem item : informationItems) {
             Marker marker = createMarker(item);
@@ -199,15 +203,23 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         markerList = new ArrayList<>(markerInformationItemMap.keySet());
 
+        String checkinInfo = preferences.getString(mapIndex+"",null);
+        if(checkinInfo == null)
+        {
+            mapVisitedInformation = MapVisitedInformation.getInitialMapVisitedInformation(
+                    informationItems);
+        }
+
+        else
+        {
+            mapVisitedInformation = gson.fromJson(checkinInfo, MapVisitedInformation.class);
+        }
+
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-
-                //System.out.println("Marker Click!");
                 selectedMarker = marker;
-
                 MarkerUtils.enableMarker(getLayoutInflater(), getApplicationContext(), selectedMarker);
-                //selectedMarker.showInfoWindow();
                 showInfoWindowBelow(marker);
                 return true;
             }
@@ -221,19 +233,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             e.printStackTrace();
         }
         ;
-//        infoWindowAdapter = setInfoWindowAdapter();
-//        mMap.setInfoWindowAdapter(infoWindowAdapter);
-//
-//        GoogleMap.OnInfoWindowClickListener infoWindowClickListener = new GoogleMap.OnInfoWindowClickListener() {
-//            @Override
-//            public void onInfoWindowClick(Marker marker) {
-//
-//                gotoDescriptionPage(marker);
-//
-//            }
-//        };
-//
-//        mMap.setOnInfoWindowClickListener(infoWindowClickListener);
 
         if (value != -1)
             selectMarker(markerList.get((value + markerList.size()) % markerList.size()));
@@ -259,11 +258,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     void showInfoWindowBelow(Marker marker) {
-        View mapView = findViewById(R.id.map);
-        LinearLayout.LayoutParams mapViewParams = (LinearLayout.LayoutParams) mapView.getLayoutParams();
+//        View mapView = findViewById(R.id.map);
+//        LinearLayout.LayoutParams mapViewParams = (LinearLayout.LayoutParams) mapView.getLayoutParams();
+//
+//        mapViewParams.weight = (float) (1f - belowPortion);
+//        mapView.setLayoutParams(mapViewParams);
 
-        mapViewParams.weight = (float) (1f - belowPortion);
-        mapView.setLayoutParams(mapViewParams);
+        LinearLayout headerLayout =   findViewById(R.id.header_content);
+        headerLayout.setVisibility(View.VISIBLE);
 
         TextView header = (TextView) findViewById(R.id.below_info_header_text);
 //        ImageView imageView = findViewById(R.id.image_text);
