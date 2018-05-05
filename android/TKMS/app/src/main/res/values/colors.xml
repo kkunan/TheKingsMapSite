@@ -2,6 +2,7 @@
 <resources>
     <color name="colorPrimary">#FFDA00</color>
     <color name="colorPrimaryDark">#FFC200</color>
+    <color name="colorBG">#FFFFFF</color>
     <color name="colorAccent">#FF4081</color>
     <color name="heart_pink">#EC7370</color>
     <color name="heart_grey">#bcbcbc</color>
