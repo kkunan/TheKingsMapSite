@@ -14,10 +14,12 @@ public class InformationItem {
     public List<Event> events;
     public LatLng location;
     public String placeImage;
+    public String placeID;
     public String placeDescription;
 
-    public InformationItem(String header, List<Event> events , LatLng location, String placeImage, String placeDescription)
+    public InformationItem(String placeID, String header, List<Event> events , LatLng location, String placeImage, String placeDescription)
     {
+        this.placeID = placeID;
         this.header = header;
         this.events = events;
         this.location = location;
