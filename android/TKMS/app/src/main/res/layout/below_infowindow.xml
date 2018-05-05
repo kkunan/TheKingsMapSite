@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:weightSum="5"
+
+    >
+    <LinearLayout
+        android:id="@+id/header_content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:orientation="horizontal"
+        android:weightSum="1"
+        >
+        <ImageView
+            android:id="@+id/left_button"
+            android:src="@mipmap/left_arrow_button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:onClick="OnNavigateButtonClick"
+            android:layout_weight="0.1"
+            />
+
+        <TextView
+            android:id="@+id/below_info_header_text"
+            android:layout_width="0dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="5dp"
+            android:textSize="20dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.8"
+            android:onClick="OnBelowWindowClick"
+            />
+
+        <ImageView
+            android:id="@+id/right_button"
+            android:src="@mipmap/right_arrow_button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:onClick="OnNavigateButtonClick"
+            android:layout_weight="0.1"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="3"
+        android:orientation="horizontal"
+        android:weightSum="1"
+        >
+
+        <ImageView
+            android:id="@+id/location_icon"
+            android:layout_width="0dp"
+            android:layout_weight="0.25"
+            android:layout_height="match_parent"
+            android:src="@mipmap/menu_1_button"
+            android:onClick="onLocationIconClick"
+            />
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_weight="0.25"
+            android:layout_height="match_parent"
+            android:src="@mipmap/menu_2_button"
+            />
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_weight="0.25"
+            android:layout_height="match_parent"
+            android:src="@mipmap/menu_3_button"
+            />
+        <!--<Button-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_weight="0.25"-->
+            <!--android:background="@mipmap/menu_4_button"-->
+            <!--android:layout_height="match_parent" />-->
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_weight="0.25"
+            android:layout_height="match_parent"
+            android:src="@mipmap/menu_4_button"
+            />
+
+    </LinearLayout>
+</LinearLayout>

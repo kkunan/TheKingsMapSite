@@ -29,7 +29,7 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".MapsActivity"
+            android:name=".Activities.MapsActivity"
             android:label="@string/title_activity_maps">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -39,10 +39,17 @@
         </activity>
 
         <activity
-            android:name=".DescriptionActivity">
+            android:name=".Activities.MarkerEventListActivity">
             <meta-data
             android:name="android.support.PARENT_ACTIVITY"
-            android:value=".MapsActivity">
+            android:value=".Activities.MapsActivity">
+            </meta-data>
+        </activity>
+
+        <activity android:name=".Activities.DescriptionActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Activities.MarkerEventListActivity">
             </meta-data>
         </activity>
 

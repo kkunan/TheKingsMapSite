@@ -1,34 +1,22 @@
-package antvk.tkms;
+package antvk.tkms.Activities;
 
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.AssetManager;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -53,13 +41,15 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import antvk.tkms.InformationItem;
+import antvk.tkms.R;
 import antvk.tkms.Utils.ImageUtils;
 import antvk.tkms.Utils.LocationUtils;
 import antvk.tkms.Utils.MarkerUtils;
 
-import static antvk.tkms.DescriptionActivity.MARKER_KEY;
+import static antvk.tkms.Activities.MarkerEventListActivity.MARKER_KEY;
 
-public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMapClickListener{
+public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMapClickListener {
 
 
     private final int MY_PERMISSIONS_REQUEST_FINE_LOCATION = 1111;
@@ -100,7 +90,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         Bundle b = getIntent().getExtras();
         value = -1; // or other values
-        if(b != null) {
+        if (b != null) {
             value = b.getInt(MARKER_KEY);
         }
 
@@ -108,7 +98,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private GoogleMap.InfoWindowAdapter setInfoWindowAdapter() {
-       return new GoogleMap.InfoWindowAdapter() {
+        return new GoogleMap.InfoWindowAdapter() {
 
             // Use default InfoWindow frame
             @Override
@@ -130,12 +120,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                 // Getting reference to the TextView to set latitude
                 TextView header = (TextView) v.findViewById(R.id.header_text);
-             //   TextView latlngtext = (TextView) v.findViewById(R.id.location_text);
+                //   TextView latlngtext = (TextView) v.findViewById(R.id.location_text);
 
-               ImageView imageView = v.findViewById(R.id.image_text);
+                ImageView imageView = v.findViewById(R.id.image_text);
                 InformationItem item = markerInformationItemMap.get(arg0);
                 header.setText(item.header);
-                imageView.setImageDrawable(imageDrawables.get(item.imageName));
+                if (item.placeImage.length() > 0)
+                    imageView.setImageDrawable(imageDrawables.get(item.placeImage));
 
                 return v;
 
@@ -144,46 +135,36 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
-    public void OnNavigateButtonClick(View view)
-    {
-        if(selectedMarker==null && markerList.size()>0)
-        {
+    public void OnNavigateButtonClick(View view) {
+        if (selectedMarker == null && markerList.size() > 0) {
             selectMarker(markerList.get(0));
-        }
-
-        else
-        {
+        } else {
             int offset = 0;
-            if(view.getId() == R.id.right_button)
-            {
-                offset =1;
-            }
-            else if(view.getId() == R.id.left_button)
-            {
+            if (view.getId() == R.id.right_button) {
+                offset = 1;
+            } else if (view.getId() == R.id.left_button) {
                 offset = -1;
             }
-            int markerIndex = (markerList.indexOf(selectedMarker)+markerList.size()+offset)%markerList.size();
-            if(markerIndex < markerList.size())
+            int markerIndex = (markerList.indexOf(selectedMarker) + markerList.size() + offset) % markerList.size();
+            if (markerIndex < markerList.size())
                 selectMarker(markerList.get(markerIndex));
         }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
-    public void selectMarker(Marker marker)
-    {
+    public void selectMarker(Marker marker) {
         selectedMarker = marker;
-       // selectedMarker.showInfoWindow();
+        // selectedMarker.showInfoWindow();
         MarkerUtils.enableMarker(getLayoutInflater(),
                 getApplicationContext(),
                 marker);
 
-        animateCameraTo(selectedMarker.getPosition(),15);
+        animateCameraTo(selectedMarker.getPosition(), 15);
         showInfoWindowBelow(marker);
     }
 
-    static void animateCameraTo(LatLng latLng, int zoom)
-    {
-        if(mMap!=null && latLng!=null) {
+    static void animateCameraTo(LatLng latLng, int zoom) {
+        if (mMap != null && latLng != null) {
             CameraUpdate cameraUpdateFactory = CameraUpdateFactory.newLatLngZoom(latLng, zoom);
             mMap.animateCamera(cameraUpdateFactory);
         }
@@ -210,8 +191,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 //        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
 
         List<InformationItem> informationItems = getAllItems(this);
-        for(InformationItem item : informationItems)
-        {
+        for (InformationItem item : informationItems) {
             Marker marker = createMarker(item);
             mMap.moveCamera(CameraUpdateFactory.newLatLng(marker.getPosition()));
 
@@ -219,27 +199,28 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         markerList = new ArrayList<>(markerInformationItemMap.keySet());
 
-        mMap.setOnMarkerClickListener( new GoogleMap.OnMarkerClickListener() {
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
 
                 //System.out.println("Marker Click!");
                 selectedMarker = marker;
 
-                MarkerUtils.enableMarker(getLayoutInflater(),getApplicationContext(),selectedMarker);
+                MarkerUtils.enableMarker(getLayoutInflater(), getApplicationContext(), selectedMarker);
                 //selectedMarker.showInfoWindow();
                 showInfoWindowBelow(marker);
-                return false;
+                return true;
             }
         });
 
         try {
             String[] imageFile = getAssets().list(imageFolder);
-            imageDrawables = LocationUtils.getDrawables(this,imageFolder,imageFile);
+            imageDrawables = ImageUtils.getDrawables(this, imageFolder, imageFile);
 
         } catch (IOException e) {
             e.printStackTrace();
-        };
+        }
+        ;
 //        infoWindowAdapter = setInfoWindowAdapter();
 //        mMap.setInfoWindowAdapter(infoWindowAdapter);
 //
@@ -254,46 +235,47 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 //
 //        mMap.setOnInfoWindowClickListener(infoWindowClickListener);
 
-        if(value!=-1)
-            selectMarker(markerList.get((value+markerList.size())%markerList.size()));
+        if (value != -1)
+            selectMarker(markerList.get((value + markerList.size()) % markerList.size()));
 
         enableLocationOnMap();
     }
 
-    void gotoDescriptionPage(Marker marker){
-        Intent intent = new Intent(MapsActivity.this, DescriptionActivity.class);
+    void gotoDescriptionPage(Marker marker) {
+        Intent intent = new Intent(MapsActivity.this, MarkerEventListActivity.class);
         Bundle b = new Bundle();
 
         b.putInt(MARKER_KEY, markerList.indexOf(marker)); //Your id
 
-        System.out.println("marker index "+markerList.indexOf(marker));
-
+    //    System.out.println("marker index " + markerList.indexOf(marker));
         intent.putExtras(b); //Put your id to your next Intent
         startActivity(intent);
         finish();
     }
 
-    public void OnBelowWindowClick(View view){
+    public void OnBelowWindowClick(View view) {
+
         gotoDescriptionPage(selectedMarker);
     }
 
-    void showInfoWindowBelow(Marker marker){
+    void showInfoWindowBelow(Marker marker) {
         View mapView = findViewById(R.id.map);
         LinearLayout.LayoutParams mapViewParams = (LinearLayout.LayoutParams) mapView.getLayoutParams();
-        mapViewParams.weight = (float) (1f-belowPortion);
 
-        System.out.println("get info contents");
+        mapViewParams.weight = (float) (1f - belowPortion);
+        mapView.setLayoutParams(mapViewParams);
 
         TextView header = (TextView) findViewById(R.id.below_info_header_text);
 //        ImageView imageView = findViewById(R.id.image_text);
         InformationItem item = markerInformationItemMap.get(marker);
-        header.setText(item.header.replaceAll("\\ ","\n"));
+        header.setText(item.header.replaceAll("\\ ", "\n"));
+
+
 //        imageView.setImageDrawable(imageDrawables.get(item.imageName));
 
     }
 
-    void enableLocationOnMap()
-    {
+    void enableLocationOnMap() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
@@ -316,7 +298,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
 
 
-        locationManager = (LocationManager)getSystemService(LOCATION_SERVICE);
+        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
                 0,
                 0, locationUtils.locationListener);
@@ -330,33 +312,29 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 //        10: City
 //        15: Streets
 //        20: Buildings
-        animateCameraTo(new LatLng(location.getLatitude(),location.getLongitude()),10);
+        if(value==-1)
+            animateCameraTo(new LatLng(location.getLatitude(), location.getLongitude()), 10);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
-    public Marker createMarker(InformationItem informationItem)
-    {
-       MarkerOptions options = new MarkerOptions()
+    public Marker createMarker(InformationItem informationItem) {
+        MarkerOptions options = new MarkerOptions()
                 .title(informationItem.header)
                 .position(informationItem.location)
                 .icon(
                         BitmapDescriptorFactory.fromBitmap(MarkerUtils
-                                .createStoreMarker(getLayoutInflater(),this.getApplicationContext()
-                        , MarkerUtils.INACTIVE_NAME, MarkerUtils.INACTIVE_BG_NAME,informationItem.header))
-                )
-                ;
+                                .createStoreMarker(getLayoutInflater(), this.getApplicationContext()
+                                        , MarkerUtils.INACTIVE_NAME, MarkerUtils.INACTIVE_BG_NAME, informationItem.header))
+                );
 
         Marker marker = mMap.addMarker(options);
 
-        markerInformationItemMap.put(marker,informationItem);
+        markerInformationItemMap.put(marker, informationItem);
         return marker;
     }
 
 
-
-
-    public List<InformationItem> getAllItems(Context context)
-    {
+    public List<InformationItem> getAllItems(Context context) {
 
         List<InformationItem> items = new ArrayList<>();
         try {
@@ -366,13 +344,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             String st = "";
 
             StringBuffer buffer = new StringBuffer();
-            while((st=reader.readLine())!=null)
-            {
-                buffer.append(st+"\n");
+            while ((st = reader.readLine()) != null) {
+                buffer.append(st + "\n");
             }
 
-            Type listType = new TypeToken<ArrayList<InformationItem>>(){}.getType();
-            items = gson.fromJson(buffer.toString(),listType);
+            Type listType = new TypeToken<ArrayList<InformationItem>>() {
+            }.getType();
+            items = gson.fromJson(buffer.toString(), listType);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -388,14 +366,26 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onMapClick(LatLng latLng) {
                 //Do what you want on obtained latLng
 
-                System.out.println("onclick!");
-
-                View mapLayout =  findViewById(R.id.map);
+                View mapLayout = findViewById(R.id.map);
                 LinearLayout.LayoutParams mapParams = (LinearLayout.LayoutParams) mapLayout.getLayoutParams();
                 mapParams.weight = 1;
                 mapLayout.setLayoutParams(mapParams);
 
             }
         });
+    }
+
+    protected void onLocationIconClick(View view)
+    {
+        // Create a Uri from an intent string. Use the result to create an Intent.
+        InformationItem item = markerInformationItemMap.get(selectedMarker);
+        Uri gmmIntentUri = Uri.parse("geo:"+item.location.latitude+","+item.location.longitude+"?q="+item.header);
+        //       Uri gmmIntentUri = Uri.parse("google.navigation:q="+item.header);
+// Create an Intent from gmmIntentUri. Set the action to ACTION_VIEW
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+// Make the Intent explicit by setting the Google Maps package
+        mapIntent.setPackage("com.google.android.apps.maps");
+// Attempt to start an activity that can handle the Intent
+        startActivity(mapIntent);
     }
 }
