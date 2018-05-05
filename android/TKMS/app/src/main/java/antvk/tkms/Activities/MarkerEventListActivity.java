@@ -24,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.todddavies.components.progressbar.ProgressWheel;
 
 import java.io.IOError;
 import java.io.IOException;
@@ -55,6 +56,7 @@ public class MarkerEventListActivity extends ActivityWithBackButton {
     static final double CHECKIN_AVALABLE_RANGE = 20.0;
 
     boolean prevShow = false;
+    boolean prevPink = false;
     boolean inRange = false;
 
     @Override
@@ -63,6 +65,9 @@ public class MarkerEventListActivity extends ActivityWithBackButton {
         setContentView(R.layout.activity_description_itemlist);
 
         value = getExtra(MARKER_KEY);
+
+//        ProgressWheel pw = findViewById(R.id.pw_spinner);
+//        pw.incrementProgress((int)(0.6 * 360));
 
         if (value != -1) {
             item = MapsActivity.markerInformationItemMap.get(
@@ -140,7 +145,31 @@ public class MarkerEventListActivity extends ActivityWithBackButton {
                 if(!prevShow)
                 {
                     heartView.setVisibility(View.VISIBLE);
+                    prevShow = true;
+
                 }
+
+                if(prevPink)
+                {
+                    heartView.setImageDrawable(getDrawable(R.drawable.grey_heart));
+                    prevPink = false;
+                }
+            }
+        }
+
+        else
+        {
+            if(prevPink && prevShow);
+
+            else if(prevPink)
+            {
+                heartView.setVisibility(View.VISIBLE);
+                prevShow = true;
+            }
+
+            else if(prevShow){
+                heartView.setImageDrawable(getDrawable(R.drawable.pink_heart));
+                prevPink = true;
             }
         }
     }
@@ -168,6 +197,8 @@ public class MarkerEventListActivity extends ActivityWithBackButton {
         {
             heartView.setImageDrawable(getDrawable(R.drawable.pink_heart));
             heartView.setVisibility(View.VISIBLE);
+            prevShow = true;
+            prevPink = true;
         }
 
         else
@@ -274,7 +305,7 @@ public class MarkerEventListActivity extends ActivityWithBackButton {
                 }
             };
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
+            AlertDialog.Builder builder = new AlertDialog.Builder(MarkerEventListActivity.this);
             builder.setMessage(
                     getString(R.string.checkin)+item.header+"?"
             ).setPositiveButton("Yes", dialogClickListener)
@@ -303,9 +334,9 @@ public class MarkerEventListActivity extends ActivityWithBackButton {
                 }
             };
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
+            AlertDialog.Builder builder = new AlertDialog.Builder(MarkerEventListActivity.this);
             builder.setMessage(
-                    getString(R.string.checkin)+item.header+"?"
+                    getString(R.string.uncheck)+item.header+"?"
             ).setPositiveButton("Yes", dialogClickListener)
                     .setNegativeButton("No", dialogClickListener).show();
         }

@@ -17,6 +17,7 @@
 			"latitude": 42.374435,
 			"longitude": -71.134088
 		},
+		"placeID": "ChIJWQnFonp344kROAt0gRMeGXw",
 		"placeImage": "",
 		"placeDescription":"[todo]ข้อมูลของโรงพยาบาล"
 	},
@@ -48,6 +49,7 @@
 			"latitude": 13.748170, 
 			"longitude": 100.533846
 		},
+		"placeID": "ChIJL2FHD82e4jARIA5MKbI5gSU",
 		"placeImage": "",
 		"placeDescription":"[todo]ข้อมูลของพระตำหนักวังสระปทุม"
 	},
@@ -70,6 +72,7 @@
 			"latitude": 13.750322,
 			"longitude": 100.491213
 		},
+		"placeID": "ChIJya0AFA-Z4jARNaRzjuLiyMc",
 		"placeImage": "",
 		"placeDescription":"[todo]ข้อมูลของพระบรมมหาราชวัง"
 	}

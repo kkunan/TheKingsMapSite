@@ -5,4 +5,5 @@
     <string name="more_details_word">click for more details</string>
     <string name="events_word">Events</string>
     <string name="checkin">Check-in at </string>
+    <string name="uncheck">Undo checkin at</string>
 </resources>

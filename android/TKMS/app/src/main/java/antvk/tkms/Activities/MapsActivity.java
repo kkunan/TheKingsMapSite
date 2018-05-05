@@ -1,6 +1,7 @@
 package antvk.tkms.Activities;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -88,6 +89,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mapIndex = 0;
         setContentView(R.layout.activity_maps);
         locationUtils = new LocationUtils();
+        setupLocationService();
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -104,6 +106,36 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
+    }
+
+    void setupLocationService()
+    {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+
+            ActivityCompat.requestPermissions(MapsActivity.this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    MY_PERMISSIONS_REQUEST_FINE_LOCATION);
+
+            ActivityCompat.requestPermissions(MapsActivity.this,
+                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                    MY_PERMISSIONS_REQUEST_COARSE_LOCATION);
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityActivityCompat.requestPermissions(WarningActivity.this,
+            //                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+            //                    MY_PERMISSIONS_REQUEST_FINE_LOCATION);Compat#requestPermissions for more details.
+        }
+
+
+        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+                0,
+                0, locationUtils.locationListener);
     }
 
     private GoogleMap.InfoWindowAdapter setInfoWindowAdapter() {
@@ -222,6 +254,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             public boolean onMarkerClick(Marker marker) {
                 selectedMarker = marker;
                 MarkerUtils.enableMarker(getLayoutInflater(), getApplicationContext(), selectedMarker);
+                animateCameraTo(marker.getPosition(),15);
                 showInfoWindowBelow(marker);
                 return true;
             }
@@ -279,45 +312,19 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     }
 
+    @SuppressLint("MissingPermission")
     void enableLocationOnMap() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-
-            ActivityCompat.requestPermissions(MapsActivity.this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    MY_PERMISSIONS_REQUEST_FINE_LOCATION);
-
-            ActivityCompat.requestPermissions(MapsActivity.this,
-                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
-                    MY_PERMISSIONS_REQUEST_COARSE_LOCATION);
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityActivityCompat.requestPermissions(WarningActivity.this,
-            //                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-            //                    MY_PERMISSIONS_REQUEST_FINE_LOCATION);Compat#requestPermissions for more details.
-        }
-
-
-        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-                0,
-                0, locationUtils.locationListener);
 
         mMap.setMyLocationEnabled(true);
         Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-
-        mMap.setOnMapClickListener(this);
 //        1: World
 //        5: Landmass/continent
 //        10: City
 //        15: Streets
 //        20: Buildings
-        if(value==-1)
-            animateCameraTo(new LatLng(location.getLatitude(), location.getLongitude()), 10);
+   //     mMap.setMinZoomPreference(15);
+        if(value==-1 && location!=null)
+            animateCameraTo(new LatLng(location.getLatitude(), location.getLongitude()), 15);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
@@ -378,20 +385,5 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
     }
-
-    public void onLocationIconClick(View view)
-    {
-        // Create a Uri from an intent string. Use the result to create an Intent.
-        InformationItem item = markerInformationItemMap.get(selectedMarker);
-        Uri gmmIntentUri = Uri.parse("geo:"+item.location.latitude+","+item.location.longitude+"?q="+item.header);
-        //       Uri gmmIntentUri = Uri.parse("google.navigation:q="+item.header);
-// Create an Intent from gmmIntentUri. Set the action to ACTION_VIEW
-        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-// Make the Intent explicit by setting the Google Maps package
-        mapIntent.setPackage("com.google.android.apps.maps");
-// Attempt to start an activity that can handle the Intent
-        startActivity(mapIntent);
-    }
-
 
 }
