@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ProgressWheel="http://schemas.android.com/apk/res-auto"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <com.todddavies.components.progressbar.ProgressWheel
+                android:id="@+id/heart_spinner"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:background="@mipmap/mymap_icon03"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_margin="20dp"
+                ProgressWheel:pwText="12"
+                ProgressWheel:pwTextSize="14sp"
+                ProgressWheel:pwRimColor="@android:color/white"
+                ProgressWheel:pwBarLength="60dp"
+                ProgressWheel:pwBarColor="#ec7375"
+                ProgressWheel:pwBarWidth="2dp"
+                ProgressWheel:pwRimWidth="5dp" />
+
+        <TextView
+            android:id="@+id/complete_counter"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textStyle="bold"
+            android:text="TEST"
+            android:layout_toRightOf="@id/heart_spinner"
+            android:layout_centerVertical="true"
+            />
+        </RelativeLayout>
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            android:layout_alignParentRight="true"
+            android:layout_margin="10dp"
+            android:src="@mipmap/human_turn_left_icon"
+            android:layout_alignParentEnd="true" />
+
+        <TextView
+
+            android:layout_alignParentBottom="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10sp"
+            android:textStyle="bold"
+            android:text="@string/recent"
+            android:textSize="20sp"
+            />
+    </RelativeLayout>
+
+
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/history_list_view"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="20sp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20sp" />
+</LinearLayout>
+</ScrollView>
