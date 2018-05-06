@@ -24,13 +24,25 @@
         android:layout_height="50dp"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="50dp"
         ProgressWheel:pwRimColor="#330097D6"
         ProgressWheel:pwBarLength="60dp"
         ProgressWheel:pwBarColor="#0097D6"
         ProgressWheel:pwBarWidth="5dp"
         ProgressWheel:pwRimWidth="2dp"/>
+
+    <ImageView
+
+        android:src="@mipmap/hamburger_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="100dp"
+        android:onClick="OnMapSelectionClick"
+        />
 
     <LinearLayout
         android:background="@android:color/white"

@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 
+<ScrollView android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:scrollbarStyle="insideOverlay"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
-
+    android:layout_margin="10dp"
     >
 
     <LinearLayout
@@ -14,7 +19,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         >
-
 
         <!--ProgressWheel:pwText="Progress"-->
         <!--ProgressWheel:pwTextColor="#222"-->
@@ -26,13 +30,17 @@
             android:layout_height="wrap_content">
             <ImageView
                 android:id="@+id/place_image"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 />
             <TextView
                 android:id="@+id/place_name_overlay"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:text="TEST"
+                android:layout_alignParentBottom="true"
+                android:layout_height="match_parent"
                 android:textSize="20sp"
                 android:textColor="@android:color/white"
                 />
@@ -52,36 +60,41 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textSize="20sp"
             android:text="@string/address_word"
             />
 
         <TextView
             android:id="@+id/place_address"
+            android:textSize="20sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Address line"
             />
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:onClick="OnMoreDetailsClick"
+            android:orientation="horizontal"
             >
             <TextView
+                android:textSize="20sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:textColor="@android:color/holo_blue_light"
                 android:text="@string/more_details_word"
                 />
+
             <ImageView
                 android:id="@+id/arrow"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/blue_right_arrow"
-                />
+                android:src="@drawable/blue_right_arrow" />
         </LinearLayout>
 
         <TextView
+            android:textSize="20sp"
             android:id="@+id/place_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -91,22 +104,27 @@
     </LinearLayout>
 
     <LinearLayout
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <TextView
-            android:layout_width="wrap_content"
+
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="10sp"
             android:text="@string/events_word"
-            android:textSize="15sp"
+            android:textSize="20sp"
             />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/eventListView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            />
+            android:layout_marginLeft="10sp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10sp" />
     </LinearLayout>
 
 </LinearLayout>
+</ScrollView>

@@ -18,7 +18,7 @@
 			"longitude": -71.134088
 		},
 		"placeID": "ChIJWQnFonp344kROAt0gRMeGXw",
-		"placeImage": "",
+		"placeImage": "king01.png",
 		"placeDescription":"[todo]ข้อมูลของโรงพยาบาล"
 	},
 	
@@ -73,7 +73,7 @@
 			"longitude": 100.491213
 		},
 		"placeID": "ChIJya0AFA-Z4jARNaRzjuLiyMc",
-		"placeImage": "",
+		"placeImage": "king06.png",
 		"placeDescription":"[todo]ข้อมูลของพระบรมมหาราชวัง"
 	}
 ]

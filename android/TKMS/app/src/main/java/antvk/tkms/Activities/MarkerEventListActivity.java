@@ -34,6 +34,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
+import antvk.tkms.Constants;
 import antvk.tkms.Struct.Information.InformationItem;
 import antvk.tkms.R;
 import antvk.tkms.Utils.ImageUtils;
@@ -176,9 +177,10 @@ public class MarkerEventListActivity extends ActivityWithBackButton {
 
     public void setPlaceContent()
     {
+        String imageFolder = mapIndex==0? Constants.KINGS_IMAGE_FOLDER:Constants.DESTINY_IMAGE_FOLDER;
         ImageView placeImageView = (ImageView) findViewById(R.id.place_image);
         placeImageView.setImageDrawable(ImageUtils.getDrawable(getApplicationContext(),
-                MapsActivity.imageFolder,
+                imageFolder,
                 item.placeImage));
 
         final String[] address = {"Address unavailable"};
@@ -193,35 +195,42 @@ public class MarkerEventListActivity extends ActivityWithBackButton {
 
         GeoDataClient mGeoDataClient = Places.getGeoDataClient(getApplicationContext());
         final Place[] myPlace = new Place[1];
+        final PlaceBufferResponse[] places = {null};
         mGeoDataClient.getPlaceById(item.placeID).addOnCompleteListener(new OnCompleteListener<PlaceBufferResponse>() {
             @Override
             public void onComplete(@NonNull Task<PlaceBufferResponse> task) {
                 if (task.isSuccessful()) {
-                    PlaceBufferResponse places = task.getResult();
-                    myPlace[0] = places.get(0);
-                    System.out.println( "Place found: " + myPlace[0].getName());
-                    Place place = myPlace[0];
-                    String desscriptionText = "";
-                    if(place!=null) {
-                        item.placeDescription =
-                                "Name: "+place.getName()+
-                                "\nPhone number: "+place.getPhoneNumber()
-                        +"\nrating: "+place.getRating()
-                        ;
-                        address[0] = place.getAddress().toString();
+                        places[0] = task.getResult();
+                    try {
+                        myPlace[0] = places[0].get(0);
+                        System.out.println("Place found: " + myPlace[0].getName());
+                        Place place = myPlace[0];
+                        if (place != null) {
+                            item.placeDescription =
+                                    "Name: " + place.getName() +
+                                            "\nPhone number: " + place.getPhoneNumber()
+                                            + "\nrating: " + place.getRating()
+                            ;
+                            address[0] = place.getAddress().toString();
+                        }
+                    }catch (Exception e){
+                        System.out.println("places: "+ places[0]);
+                        e.printStackTrace();
                     }
-                    runOnUiThread(
-                            new Runnable() {
-                                @Override
-                                public void run() {
-                                    descriptionView.setText(item.placeDescription);
-                                    TextView addressView = (TextView) findViewById(R.id.place_address);
-                                    addressView.setText(address[0]);
+                        runOnUiThread(
+                                new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        descriptionView.setText(item.placeDescription);
+                                        TextView addressView = (TextView) findViewById(R.id.place_address);
+                                        addressView.setText(address[0]);
+                                    }
                                 }
-                            }
-                    );
+                        );
 
-                    places.release();
+                        places[0].release();
+
+
                 } else {
 
                 }
@@ -271,10 +280,11 @@ public class MarkerEventListActivity extends ActivityWithBackButton {
                 new RecyclerItemClickListener(getApplicationContext(), recList ,new RecyclerItemClickListener.OnItemClickListener() {
                     @Override public void onItemClick(View view, int position) {
 
+                        Intent intent = new Intent(getApplicationContext(),DescriptionActivity.class);
+
                         Bundle b = setExtra(MARKER_KEY,value);
                         b = setExtra(EVENT_KEY,position, b);
-
-                        Intent intent = new Intent(getApplicationContext(),DescriptionActivity.class);
+                        b = setExtra(MAP_ID_KEY,mapIndex,b);
                         intent.putExtras(b);
                         startActivity(intent);
                     }

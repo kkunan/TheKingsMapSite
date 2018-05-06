@@ -65,7 +65,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private final int MY_PERMISSIONS_REQUEST_FINE_LOCATION = 1111;
     private final int MY_PERMISSIONS_REQUEST_COARSE_LOCATION = 1112;
 
-    static int mapIndex;
+    public static int mapIndex;
     public static GoogleMap mMap;
     public static Map<String, Drawable> imageDrawables;
     public static List<Marker> markerList;
@@ -78,11 +78,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     static MapVisitedInformation mapVisitedInformation;
 
     public static Gson gson;
-
-    static double belowPortion = 0.3;
-
-    static final String imageFolder = "kings_images";
-    static final String infoFile = "info.json";
     static Marker selectedMarker;
 
     int value;
@@ -292,6 +287,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
 
         try {
+            String imageFolder = mapIndex==0?Constants.KINGS_IMAGE_FOLDER:Constants.DESTINY_IMAGE_FOLDER;
             String[] imageFile = getAssets().list(imageFolder);
             imageDrawables = ImageUtils.getDrawables(this, imageFolder, imageFile);
 
@@ -417,4 +413,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
     }
 
+    public void OnMapSelectionClick(View view) {
+        Intent intent = new Intent(MapsActivity.this, MapSelectorActivity.class);
+        startActivity(intent);
+    }
 }

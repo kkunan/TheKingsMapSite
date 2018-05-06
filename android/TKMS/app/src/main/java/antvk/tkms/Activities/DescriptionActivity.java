@@ -10,9 +10,12 @@ import android.widget.TextView;
 
 import com.google.android.gms.maps.model.Marker;
 
+import antvk.tkms.Constants;
 import antvk.tkms.R;
 import antvk.tkms.Utils.ImageUtils;
 import antvk.tkms.Struct.Information.InformationItem.Event;
+
+import static antvk.tkms.Activities.MapsActivity.mapIndex;
 
 public class DescriptionActivity extends ActivityWithBackButton{
 
@@ -50,7 +53,8 @@ public class DescriptionActivity extends ActivityWithBackButton{
             descriptionText.setText(event.description);
 
             if(event.imageName.length()>0) {
-                Drawable drawable = ImageUtils.getDrawable(this.getApplicationContext(), MapsActivity.imageFolder, event.imageName);
+                String imageFolder = mapIndex==0? Constants.KINGS_IMAGE_FOLDER:Constants.DESTINY_IMAGE_FOLDER;
+                Drawable drawable = ImageUtils.getDrawable(this.getApplicationContext(), imageFolder, event.imageName);
                 ImageView imageView = (ImageView) findViewById(R.id.imageView);
                 imageView.setImageDrawable(drawable);
             }
