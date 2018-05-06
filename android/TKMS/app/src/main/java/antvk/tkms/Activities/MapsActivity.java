@@ -271,9 +271,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             mapVisitedInformation = gson.fromJson(checkinInfo, MapVisitedInformation.class);
         }
 
+       // System.out.println("progress: "+mapVisitedInformation.getVisitedPercentage());
 
         ProgressWheel pw = (ProgressWheel) findViewById(R.id.pw_spinner);
         pw.incrementProgress((int)(mapVisitedInformation.getVisitedPercentage()* 360));
+        pw.setText((int)Math.ceil(100*mapVisitedInformation.getVisitedPercentage())+"");
 
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override

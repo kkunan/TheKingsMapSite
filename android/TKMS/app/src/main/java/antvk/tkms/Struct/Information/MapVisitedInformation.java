@@ -1,6 +1,8 @@
 package antvk.tkms.Struct.Information;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class MapVisitedInformation {
@@ -43,7 +45,7 @@ public class MapVisitedInformation {
         List<VisitedInformation> visitedInformations = new ArrayList<>();
         for(InformationItem item :informationItems)
         {
-            VisitedInformation information = new VisitedInformation(item.placeID,false);
+            VisitedInformation information = new VisitedInformation(item.placeID,null,false);
             visitedInformations.add(information);
         }
         return new MapVisitedInformation(visitedInformations);
@@ -54,6 +56,7 @@ public class MapVisitedInformation {
         {
             if(information.placeID.equals(placeID)) {
                 information.visited = true;
+                information.visitedDate = Calendar.getInstance().getTime();
                 break;
             }
         }
@@ -64,6 +67,14 @@ public class MapVisitedInformation {
         {
             if(information.placeID.equals(placeID)) {
                 information.visited = b;
+
+                if(b)
+                {
+                    information.visitedDate = Calendar.getInstance().getTime();
+                }
+
+                else information.visitedDate = null;
+
                 break;
             }
         }
@@ -71,11 +82,13 @@ public class MapVisitedInformation {
 
     public static class VisitedInformation {
         String placeID;
+        Date visitedDate;
         boolean visited;
 
-        public VisitedInformation(String placeID, boolean visited)
+        public VisitedInformation(String placeID, Date visitedDate, boolean visited)
         {
             this.placeID = placeID;
+            this.visitedDate = visitedDate;
             this.visited = visited;
         }
     }

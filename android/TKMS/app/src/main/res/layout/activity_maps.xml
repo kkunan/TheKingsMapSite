@@ -17,24 +17,25 @@
         android:layout_height="match_parent"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        tools:context=".Activities.MapsActivity" />
+        tools:context=".Activities.MapsActivity"
+        android:layout_alignParentLeft="true" />
 
     <com.todddavies.components.progressbar.ProgressWheel
         android:id="@+id/pw_spinner"
-        android:background="@mipmap/mymap_icon03"
         android:layout_width="45dp"
         android:layout_height="45dp"
+        android:background="@mipmap/mymap_icon03"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_marginLeft="60dp"
         android:layout_marginTop="10dp"
-        map:pwText="12"
-        map:pwTextSize="10sp"
-        ProgressWheel:pwRimColor="#ffec7375"
-        ProgressWheel:pwBarLength="45dp"
+        ProgressWheel:pwText="12"
+        ProgressWheel:pwTextSize="14sp"
+        ProgressWheel:pwRimColor="@android:color/white"
+        ProgressWheel:pwBarLength="60dp"
         ProgressWheel:pwBarColor="#ec7375"
-        ProgressWheel:pwBarWidth="0dp"
-        ProgressWheel:pwRimWidth="2dp"/>
+        ProgressWheel:pwBarWidth="2dp"
+        ProgressWheel:pwRimWidth="5dp" />
 
     <ImageView
 
