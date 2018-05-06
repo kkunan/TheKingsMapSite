@@ -31,6 +31,7 @@ public class MarkerUtils {
     public static final String ACTIVE_VISITED_NAME = "pin_active_on.png";
 
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public static void enableMarker(LayoutInflater inflater, Context context, Marker marker)
     {
         List<Marker> markerList = MapsActivity.markerList;
@@ -60,8 +61,10 @@ public class MarkerUtils {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public static void disableMarker(LayoutInflater inflater, Context context, Marker marker)
     {
+        if(marker.isVisible())
         marker.setIcon(
                 BitmapDescriptorFactory.fromBitmap(
                         createStoreMarker(inflater,context

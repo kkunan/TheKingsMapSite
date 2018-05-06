@@ -260,7 +260,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         };
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     public void OnNavigateButtonClick(View view) {
         if (selectedMarker == null && markerList.size() > 0) {
             selectMarker(markerList.get(0));
@@ -277,7 +276,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+
     public void selectMarker(Marker marker) {
         selectedMarker = marker;
         // selectedMarker.showInfoWindow();

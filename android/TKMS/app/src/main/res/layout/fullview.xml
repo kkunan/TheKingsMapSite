@@ -1,6 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+     android:layout_width="match_parent"
+    android:background="#44000000"
+    android:layout_height="match_parent" android:weightSum="1">
 
-</LinearLayout>
+    <LinearLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_centerInParent="true"
+        >
+
+        <LinearLayout
+            android:id="@+id/king_view"
+            android:background="@color/dark_grey"
+            android:layout_width="0dp"
+            android:layout_weight="0.5"
+            android:orientation="vertical"
+            android:onClick="onMapSelect"
+            android:layout_height="wrap_content">
+
+            <ImageView
+
+                android:id="@+id/halfview_left_image"
+                android:adjustViewBounds="true"
+                android:layout_gravity="center_horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@mipmap/map_king"
+                />
+
+            <TextView
+                android:id="@+id/map_left_title_text"
+                android:layout_width="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/white"
+                android:text="ในหลวงรัชกาลที่ ๙"
+                android:textSize="20sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/destiny_view"
+            android:layout_width="0dp"
+            android:layout_weight="0.5"
+            android:orientation="vertical"
+            android:background="@color/dark_grey"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/halfview_right_image"
+                android:src="@mipmap/map_destiny"
+                android:adjustViewBounds="true"
+                android:layout_gravity="center_horizontal"
+                android:layout_width="match_parent"
+                android:onClick="onMapSelect"
+                android:layout_height="match_parent"
+                />
+
+            <TextView
+                android:id="@+id/map_right_title_text"
+                android:layout_width="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_height="wrap_content"
+                android:text="บุพเพสันนิวาส"
+                android:textColor="@android:color/white"
+                android:textSize="20sp" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+
+</RelativeLayout>
