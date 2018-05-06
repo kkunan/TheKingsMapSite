@@ -101,6 +101,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (b != null) {
             value = b.getInt(MARKER_KEY);
             mapIndex = b.getInt(MAP_ID_KEY);
+            //System.out.println("mapIndex received: "+mapIndex);
         }
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);

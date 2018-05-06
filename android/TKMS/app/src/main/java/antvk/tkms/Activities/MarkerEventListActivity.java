@@ -305,10 +305,7 @@ public class MarkerEventListActivity extends ActivityWithBackButton {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        Intent intent = new Intent(getApplicationContext(),MapsActivity.class);
-        Bundle b = setExtra(MARKER_KEY,value);
-        intent.putExtras(b);
-        startActivity(intent);
+        gobackToPreviousScreen();
         return true;
     }
 
@@ -388,6 +385,19 @@ public class MarkerEventListActivity extends ActivityWithBackButton {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        gobackToPreviousScreen();
+    }
+
+    private void gobackToPreviousScreen() {
+        Intent intent = new Intent(getApplicationContext(),MapsActivity.class);
+        Bundle b = setExtra(MARKER_KEY,value);
+        b = setExtra(MAP_ID_KEY,mapIndex,b);
+        //System.out.println("mapIndex sent: "+mapIndex);
+        intent.putExtras(b);
+        startActivity(intent);
+    }
 
 }
 

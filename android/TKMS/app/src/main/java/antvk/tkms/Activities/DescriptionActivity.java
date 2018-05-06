@@ -69,13 +69,23 @@ public class DescriptionActivity extends ActivityWithBackButton{
 //        }
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
+    void gobackToPreviousScreen(){
         Intent intent = new Intent(getApplicationContext(),MarkerEventListActivity.class);
         Bundle b = setExtra(MARKER_KEY,markerId);
         intent.putExtras(b);
         startActivity(intent);
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        gobackToPreviousScreen();
         return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        gobackToPreviousScreen();
     }
 }
