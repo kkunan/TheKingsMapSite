@@ -5,6 +5,8 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
+import android.text.Layout;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -14,31 +16,36 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Marker;
 
 import java.util.List;
+import java.util.Map;
 
 import antvk.tkms.Constants;
 import antvk.tkms.Activities.MapsActivity;
 import antvk.tkms.R;
+import antvk.tkms.Struct.Information.InformationItem;
+
 @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
 public class MarkerUtils {
 
-    public static final String INACTIVE_NAME = "pin_inactive_pin.png";
-    public static final String INACTIVE_BG_NAME = "pin_inactive_bg.png";
+    public static final String INACTIVE_NAME = "pin_inactive.png";
     public static final String ACTIVE_NOVISIT_NAME = "pin_active_no.png";
-    public static final String ACTIVE_NOVISIT_BG_NAME = "pin_active_bg.png";
     public static final String ACTIVE_VISITED_NAME = "pin_active_on.png";
-    public static final String ACTIVE_VISITED_BG_NAME = "pin_active_on.png";
 
 
     public static void enableMarker(LayoutInflater inflater, Context context, Marker marker)
     {
         List<Marker> markerList = MapsActivity.markerList;
 
+        String fileName;
+        InformationItem item = MapsActivity.markerInformationItemMap.get(marker);
+        if(MapsActivity.mapVisitedInformation.getVisitedAt(item.placeID))
+            fileName = ACTIVE_VISITED_NAME;
+        else
+            fileName = ACTIVE_NOVISIT_NAME;
         //todo: pick active/inactive
         marker.setIcon(
                 BitmapDescriptorFactory.fromBitmap(
                         createStoreMarker(inflater,context
-                                ,ACTIVE_NOVISIT_NAME,
-                                ACTIVE_NOVISIT_BG_NAME,
+                                ,fileName,
                                 MapsActivity.markerInformationItemMap
                                         .get(marker)
                                         .header)
@@ -59,7 +66,6 @@ public class MarkerUtils {
                 BitmapDescriptorFactory.fromBitmap(
                         createStoreMarker(inflater,context
                                 ,INACTIVE_NAME,
-                                INACTIVE_BG_NAME,
                                 MapsActivity.markerInformationItemMap
                                         .get(marker)
                                         .header)
@@ -68,7 +74,7 @@ public class MarkerUtils {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
-    public static Bitmap createStoreMarker(LayoutInflater inflater, Context context, String imageName, String imageBG, String text) {
+    public static Bitmap createStoreMarker(LayoutInflater inflater, Context context, String imageBG, String text) {
         View markerLayout = inflater.inflate(R.layout.marker_inactive, null);
 
         TextView markerRating = (TextView) markerLayout.findViewById(R.id.marker_text);
@@ -86,8 +92,11 @@ public class MarkerUtils {
 
 
         text = text.replaceAll("\\ ","\n")+"\n";
+        markerImage.setGravity(Gravity.CENTER_VERTICAL);
         markerRating.setText(text);
+        if(!imageBG.equals(INACTIVE_NAME)) {
 
+        }
         markerLayout.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED), View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
         markerLayout.layout(0, 0, markerLayout.getMeasuredWidth(), markerLayout.getMeasuredHeight());
 

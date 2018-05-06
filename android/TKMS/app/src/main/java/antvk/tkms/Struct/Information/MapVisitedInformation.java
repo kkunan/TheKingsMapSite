@@ -13,6 +13,17 @@ public class MapVisitedInformation {
         this.informationList = visitedInformations;
     }
 
+    public List<VisitedInformation> getVisitedList()
+    {
+        List<VisitedInformation> visitedInformations = new ArrayList<>();
+        for(VisitedInformation information : informationList)
+        {
+            if(information.visited)
+                visitedInformations.add(information);
+        }
+        return visitedInformations;
+    }
+
     public double getVisitedPercentage(){
         double total = (double)informationList.size();
 
@@ -33,7 +44,7 @@ public class MapVisitedInformation {
     {
         for(VisitedInformation information : informationList)
         {
-            if(information.placeID.equals(placeID))
+            if(information.item.placeID.equals(placeID))
                 return information.visited;
         }
         return false;
@@ -45,7 +56,7 @@ public class MapVisitedInformation {
         List<VisitedInformation> visitedInformations = new ArrayList<>();
         for(InformationItem item :informationItems)
         {
-            VisitedInformation information = new VisitedInformation(item.placeID,null,false);
+            VisitedInformation information = new VisitedInformation(item,null,false);
             visitedInformations.add(information);
         }
         return new MapVisitedInformation(visitedInformations);
@@ -54,7 +65,7 @@ public class MapVisitedInformation {
     public void markVisit(String placeID) {
         for(VisitedInformation information : informationList)
         {
-            if(information.placeID.equals(placeID)) {
+            if(information.item.placeID.equals(placeID)) {
                 information.visited = true;
                 information.visitedDate = Calendar.getInstance().getTime();
                 break;
@@ -65,7 +76,7 @@ public class MapVisitedInformation {
     public void setVisit(String placeID, boolean b) {
         for(VisitedInformation information : informationList)
         {
-            if(information.placeID.equals(placeID)) {
+            if(information.item.placeID.equals(placeID)) {
                 information.visited = b;
 
                 if(b)
@@ -81,13 +92,13 @@ public class MapVisitedInformation {
     }
 
     public static class VisitedInformation {
-        String placeID;
-        Date visitedDate;
-        boolean visited;
+       public InformationItem item;
+        public Date visitedDate;
+        public boolean visited;
 
-        public VisitedInformation(String placeID, Date visitedDate, boolean visited)
+        public VisitedInformation(InformationItem item, Date visitedDate, boolean visited)
         {
-            this.placeID = placeID;
+            this.item = item;
             this.visitedDate = visitedDate;
             this.visited = visited;
         }

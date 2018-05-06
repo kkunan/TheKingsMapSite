@@ -40,7 +40,7 @@ import antvk.tkms.R;
 import antvk.tkms.Utils.ImageUtils;
 import antvk.tkms.Utils.LocationUtils;
 import antvk.tkms.ViewManager.EventView.EventViewAdapter;
-import antvk.tkms.ViewManager.EventView.RecyclerItemClickListener;
+import antvk.tkms.ViewManager.RecyclerItemClickListener;
 
 import static antvk.tkms.Activities.MapsActivity.gson;
 import static antvk.tkms.Activities.MapsActivity.mapIndex;

@@ -15,11 +15,11 @@
 
         >
 
-        <LinearLayout
-            android:id="@+id/left_background"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:orientation="horizontal" />
+        <!--<LinearLayout-->
+            <!--android:id="@+id/left_background"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:orientation="horizontal" />-->
 
         <LinearLayout
             android:id="@+id/marker_image"

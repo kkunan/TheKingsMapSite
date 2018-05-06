@@ -75,7 +75,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     static SharedPreferences preferences;
 
     static LocationUtils locationUtils;
-    static MapVisitedInformation mapVisitedInformation;
+    public static MapVisitedInformation mapVisitedInformation;
 
     public static Gson gson;
     static Marker selectedMarker;
@@ -148,6 +148,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                                 return true;
                             case R.id.bottombaritem_history:
                                 // TODO
+                                Intent intent = new Intent(MapsActivity.this,HistoryActivity.class);
+                                startActivity(intent);
                                 return true;
                             case R.id.bottombaritem_profile:
                                 // TODO
@@ -269,6 +271,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         else
         {
             mapVisitedInformation = gson.fromJson(checkinInfo, MapVisitedInformation.class);
+
         }
 
        // System.out.println("progress: "+mapVisitedInformation.getVisitedPercentage());
@@ -298,8 +301,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
         ;
 
-        if (value != -1)
-            selectMarker(markerList.get((value + markerList.size()) % markerList.size()));
+//        if (value != -1)
+//            selectMarker(markerList.get((value + markerList.size()) % markerList.size()));
 
         enableLocationOnMap();
     }
@@ -364,7 +367,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .icon(
                         BitmapDescriptorFactory.fromBitmap(MarkerUtils
                                 .createStoreMarker(getLayoutInflater(), this.getApplicationContext()
-                                        , MarkerUtils.INACTIVE_NAME, MarkerUtils.INACTIVE_BG_NAME, informationItem.header))
+                                        , MarkerUtils.INACTIVE_NAME, informationItem.header))
                 );
 
         Marker marker = mMap.addMarker(options);
