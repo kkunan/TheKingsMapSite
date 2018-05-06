@@ -11,6 +11,6 @@ public class Main extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.activity_maps);
+        setContentView(R.layout.map_selector_layout);
     }
 }
