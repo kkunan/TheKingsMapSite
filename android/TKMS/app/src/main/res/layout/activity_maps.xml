@@ -15,34 +15,37 @@
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
         tools:context=".Activities.MapsActivity" />
 
     <com.todddavies.components.progressbar.ProgressWheel
         android:id="@+id/pw_spinner"
-        android:background="@drawable/pink_heart"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_alignParentRight="true"
+        android:background="@mipmap/mymap_icon03"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="50dp"
-        ProgressWheel:pwRimColor="#330097D6"
-        ProgressWheel:pwBarLength="60dp"
-        ProgressWheel:pwBarColor="#0097D6"
-        ProgressWheel:pwBarWidth="5dp"
+        android:layout_marginLeft="60dp"
+        android:layout_marginTop="10dp"
+        map:pwText="12"
+        map:pwTextSize="10sp"
+        ProgressWheel:pwRimColor="#ffec7375"
+        ProgressWheel:pwBarLength="45dp"
+        ProgressWheel:pwBarColor="#ec7375"
+        ProgressWheel:pwBarWidth="0dp"
         ProgressWheel:pwRimWidth="2dp"/>
 
     <ImageView
 
-        android:src="@mipmap/hamburger_icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="100dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
         android:onClick="OnMapSelectionClick"
-        />
+        android:src="@mipmap/mymap_icon01" />
 
     <LinearLayout
         android:background="@android:color/white"
