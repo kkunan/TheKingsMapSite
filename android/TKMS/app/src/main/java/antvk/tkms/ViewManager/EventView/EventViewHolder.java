@@ -18,7 +18,6 @@ public class EventViewHolder extends RecyclerView.ViewHolder{
             super(v);
             vTitle = v.findViewById(R.id.event_title_text);
             vEventTime = (TextView) v.findViewById(R.id.event_time_text);
-            vBackground = v.findViewById(R.id.card_view_background);
         }
 
         public void setValue(String title, String time, Drawable drawable)
