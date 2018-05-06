@@ -27,6 +27,7 @@
 
     <com.todddavies.components.progressbar.ProgressWheel
         android:id="@+id/pw_spinner"
+        android:onClick="showHistory"
         android:layout_width="45dp"
         android:layout_height="45dp"
         android:background="@mipmap/mymap_icon03"

@@ -202,13 +202,16 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                                 // TODO
                                 findViewById(R.id.mapActivity_layout).setVisibility(View.VISIBLE);
                                 findViewById(R.id.history_activity_view).setVisibility(View.GONE);
-
+                                if(selectedMarker != null){
+                                    findViewById(R.id.header_content).setVisibility(View.VISIBLE);
+                                }
                                 return true;
                             case R.id.bottombaritem_history:
                                 // TODO
 //                                Intent intent = new Intent(MapsActivity.this,HistoryActivity.class);
 //                                startActivity(intent);
                                 findViewById(R.id.history_activity_view).setVisibility(View.VISIBLE);
+                                findViewById(R.id.header_content).setVisibility(View.GONE);
                                 findViewById(R.id.mapActivity_layout).setVisibility(View.GONE);
                                 return true;
                             case R.id.bottombaritem_profile:
@@ -221,6 +224,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         return false;
                     }
                 });
+    }
+
+    public void showHistory(View view) {
+
+        View view2 = findViewById(R.id.bottombaritem_history);
+        view2.performClick();
     }
 
     private GoogleMap.InfoWindowAdapter setInfoWindowAdapter() {
