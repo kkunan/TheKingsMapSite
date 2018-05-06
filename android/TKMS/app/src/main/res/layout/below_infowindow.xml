@@ -19,20 +19,21 @@
         >
         <ImageView
             android:id="@+id/left_button"
-            android:src="@mipmap/left_arrow_button"
+            android:src="@drawable/btn_left"
             android:layout_width="0dp"
-            android:layout_height="20dp"
+            android:layout_height="25dp"
             android:onClick="OnNavigateButtonClick"
             android:layout_weight="0.1"
-            android:paddingTop="10px"
-            android:paddingBottom="10px"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             />
 
         <TextView
             android:id="@+id/below_info_header_text"
             android:layout_width="0dp"
-            android:textSize="15dp"
-            android:layout_marginLeft="10px"
+            android:textSize="15sp"
+            android:layout_marginStart="10dp"
+            android:layout_marginLeft="10dp"
             android:layout_height="match_parent"
             android:layout_weight="0.8"
             android:onClick="OnBelowWindowClick"
@@ -40,14 +41,15 @@
 
         <ImageView
             android:id="@+id/right_button"
-            android:src="@mipmap/right_arrow_button"
+            android:src="@drawable/btn_right"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="25dp"
             android:onClick="OnNavigateButtonClick"
             android:layout_weight="0.1"
-            android:paddingTop="10px"
-            android:paddingBottom="10px"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             />
+
     </LinearLayout>
 
     <android.support.design.widget.BottomNavigationView
