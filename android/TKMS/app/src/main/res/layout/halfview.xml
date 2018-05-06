@@ -2,10 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginHorizontal="5sp"
-    android:background="@color/dark_grey"
+    android:layout_margin="10dp"
     >
-
 
     <ImageView
 
@@ -14,6 +12,7 @@
         android:layout_width="match_parent"
         android:adjustViewBounds="true"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
         />
 
     <TextView
@@ -24,6 +23,6 @@
         android:layout_height="wrap_content"
         android:text="TEXT"
         android:textColor="@android:color/white"
-        android:textSize="16sp" />
+        android:textSize="14sp" />
 
 </LinearLayout>

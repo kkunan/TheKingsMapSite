@@ -6,7 +6,6 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -62,7 +61,7 @@ public class HistoryItemAdapter extends RecyclerView.Adapter<HistoryItemAdapter.
         public VisitedInformationHolder(View v) {
             super(v);
             vTitle = v.findViewById(R.id.place_name_text);
-            boldDateAndDescription = v.findViewById(R.id.event_time_text);
+            boldDateAndDescription = v.findViewById(R.id.time_visit);
             imageView = v.findViewById(R.id.history_view_pic);
         }
 
@@ -75,7 +74,8 @@ public class HistoryItemAdapter extends RecyclerView.Adapter<HistoryItemAdapter.
                     String.format("<b>%s</b>",simpleDateFormat.format(visitedDate))
             )+ item.placeDescription;
 
-            boldDateAndDescription.setText(dateTimeText);
+            if(boldDateAndDescription!=null)
+                boldDateAndDescription.setText(dateTimeText);
 
             String imageFolder = MapsActivity.mapIndex==0?Constants.KINGS_IMAGE_FOLDER:Constants.DESTINY_IMAGE_FOLDER;
             imageView.setImageDrawable(ImageUtils.getDrawable(context, imageFolder,item.placeImage));

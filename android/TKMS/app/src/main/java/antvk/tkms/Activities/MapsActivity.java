@@ -208,8 +208,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                                 // TODO
 //                                Intent intent = new Intent(MapsActivity.this,HistoryActivity.class);
 //                                startActivity(intent);
-                                findViewById(R.id.mapActivity_layout).setVisibility(View.GONE);
                                 findViewById(R.id.history_activity_view).setVisibility(View.VISIBLE);
+                                findViewById(R.id.mapActivity_layout).setVisibility(View.GONE);
                                 return true;
                             case R.id.bottombaritem_profile:
                                 // TODO
