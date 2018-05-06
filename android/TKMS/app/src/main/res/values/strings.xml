@@ -7,4 +7,6 @@
     <string name="checkin">Check-in at </string>
     <string name="uncheck">Undo checkin at</string>
     <string name="recent">Recent</string>
-</resources>
+    <string name="facebook_app_id">209605959823801</string>
+
+    </resources>

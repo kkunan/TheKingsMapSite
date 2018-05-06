@@ -11,6 +11,11 @@ import android.net.Uri;
 import android.os.Environment;
 import android.view.View;
 import android.view.Window;
+//
+//import com.facebook.share.model.SharePhoto;
+//import com.facebook.share.model.SharePhotoContent;
+//import com.facebook.share.widget.ShareButton;
+//import com.facebook.share.widget.ShareDialog;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -73,6 +78,19 @@ public class ImageUtils extends Activity{
 
         return bitmap;
     }
+
+//    public static void sharePicToFB(Bitmap image, ShareButton shareButton, ShareDialog shareDialog)
+//    {
+//        SharePhoto photo = new SharePhoto.Builder()
+//                .setBitmap(image)
+//                .build();
+//        SharePhotoContent content = new SharePhotoContent.Builder()
+//                .addPhoto(photo)
+//                .build();
+//
+//        shareButton.setShareContent(content);
+//        shareDialog.show(content);
+//    }
 
 
     public static Map<String, Drawable> getDrawables(Context context, String imageFolder, String[] names) {
