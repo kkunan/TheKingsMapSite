@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.Window;
 
+import antvk.tkms.Activities.MapSelectorActivity;
 import antvk.tkms.R;
 
 public class Splash extends Activity {
@@ -22,7 +23,7 @@ public class Splash extends Activity {
 
         runnable = new Runnable() {
             public void run() {
-                Intent intent = new Intent(Splash.this, Main.class);
+                Intent intent = new Intent(getApplicationContext(), MapSelectorActivity.class);
                 startActivity(intent);
                 finish();
             }
