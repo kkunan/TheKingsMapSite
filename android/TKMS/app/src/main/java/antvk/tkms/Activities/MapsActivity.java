@@ -18,6 +18,8 @@ import android.support.annotation.RequiresApi;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -55,6 +57,8 @@ import antvk.tkms.R;
 import antvk.tkms.Utils.ImageUtils;
 import antvk.tkms.Utils.LocationUtils;
 import antvk.tkms.Utils.MarkerUtils;
+import antvk.tkms.ViewManager.HistoryItemView.HistoryItemAdapter;
+import antvk.tkms.ViewManager.RecyclerItemClickListener;
 
 import static antvk.tkms.Activities.ActivityWithBackButton.MAP_ID_KEY;
 import static antvk.tkms.Activities.MarkerEventListActivity.MARKER_KEY;
@@ -82,6 +86,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     int value;
 
+    HistoryItemAdapter historyItemAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,6 +112,55 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
     }
+
+    private void initializeHeaderView() {
+
+        ProgressWheel progressBar = (ProgressWheel) findViewById(R.id.heart_spinner);
+        double percent = mapVisitedInformation.getVisitedPercentage();
+        progressBar.incrementProgress((int)(Math.ceil(percent*360)));
+        progressBar.setText((int)(Math.ceil(percent*100))+"");
+
+        TextView textView = (TextView)findViewById(R.id.complete_counter);
+        textView.setText(
+                String.format("%s / %s events complete!"
+                        ,historyItemAdapter.informationItems.size(), mapVisitedInformation.informationList.size()
+                )
+        );
+
+    }
+
+
+    private void initializeRecycleView() {
+
+        RecyclerView recList = (RecyclerView) findViewById(R.id.history_list_view);
+        recList.setHasFixedSize(true);
+        recList.addOnItemTouchListener(
+                new RecyclerItemClickListener(getApplicationContext(), recList ,new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override public void onItemClick(View view, int position) {
+
+//                            Intent intent = new Intent(getApplicationContext(),DescriptionActivity.class);
+//
+//                            Bundle b = setExtra(MARKER_KEY,value);
+//                            b = setExtra(EVENT_KEY,position, b);
+//                            b = setExtra(MAP_ID_KEY,mapIndex,b);
+//                            intent.putExtras(b);
+//                            startActivity(intent);
+                        // TODO: 06/05/2018 share achievements
+                    }
+
+                    @Override public void onLongItemClick(View view, int position) {
+                        // do whatever
+                    }
+                }));
+
+        LinearLayoutManager llm = new LinearLayoutManager(this);
+        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        recList.setLayoutManager(llm);
+        recList.setAdapter(historyItemAdapter);
+
+
+    }
+
 
     void setupLocationService()
     {
@@ -146,11 +200,16 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         switch (item.getItemId()) {
                             case R.id.bottombaritem_mymap:
                                 // TODO
+                                findViewById(R.id.mapActivity_layout).setVisibility(View.VISIBLE);
+                                findViewById(R.id.history_activity_view).setVisibility(View.GONE);
+
                                 return true;
                             case R.id.bottombaritem_history:
                                 // TODO
-                                Intent intent = new Intent(MapsActivity.this,HistoryActivity.class);
-                                startActivity(intent);
+//                                Intent intent = new Intent(MapsActivity.this,HistoryActivity.class);
+//                                startActivity(intent);
+                                findViewById(R.id.mapActivity_layout).setVisibility(View.GONE);
+                                findViewById(R.id.history_activity_view).setVisibility(View.VISIBLE);
                                 return true;
                             case R.id.bottombaritem_profile:
                                 // TODO
@@ -274,6 +333,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             mapVisitedInformation = gson.fromJson(checkinInfo, MapVisitedInformation.class);
 
         }
+
+        historyItemAdapter = new HistoryItemAdapter(getApplicationContext(),mapVisitedInformation.getVisitedList());
+        initializeHeaderView();
+        initializeRecycleView();
 
        // System.out.println("progress: "+mapVisitedInformation.getVisitedPercentage());
 
