@@ -152,9 +152,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                             case R.id.bottombaritem_profile:
                                 // TODO
                                 return true;
-                            case R.id.bottombaritem_settings:
-                                // TODO
-                                return true;
+//                            case R.id.bottombaritem_settings:
+//                                // TODO
+//                                return true;
                         }
                         return false;
                     }
