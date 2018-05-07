@@ -25,6 +25,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import antvk.tkms.Constants;
+
 public class ImageUtils extends Activity{
 
     private void takeScreenshot(Window window) {
@@ -92,6 +94,17 @@ public class ImageUtils extends Activity{
 //        shareDialog.show(content);
 //    }
 
+    public static String getImageFolderByMapType(int type)
+    {
+        switch (type)
+        {
+            case 0 : return Constants.KINGS_IMAGE_FOLDER;
+            case 1 : return Constants.DESTINY_IMAGE_FOLDER;
+            case 2 : return Constants.TENCENT_IMAGE_FOLDER;
+
+            default: return Constants.LOCAL_IMAGE_FOLDER;
+        }
+    }
 
     public static Map<String, Drawable> getDrawables(Context context, String imageFolder, String[] names) {
         Map<String, Drawable> da = new HashMap<>();

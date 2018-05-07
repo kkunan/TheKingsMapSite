@@ -2,12 +2,16 @@
 	{
 		"mapID": 0,
 		"mapName": "ตามรอยในหลวง ร ๙",
-		"imageLogo": "select_map02.png"
+		"imageLogo": "select_map00.png"
 	},
 	{
 		"mapID": 1,
 		"mapName": "ตามรอยบุพเพสันนิวาส",
 		"imageLogo": "select_map01.png"
+	},
+	{
+		"mapID": 2,
+		"mapName": "Tencent",
+		"imageLogo": "select_map02.png"
 	}
-
 ]

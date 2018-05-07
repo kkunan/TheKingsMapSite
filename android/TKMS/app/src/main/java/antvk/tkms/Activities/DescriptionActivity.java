@@ -2,7 +2,9 @@ package antvk.tkms.Activities;
 
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -17,10 +19,12 @@ import antvk.tkms.Struct.Information.InformationItem.Event;
 
 import static antvk.tkms.Activities.MapsActivity.mapIndex;
 
+@RequiresApi(api = Build.VERSION_CODES.N)
 public class DescriptionActivity extends ActivityWithBackButton{
 
     Event event;
     int markerId, eventId;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +57,7 @@ public class DescriptionActivity extends ActivityWithBackButton{
             descriptionText.setText(event.description);
 
             if(event.imageName.length()>0) {
-                String imageFolder = mapIndex==0? Constants.KINGS_IMAGE_FOLDER:Constants.DESTINY_IMAGE_FOLDER;
+                String imageFolder = ImageUtils.getImageFolderByMapType(mapIndex);
                 Drawable drawable = ImageUtils.getDrawable(this.getApplicationContext(), imageFolder, event.imageName);
                 ImageView imageView = (ImageView) findViewById(R.id.imageView);
                 imageView.setImageDrawable(drawable);

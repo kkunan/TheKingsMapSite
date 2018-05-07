@@ -42,20 +42,17 @@ import antvk.tkms.Utils.LocationUtils;
 import antvk.tkms.ViewManager.EventView.EventViewAdapter;
 import antvk.tkms.ViewManager.RecyclerItemClickListener;
 
-import static antvk.tkms.Activities.MapsActivity.gson;
-import static antvk.tkms.Activities.MapsActivity.mapIndex;
-import static antvk.tkms.Activities.MapsActivity.mapVisitedInformation;
-import static antvk.tkms.Activities.MapsActivity.preferences;
+import static antvk.tkms.Activities.MapsActivity.*;
 
 
-@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+@RequiresApi(api = Build.VERSION_CODES.N)
 public class MarkerEventListActivity extends ActivityWithBackButton {
 
     public static InformationItem item;
     LocationManager manager;
     int value;
 
-    static final double CHECKIN_AVALABLE_RANGE = 20.0;
+    static final double CHECKIN_AVALABLE_RANGE = 500.0;
 
     boolean prevShow = false;
     boolean prevPink = false;
@@ -70,14 +67,34 @@ public class MarkerEventListActivity extends ActivityWithBackButton {
 
 
         if (value != -1) {
-            item = MapsActivity.markerInformationItemMap.get(
-                    MapsActivity.markerList.get(value)
+            item = markerInformationItemMap.get(
+                    markerList.get(value)
             );
+
+
+            sortOutLocationStuff();
 
             setTitle(item.header);
             setPlaceContent();
             initializeRecycleView();
-            sortOutLocationStuff();
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                return;
+            }
+            Location location = manager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            boolean visited = mapVisitedInformation.getVisitedAt(item.placeID);
+            double distance = LocationUtils.quickDistance(
+                    new LatLng(location.getLatitude(),location.getLongitude()
+                    ), item.location
+            );
+            boolean inDistance = distance <= CHECKIN_AVALABLE_RANGE;
+            sortoutUIByStatus(visited,inDistance);
         }
     }
 
@@ -177,7 +194,7 @@ public class MarkerEventListActivity extends ActivityWithBackButton {
 
     public void setPlaceContent()
     {
-        String imageFolder = mapIndex==0? Constants.KINGS_IMAGE_FOLDER:Constants.DESTINY_IMAGE_FOLDER;
+        String imageFolder = ImageUtils.getImageFolderByMapType(mapIndex);
         ImageView placeImageView = (ImageView) findViewById(R.id.place_image);
         placeImageView.setImageDrawable(ImageUtils.getDrawable(getApplicationContext(),
                 imageFolder,

@@ -1,6 +1,8 @@
 package antvk.tkms.ViewManager.HistoryItemView;
 
 import android.content.Context;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -20,6 +22,7 @@ import antvk.tkms.Struct.Information.InformationItem;
 import antvk.tkms.Struct.Information.MapVisitedInformation.VisitedInformation;
 import antvk.tkms.Utils.ImageUtils;
 
+@RequiresApi(api = Build.VERSION_CODES.N)
 public class HistoryItemAdapter extends RecyclerView.Adapter<HistoryItemAdapter.VisitedInformationHolder> {
 
     public List<VisitedInformation> informationItems;
@@ -65,19 +68,19 @@ public class HistoryItemAdapter extends RecyclerView.Adapter<HistoryItemAdapter.
             imageView = v.findViewById(R.id.history_view_pic);
         }
 
+
         public void setValue(InformationItem item, Date visitedDate) {
 
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            SimpleDateFormat simpleDateFormat = Constants.DMY_DATE_FORMATTER;
 
             vTitle.setText(item.header);
-            String dateTimeText = Html.fromHtml(
-                    String.format("<b>%s</b>",simpleDateFormat.format(visitedDate))
-            )+ item.placeDescription;
+            String dateTimeText = Html.fromHtml("<b>%s</b>"+simpleDateFormat.format(visitedDate)) +
+                    " "+ item.placeDescription;
 
             if(boldDateAndDescription!=null)
                 boldDateAndDescription.setText(dateTimeText);
 
-            String imageFolder = MapsActivity.mapIndex==0?Constants.KINGS_IMAGE_FOLDER:Constants.DESTINY_IMAGE_FOLDER;
+            String imageFolder = ImageUtils.getImageFolderByMapType(MapsActivity.mapIndex);
             imageView.setImageDrawable(ImageUtils.getDrawable(context, imageFolder,item.placeImage));
         }
     }

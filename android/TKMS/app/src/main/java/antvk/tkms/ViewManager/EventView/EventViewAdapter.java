@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import java.util.List;
 
+import antvk.tkms.Constants;
 import antvk.tkms.Struct.Information.InformationItem.Event;
 import antvk.tkms.R;
 
@@ -26,7 +27,9 @@ public class EventViewAdapter extends RecyclerView.Adapter<EventViewHolder> {
         @Override
         public void onBindViewHolder(EventViewHolder eventViewHolder, int i) {
             Event ci = contactList.get(i);
-            eventViewHolder.setValue(ci.title,ci.getDate().toString(),null);
+            eventViewHolder.setValue(ci.title,
+                    Constants.DMY_DATE_FORMATTER.format(ci.getDate())
+            );
         }
 
         @Override

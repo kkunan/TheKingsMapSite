@@ -12,7 +12,6 @@ public class EventViewHolder extends RecyclerView.ViewHolder{
 
         protected TextView vTitle;
         protected TextView vEventTime;
-        protected ImageView vBackground;
 
         public EventViewHolder(View v) {
             super(v);
@@ -20,11 +19,9 @@ public class EventViewHolder extends RecyclerView.ViewHolder{
             vEventTime = (TextView) v.findViewById(R.id.event_time_text);
         }
 
-        public void setValue(String title, String time, Drawable drawable)
+        public void setValue(String title, String time)
         {
             vTitle.setText(title);
             vEventTime.setText(time);
-            if(drawable!=null)
-                vBackground.setImageDrawable(drawable);
         }
 }

@@ -41,24 +41,25 @@ public class MapSelectorActivity extends AppCompatActivity{
     maps = getAllItems(getApplicationContext());
 
 
-    ArrayList<AvailableMap> leftViewList = new ArrayList<>();
-    ArrayList<AvailableMap> rightViewList = new ArrayList<>();
+//    ArrayList<AvailableMap> leftViewList = new ArrayList<>();
+//    ArrayList<AvailableMap> rightViewList = new ArrayList<>();
 
-    for(int i=0;i<maps.size();i++)
-    {
-        AvailableMap map = maps.get(i);
+//    for(int i=0;i<maps.size();i++)
+//    {
+//        AvailableMap map = maps.get(i);
+//
+//        if(i%2==0) {
+//            leftViewList.add(map);
+//        }
+//        else {
+//            rightViewList.add(map);
+//        }
+//    }
 
-        if(i%2==0) {
-            leftViewList.add(map);
-        }
-        else {
-            rightViewList.add(map);
-        }
-    }
+//    sortOutRecycleViews(R.id.left_view, leftViewList);
+//    sortOutRecycleViews(R.id.right_view, rightViewList);
 
-    sortOutRecycleViews(R.id.left_view, leftViewList);
-    sortOutRecycleViews(R.id.right_view, rightViewList);
-
+        sortOutRecycleViews(R.id.map_list_view,maps);
     }
 
     public List<AvailableMap> getAllItems(Context context) {
@@ -96,7 +97,7 @@ public class MapSelectorActivity extends AppCompatActivity{
                 new RecyclerItemClickListener(getApplicationContext(), recList ,new RecyclerItemClickListener.OnItemClickListener() {
                     @Override public void onItemClick(View view, int position) {
 
-                        System.out.println("position "+position+" "+views.size());
+                    //    System.out.println("position "+position+" "+views.size());
 
                         Intent intent = new Intent(MapSelectorActivity.this,MapsActivity.class);
 
@@ -115,7 +116,7 @@ public class MapSelectorActivity extends AppCompatActivity{
                 }));
 
         LinearLayoutManager llm = new LinearLayoutManager(this);
-        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        llm.setOrientation(LinearLayoutManager.HORIZONTAL);
         recList.setLayoutManager(llm);
         MapSelectorAdapter adapter = new MapSelectorAdapter(MapSelectorActivity.this,viewList);
         recList.setAdapter(adapter);

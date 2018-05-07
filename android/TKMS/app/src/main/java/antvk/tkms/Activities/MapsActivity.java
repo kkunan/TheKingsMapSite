@@ -63,6 +63,7 @@ import antvk.tkms.ViewManager.RecyclerItemClickListener;
 import static antvk.tkms.Activities.ActivityWithBackButton.MAP_ID_KEY;
 import static antvk.tkms.Activities.MarkerEventListActivity.MARKER_KEY;
 
+@RequiresApi(api = Build.VERSION_CODES.N)
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMapClickListener {
 
 
@@ -85,6 +86,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     static Marker selectedMarker;
 
     int value;
+
+
 
     HistoryItemAdapter historyItemAdapter;
     @Override
@@ -320,7 +323,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        List<InformationItem> informationItems = getAllItems(this, Constants.getFileName(mapIndex));
+        List<InformationItem> informationItems = getAllItems(this, Constants.getFileName(mapIndex,preferences));
         for (InformationItem item : informationItems) {
             Marker marker = createMarker(item);
             mMap.moveCamera(CameraUpdateFactory.newLatLng(marker.getPosition()));
@@ -364,7 +367,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
 
         try {
-            String imageFolder = mapIndex==0?Constants.KINGS_IMAGE_FOLDER:Constants.DESTINY_IMAGE_FOLDER;
+            String imageFolder = ImageUtils.getImageFolderByMapType(mapIndex);
             String[] imageFile = getAssets().list(imageFolder);
             imageDrawables = ImageUtils.getDrawables(this, imageFolder, imageFile);
 
@@ -427,11 +430,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 //        15: Streets
 //        20: Buildings
    //     mMap.setMinZoomPreference(15);
-        if(value==-1 && location!=null)
+        if(location!=null)
             animateCameraTo(new LatLng(location.getLatitude(), location.getLongitude()), 15);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+
     public Marker createMarker(InformationItem informationItem) {
         MarkerOptions options = new MarkerOptions()
                 .title(informationItem.header)

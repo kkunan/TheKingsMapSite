@@ -3,14 +3,15 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="10dp"
+    android:weightSum="1"
     >
 
     <ImageView
-
         android:id="@+id/halfview_image"
         android:layout_gravity="center_horizontal"
         android:layout_width="match_parent"
         android:adjustViewBounds="true"
+        android:src="@android:drawable/alert_dark_frame"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         />
@@ -23,6 +24,6 @@
         android:layout_height="wrap_content"
         android:text="TEXT"
         android:textColor="@android:color/white"
-        android:textSize="14sp" />
+        android:textSize="20sp" />
 
 </LinearLayout>
