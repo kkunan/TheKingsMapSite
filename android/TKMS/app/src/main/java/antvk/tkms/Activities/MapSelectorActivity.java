@@ -131,4 +131,9 @@ public class MapSelectorActivity extends AppCompatActivity{
 //                   ));
 //        }
     }
+
+    public void onAddNewMapClick(View view)
+    {
+
+    }
 }

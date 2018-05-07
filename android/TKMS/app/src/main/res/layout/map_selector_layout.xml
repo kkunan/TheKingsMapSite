@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/dark_grey"
+    android:paddingTop="40dp">
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/dark_grey"
-    android:paddingTop="40dp">
+>
 
     <TextView
         android:id="@+id/textView2"
@@ -17,16 +21,11 @@
         android:textColor="@color/colorBG"
         android:layout_marginBottom="20dp"/>
 
-    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-
-        >
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/map_list_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_margin="10dp"
             />
         <!--<android.support.v7.widget.RecyclerView-->
@@ -36,7 +35,33 @@
             <!--android:layout_marginRight="10dp"-->
             <!--android:layout_weight="0.5"></android.support.v7.widget.RecyclerView>-->
 
-    </ScrollView>
 
 </LinearLayout>
 
+    <LinearLayout
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_margin="20dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true">
+    <Button
+        android:id="@+id/add_map_button"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:background="@mipmap/add_map"
+        android:layout_gravity="center"
+        android:onClick="onAddNewMapClick"
+        />
+    <!--<TextView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:gravity="center"-->
+        <!--android:textSize="15sp"-->
+        <!--android:textColor="@android:color/white"-->
+        <!--android:text="เพิ่มแผนที่ส่วนตัว"-->
+        <!--/>-->
+    </LinearLayout>
+</RelativeLayout>
