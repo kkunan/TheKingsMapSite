@@ -75,7 +75,7 @@ public class HistoryItemAdapter extends RecyclerView.Adapter<HistoryItemAdapter.
 
             vTitle.setText(item.header);
             String dateTimeText = Html.fromHtml("<b>"+simpleDateFormat.format(visitedDate)+"</b>") +
-                    "\n"+ item.placeDescription;
+                    "\n";
 
             if(boldDateAndDescription!=null)
                 boldDateAndDescription.setText(dateTimeText);
