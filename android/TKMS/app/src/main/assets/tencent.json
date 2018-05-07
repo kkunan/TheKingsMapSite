@@ -1,0 +1,29 @@
+[{
+		"header": "Tencent",
+		"events": [
+			{
+				"title": "The 5th Mobile Application Hackathon (round 1)",
+				"date":"04-05-2018",
+				"dateFormat":"dd-MM-yyyy",
+				"description": "",
+				"imageName": "hackathon_5.jpg",
+				"url": ""
+			},
+			{
+				"title": "The 5th Mobile Application Hackathon (final round)",
+				"date":"07-05-2018",
+				"dateFormat":"dd-MM-yyyy",
+				"description": "",
+				"imageName": "hackathon_5.jpg",
+				"url": ""
+			}
+		],
+		"location": {
+			"latitude":13.787006, 
+			"longitude":100.574812
+			},
+		"placeID": "ChIJc_O-19Kd4jARtHQix3yELto",
+		"placeImage": "tencent_logo.png",
+		"placeDescription": "Tencent (Thailand) Company Limited"
+	}
+	]
