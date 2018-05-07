@@ -6,11 +6,12 @@
 
     <ImageView
         android:id="@+id/imageView1"
-        android:layout_width="131dp"
-        android:layout_height="127dp"
+        android:layout_width="214dp"
+        android:layout_height="271dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="141dp"
-        android:src="@mipmap/splash" />
+        android:layout_marginTop="74dp"
+        android:contentDescription="@string/app_name"
+        android:src="@mipmap/splash2" />
 
 </RelativeLayout>
