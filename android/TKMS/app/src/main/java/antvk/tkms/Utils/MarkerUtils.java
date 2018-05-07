@@ -3,12 +3,14 @@ package antvk.tkms.Utils;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.media.Image;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.text.Layout;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -91,10 +93,17 @@ public class MarkerUtils {
 //        leftBackground.setBackground(
 //                LocationUtils.getDrawable(context,Constants.PIN_FOLDER,imageName)
 //        );
+
         markerRating.setBackground(
                 ImageUtils.getDrawable(context,Constants.PIN_FOLDER,imageBG)
         );
 
+        ImageView markerImage = (ImageView)markerLayout.findViewById(R.id.marker_image);
+
+        if(leftImage!=null)
+        {
+            markerImage.setImageDrawable(ImageUtils.getDrawable(context,Constants.PIN_FOLDER,leftImage));
+        }
 
         text = text.replaceAll("\\ ","\n")+"\n";
 

@@ -95,8 +95,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     int value;
 
 
-
     HistoryItemAdapter historyItemAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -127,13 +127,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         ProgressWheel progressBar = (ProgressWheel) findViewById(R.id.heart_spinner);
         double percent = mapVisitedInformation.getVisitedPercentage();
-        progressBar.incrementProgress((int)(Math.ceil(percent*360)));
-        progressBar.setText((int)(Math.ceil(percent*100))+"");
+        progressBar.incrementProgress((int) (Math.ceil(percent * 360)));
+        progressBar.setText((int) (Math.ceil(percent * 100)) + "");
 
-        TextView textView = (TextView)findViewById(R.id.complete_counter);
+        TextView textView = (TextView) findViewById(R.id.complete_counter);
         textView.setText(
                 String.format("%s / %s events complete!"
-                        ,historyItemAdapter.informationItems.size(), mapVisitedInformation.informationList.size()
+                        , historyItemAdapter.informationItems.size(), mapVisitedInformation.informationList.size()
                 )
         );
 
@@ -145,8 +145,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         RecyclerView recList = (RecyclerView) findViewById(R.id.history_list_view);
         recList.setHasFixedSize(true);
         recList.addOnItemTouchListener(
-                new RecyclerItemClickListener(getApplicationContext(), recList ,new RecyclerItemClickListener.OnItemClickListener() {
-                    @Override public void onItemClick(View view, int position) {
+                new RecyclerItemClickListener(getApplicationContext(), recList, new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
 
 //                            Intent intent = new Intent(getApplicationContext(),DescriptionActivity.class);
 //
@@ -158,7 +159,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         // TODO: 06/05/2018 share achievements
                     }
 
-                    @Override public void onLongItemClick(View view, int position) {
+                    @Override
+                    public void onLongItemClick(View view, int position) {
                         // do whatever
                     }
                 }));
@@ -172,8 +174,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
 
-    void setupLocationService()
-    {
+    void setupLocationService() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
@@ -212,7 +213,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                                 // TODO
                                 findViewById(R.id.mapActivity_layout).setVisibility(View.VISIBLE);
                                 findViewById(R.id.history_activity_view).setVisibility(View.GONE);
-                                if(selectedMarker != null){
+                                if (selectedMarker != null) {
                                     findViewById(R.id.header_content).setVisibility(View.VISIBLE);
                                 }
                                 return true;
@@ -330,7 +331,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        List<InformationItem> informationItems = getAllItems(this, Constants.getFileName(mapIndex,preferences));
+        List<InformationItem> informationItems = getAllItems(this, Constants.getFileName(mapIndex, preferences));
         for (InformationItem item : informationItems) {
             Marker marker = createMarker(item);
             mMap.moveCamera(CameraUpdateFactory.newLatLng(marker.getPosition()));
@@ -339,35 +340,31 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         markerList = new ArrayList<>(markerInformationItemMap.keySet());
 
-        String checkinInfo = preferences.getString(mapIndex+"",null);
-        if(checkinInfo == null)
-        {
+        String checkinInfo = preferences.getString(mapIndex + "", null);
+        if (checkinInfo == null) {
             mapVisitedInformation = MapVisitedInformation.getInitialMapVisitedInformation(
                     informationItems);
-        }
-
-        else
-        {
+        } else {
             mapVisitedInformation = gson.fromJson(checkinInfo, MapVisitedInformation.class);
 
         }
 
-        historyItemAdapter = new HistoryItemAdapter(getApplicationContext(),mapVisitedInformation.getVisitedList());
+        historyItemAdapter = new HistoryItemAdapter(getApplicationContext(), mapVisitedInformation.getVisitedList());
         initializeHeaderView();
         initializeRecycleView();
 
-       // System.out.println("progress: "+mapVisitedInformation.getVisitedPercentage());
+        // System.out.println("progress: "+mapVisitedInformation.getVisitedPercentage());
 
         ProgressWheel pw = (ProgressWheel) findViewById(R.id.pw_spinner);
-        pw.incrementProgress((int)(mapVisitedInformation.getVisitedPercentage()* 360));
-        pw.setText((int)Math.ceil(100*mapVisitedInformation.getVisitedPercentage())+"");
+        pw.incrementProgress((int) (mapVisitedInformation.getVisitedPercentage() * 360));
+        pw.setText((int) Math.ceil(100 * mapVisitedInformation.getVisitedPercentage()) + "");
 
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
                 selectedMarker = marker;
                 MarkerUtils.enableMarker(getLayoutInflater(), getApplicationContext(), selectedMarker);
-                animateCameraTo(marker.getPosition(),15);
+                animateCameraTo(marker.getPosition(), 15);
                 showInfoWindowBelow(marker);
                 return true;
             }
@@ -395,7 +392,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         b.putInt(MARKER_KEY, markerList.indexOf(marker)); //Your id
 
-    //    System.out.println("marker index " + markerList.indexOf(marker));
+        //    System.out.println("marker index " + markerList.indexOf(marker));
         intent.putExtras(b); //Put your id to your next Intent
         startActivity(intent);
         finish();
@@ -476,8 +473,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 //        10: City
 //        15: Streets
 //        20: Buildings
-   //     mMap.setMinZoomPreference(15);
-        if(location!=null)
+        //     mMap.setMinZoomPreference(15);
+        if (location != null)
             animateCameraTo(new LatLng(location.getLatitude(), location.getLongitude()), 15);
     }
 
@@ -496,6 +493,42 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         markerInformationItemMap.put(marker, informationItem);
         return marker;
+    }
+
+    public void animateToClosestMarker(LatLng currentLatlng) {
+        double distance = 0.0;
+        Marker mk = null;
+
+        for (Marker marker : markerList) {
+            double quickDistance = LocationUtils.quickDistance(currentLatlng, marker.getPosition());
+            if (quickDistance < distance) {
+                mk = marker;
+                distance = quickDistance;
+            }
+        }
+
+        if (mk != null) {
+            animateCameraTo(mk.getPosition(), 15);
+        }
+    }
+
+    public void onGotoClosestPlaceClick(View view) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            ActivityCompat.requestPermissions(MapsActivity.this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    MY_PERMISSIONS_REQUEST_FINE_LOCATION);
+
+            ActivityCompat.requestPermissions(MapsActivity.this,
+                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                    MY_PERMISSIONS_REQUEST_COARSE_LOCATION);
+            return;
+        }
+        Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        if(location!=null)
+        {
+            animateToClosestMarker(new LatLng(location.getLatitude(),location.getLongitude()));
+        }
     }
 
 
