@@ -3,10 +3,13 @@ package antvk.tkms.Activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -28,7 +31,7 @@ import static antvk.tkms.Activities.ActivityWithBackButton.MAP_ID_KEY;
 
 public class MapSelectorActivity extends AppCompatActivity{
 
-    List<AvailableMap> maps;
+    public static List<AvailableMap> maps;
     static String mapFile = "maps.json";
 
     Bundle b;
@@ -58,6 +61,21 @@ public class MapSelectorActivity extends AppCompatActivity{
 
 //    sortOutRecycleViews(R.id.left_view, leftViewList);
 //    sortOutRecycleViews(R.id.right_view, rightViewList);
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayOptions(actionBar.getDisplayOptions()
+                | ActionBar.DISPLAY_SHOW_CUSTOM);
+        ImageView imageView = new ImageView(actionBar.getThemedContext());
+        imageView.setScaleType(ImageView.ScaleType.CENTER);
+        imageView.setImageResource(R.mipmap.logo_icon);
+        ActionBar.LayoutParams layoutParams = new ActionBar.LayoutParams(
+                ActionBar.LayoutParams.WRAP_CONTENT,
+                ActionBar.LayoutParams.WRAP_CONTENT, Gravity.CENTER_HORIZONTAL
+                | Gravity.CENTER_VERTICAL);
+        layoutParams.leftMargin = 40;
+        imageView.setLayoutParams(layoutParams);
+        actionBar.setCustomView(imageView);
+        actionBar.setTitle("");
 
         sortOutRecycleViews(R.id.map_list_view,maps);
     }

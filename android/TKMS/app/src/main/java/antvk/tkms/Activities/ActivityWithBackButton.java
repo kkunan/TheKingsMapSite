@@ -1,8 +1,13 @@
 package antvk.tkms.Activities;
 
 import android.content.Intent;
+import android.support.v7.app.ActionBar;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Gravity;
+import android.widget.ImageView;
+
+import antvk.tkms.R;
 
 public class ActivityWithBackButton extends AppCompatActivity {
     public static final String MAP_ID_KEY = "mapID";
@@ -13,7 +18,7 @@ public class ActivityWithBackButton extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         try {
-            android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+            ActionBar actionBar = getSupportActionBar();
             actionBar.setDisplayHomeAsUpEnabled(true);
 
         } catch (NullPointerException e) {

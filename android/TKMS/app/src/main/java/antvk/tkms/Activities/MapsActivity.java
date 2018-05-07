@@ -17,9 +17,11 @@ import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -65,6 +67,7 @@ import antvk.tkms.Utils.ImageUtils;
 import antvk.tkms.Utils.LocationUtils;
 import antvk.tkms.Utils.MarkerUtils;
 import antvk.tkms.ViewManager.HistoryItemView.HistoryItemAdapter;
+import antvk.tkms.ViewManager.MapSelectorView.MapSelectorAdapter;
 import antvk.tkms.ViewManager.RecyclerItemClickListener;
 
 import static antvk.tkms.Activities.ActivityWithBackButton.MAP_ID_KEY;
@@ -120,7 +123,29 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        sortoutUI();
+    }
 
+    void sortoutUI()
+    {
+       ActionBar actionBar = getSupportActionBar();
+//        actionBar.setDisplayOptions(actionBar.getDisplayOptions()
+//                | ActionBar.DISPLAY_SHOW_CUSTOM);
+//        ImageView imageView = new ImageView(actionBar.getThemedContext());
+//        imageView.setScaleType(ImageView.ScaleType.CENTER);
+//        imageView.setImageResource(R.mipmap.the_app_icon_round);
+//        ActionBar.LayoutParams layoutParams = new ActionBar.LayoutParams(
+//                ActionBar.LayoutParams.WRAP_CONTENT,
+//                ActionBar.LayoutParams.WRAP_CONTENT, Gravity.LEFT
+//                | Gravity.CENTER_VERTICAL);
+//        layoutParams.leftMargin = 40;
+//        imageView.setLayoutParams(layoutParams);
+//        actionBar.setCustomView(imageView);
+
+        if(mapIndex>-1)
+        {
+            actionBar.setTitle(MapSelectorActivity.maps.get(mapIndex).mapName);
+        }
     }
 
     private void initializeHeaderView() {
@@ -225,9 +250,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                                 findViewById(R.id.header_content).setVisibility(View.GONE);
                                 findViewById(R.id.mapActivity_layout).setVisibility(View.GONE);
                                 return true;
-                            case R.id.bottombaritem_profile:
-                                // TODO
-                                return true;
+//                            case R.id.bottombaritem_profile:
+//                                // TODO
+//                                return true;
 //                            case R.id.bottombaritem_settings:
 //                                // TODO
 //                                return true;
@@ -496,7 +521,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     public void animateToClosestMarker(LatLng currentLatlng) {
-        double distance = 0.0;
+        double distance = Double.MAX_VALUE;
         Marker mk = null;
 
         for (Marker marker : markerList) {
@@ -508,7 +533,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
 
         if (mk != null) {
-            animateCameraTo(mk.getPosition(), 15);
+            selectMarker(mk);
         }
     }
 
@@ -524,7 +549,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     MY_PERMISSIONS_REQUEST_COARSE_LOCATION);
             return;
         }
+
         Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
+        System.out.println("goto closest place click! "+location);
         if(location!=null)
         {
             animateToClosestMarker(new LatLng(location.getLatitude(),location.getLongitude()));

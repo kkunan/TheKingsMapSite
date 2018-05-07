@@ -14,10 +14,10 @@
         android:title="History"
         app:showAsAction="ifRoom"/>
 
-    <item
-        android:id="@+id/bottombaritem_profile"
-        android:icon="@drawable/menu3"
-        android:title="Profile"
-        app:showAsAction="ifRoom"/>
+    <!--<item-->
+        <!--android:id="@+id/bottombaritem_profile"-->
+        <!--android:icon="@drawable/menu3"-->
+        <!--android:title="Profile"-->
+        <!--app:showAsAction="ifRoom"/>-->
 
 </menu>

@@ -52,6 +52,16 @@
         android:layout_marginTop="10dp"
         android:onClick="OnMapSelectionClick"
         android:src="@mipmap/mymap_icon01" />
+
+    <ImageView
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="10dp"
+        android:layout_toRightOf="@+id/pw_spinner"
+        android:src="@mipmap/goto_closest_icon"
+        android:onClick="onGotoClosestPlaceClick"
+        />
 </RelativeLayout>
     <include layout="@layout/activity_history"
         android:id="@+id/history_activity_view"
