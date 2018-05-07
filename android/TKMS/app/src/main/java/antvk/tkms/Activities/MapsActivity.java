@@ -24,8 +24,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.android.gms.location.places.GeoDataClient;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.PlaceBufferResponse;
+import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -35,6 +40,8 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -414,7 +421,47 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         InformationItem item = markerInformationItemMap.get(marker);
         header.setText(item.header.replaceAll("\\ ", "\n"));
 
-
+//        GeoDataClient mGeoDataClient = Places.getGeoDataClient(getApplicationContext());
+//        final Place[] myPlace = new Place[1];
+//        final PlaceBufferResponse[] places = {null};
+//        final float[] rating = new float[1];
+//
+//        mGeoDataClient.getPlaceById(item.placeID).addOnCompleteListener(new OnCompleteListener<PlaceBufferResponse>() {
+//            @Override
+//            public void onComplete(@NonNull Task<PlaceBufferResponse> task) {
+//                if (task.isSuccessful()) {
+//                    places[0] = task.getResult();
+//                    try {
+//                        myPlace[0] = places[0].get(0);
+//                        System.out.println("Place found: " + myPlace[0].getName());
+//                        Place place = myPlace[0];
+//                        if (place != null) {
+//                                rating[0] = place.getRating();
+//                            }
+//                            } catch (Exception e) {
+//                        }
+//                        }
+//                        }
+//                        });
+//
+//        try {
+//            ProgressBar ratingBar = (ProgressBar) findViewById(R.id.progress_star);
+//            TextView ratingText = (TextView) findViewById(R.id.rating_textview);
+//
+//            if (rating[0] <= 0) {
+//
+//                ratingBar.setProgress((int) ((rating[0] / 5.0) * 100));
+//                ratingText.setText(rating[0] + "");
+//            } else {
+//
+//                ratingBar.setVisibility(View.GONE);
+//                ratingText.setVisibility(View.GONE);
+//
+//            }
+//        }catch (Exception e)
+//        {
+//            e.printStackTrace();
+//        }
 //        imageView.setImageDrawable(imageDrawables.get(item.imageName));
 
     }
@@ -441,8 +488,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .position(informationItem.location)
                 .icon(
                         BitmapDescriptorFactory.fromBitmap(MarkerUtils
-                                .createStoreMarker(getLayoutInflater(), this.getApplicationContext()
-                                        , MarkerUtils.INACTIVE_NAME, informationItem.header))
+                                .createStoreMarker(getLayoutInflater(), this.getApplicationContext(),
+                                        null, MarkerUtils.INACTIVE_NAME, informationItem.header))
                 );
 
         Marker marker = mMap.addMarker(options);

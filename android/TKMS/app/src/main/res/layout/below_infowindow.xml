@@ -2,55 +2,86 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
+
+    android:background="@android:color/white"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:weightSum="5"
 
     >
     <LinearLayout
+
         android:id="@+id/header_content"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="2"
-        android:orientation="horizontal"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
         android:visibility="gone"
-        android:weightSum="1"
-        android:background="@drawable/text_line_hamepage"
         >
-        <ImageView
-            android:id="@+id/left_button"
-            android:src="@drawable/btn_left"
-            android:layout_width="0dp"
-            android:layout_height="25dp"
-            android:onClick="OnNavigateButtonClick"
-            android:layout_weight="0.1"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2"
+            android:orientation="horizontal"
+            android:weightSum="1"
+            android:background="@drawable/text_line_hamepage"
+            >
+            <ImageView
+                android:id="@+id/left_button"
+                android:src="@drawable/btn_left"
+                android:layout_width="0dp"
+                android:layout_height="25dp"
+                android:onClick="OnNavigateButtonClick"
+                android:layout_weight="0.1"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                />
 
-        <TextView
-            android:id="@+id/below_info_header_text"
-            android:layout_width="0dp"
-            android:textSize="15sp"
-            android:layout_marginStart="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.8"
-            android:onClick="OnBelowWindowClick"
-            />
+            <TextView
+                android:id="@+id/below_info_header_text"
+                android:layout_width="0dp"
+                android:textSize="15sp"
+                android:layout_marginStart="10dp"
+                android:text="TEXTTEXTEXT"
+                android:layout_marginLeft="10dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.8"
+                android:onClick="OnBelowWindowClick"
+                />
 
-        <ImageView
-            android:id="@+id/right_button"
-            android:src="@drawable/btn_right"
-            android:layout_width="0dp"
-            android:layout_height="25dp"
-            android:onClick="OnNavigateButtonClick"
-            android:layout_weight="0.1"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            />
+            <ImageView
+                android:id="@+id/right_button"
+                android:src="@drawable/btn_right"
+                android:layout_width="0dp"
+                android:layout_height="25dp"
+                android:onClick="OnNavigateButtonClick"
+                android:layout_weight="0.1"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                />
+
+        </LinearLayout>
+
+        <!--<RelativeLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="20dp">-->
+            <!--<include layout="@layout/rating_box"-->
+                <!--android:id="@+id/rating_box_box"-->
+                <!--android:layout_width="100dp"-->
+                <!--android:layout_marginLeft="50dp"-->
+                <!--android:layout_height="wrap_content" />-->
+
+            <!--<TextView-->
+                <!--android:id="@+id/rating_textview"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:textAlignment="center"-->
+                <!--android:layout_toRightOf="@+id/rating_box_box"-->
+                <!--android:text="2.4"-->
+                <!--android:layout_height="match_parent" />-->
+        <!--</RelativeLayout>-->
 
     </LinearLayout>
+
+
 
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/bottom_navigation_view"

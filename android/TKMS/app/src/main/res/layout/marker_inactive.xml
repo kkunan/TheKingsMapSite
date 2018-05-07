@@ -21,13 +21,13 @@
         <!--android:layout_height="match_parent"-->
         <!--android:orientation="horizontal" />-->
 
-        <LinearLayout
+        <ImageView
             android:id="@+id/marker_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:orientation="vertical">
-
+        </ImageView>
             <TextView
                 android:id="@+id/marker_text"
                 android:layout_width="wrap_content"
@@ -37,7 +37,7 @@
                 android:text="dgdfgdfg"
                 android:textColor="@android:color/black"
                 android:textStyle="bold" />
-        </LinearLayout>
+
     </LinearLayout>
 
 

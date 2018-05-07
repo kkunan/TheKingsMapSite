@@ -15,6 +15,8 @@ import android.widget.TextView;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Marker;
 
+import org.w3c.dom.Text;
+
 import java.util.List;
 import java.util.Map;
 
@@ -26,9 +28,10 @@ import antvk.tkms.Struct.Information.InformationItem;
 @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
 public class MarkerUtils {
 
-    public static final String INACTIVE_NAME = "pin_inactive.png";
-    public static final String ACTIVE_NOVISIT_NAME = "pin_active_no.png";
-    public static final String ACTIVE_VISITED_NAME = "pin_active_on.png";
+    public static final String INACTIVE_NAME = "pin_inactive_bg.png";
+    public static final String ACTIVE_NOVISIT_LEFT_NAME = "pin_active_no_left.png";
+    public static final String ACTIVE_VISITED_LEFT_NAME = "pin_active_on_left.png";
+    public static final String ACTIVE_NAME = "pin_active_bg.png";
 
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -39,14 +42,16 @@ public class MarkerUtils {
         String fileName;
         InformationItem item = MapsActivity.markerInformationItemMap.get(marker);
         if(MapsActivity.mapVisitedInformation.getVisitedAt(item.placeID))
-            fileName = ACTIVE_VISITED_NAME;
+            fileName = ACTIVE_VISITED_LEFT_NAME;
         else
-            fileName = ACTIVE_NOVISIT_NAME;
+            fileName = ACTIVE_NOVISIT_LEFT_NAME;
+
+
         //todo: pick active/inactive
         marker.setIcon(
                 BitmapDescriptorFactory.fromBitmap(
                         createStoreMarker(inflater,context
-                                ,fileName,
+                                ,fileName,ACTIVE_NAME,
                                 MapsActivity.markerInformationItemMap
                                         .get(marker)
                                         .header)
@@ -67,8 +72,8 @@ public class MarkerUtils {
         if(marker.isVisible())
         marker.setIcon(
                 BitmapDescriptorFactory.fromBitmap(
-                        createStoreMarker(inflater,context
-                                ,INACTIVE_NAME,
+                        createStoreMarker(inflater,context,
+                                null,INACTIVE_NAME,
                                 MapsActivity.markerInformationItemMap
                                         .get(marker)
                                         .header)
@@ -77,7 +82,7 @@ public class MarkerUtils {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
-    public static Bitmap createStoreMarker(LayoutInflater inflater, Context context, String imageBG, String text) {
+    public static Bitmap createStoreMarker(LayoutInflater inflater, Context context, String leftImage, String imageBG, String text) {
         View markerLayout = inflater.inflate(R.layout.marker_inactive, null);
 
         TextView markerRating = (TextView) markerLayout.findViewById(R.id.marker_text);
@@ -86,16 +91,13 @@ public class MarkerUtils {
 //        leftBackground.setBackground(
 //                LocationUtils.getDrawable(context,Constants.PIN_FOLDER,imageName)
 //        );
-
-        LinearLayout markerImage = (LinearLayout) markerLayout.findViewById(R.id.marker_image);
-
-        markerImage.setBackground(
+        markerRating.setBackground(
                 ImageUtils.getDrawable(context,Constants.PIN_FOLDER,imageBG)
         );
 
 
         text = text.replaceAll("\\ ","\n")+"\n";
-        markerImage.setGravity(Gravity.CENTER_VERTICAL);
+
         markerRating.setText(text);
         if(!imageBG.equals(INACTIVE_NAME)) {
 
