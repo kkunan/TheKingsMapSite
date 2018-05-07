@@ -88,13 +88,16 @@ public class MarkerEventListActivity extends ActivityWithBackButton {
                 return;
             }
             Location location = manager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            boolean visited = mapVisitedInformation.getVisitedAt(item.placeID);
-            double distance = LocationUtils.quickDistance(
-                    new LatLng(location.getLatitude(),location.getLongitude()
-                    ), item.location
-            );
-            boolean inDistance = distance <= CHECKIN_AVALABLE_RANGE;
-            sortoutUIByStatus(visited,inDistance);
+
+            if(location!=null) {
+                boolean visited = mapVisitedInformation.getVisitedAt(item.placeID);
+                double distance = LocationUtils.quickDistance(
+                        new LatLng(location.getLatitude(), location.getLongitude()
+                        ), item.location
+                );
+                boolean inDistance = distance <= CHECKIN_AVALABLE_RANGE;
+                sortoutUIByStatus(visited, inDistance);
+            }
         }
     }
 
