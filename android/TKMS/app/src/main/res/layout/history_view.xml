@@ -36,14 +36,16 @@
         android:layout_margin="5dp"
         android:text="PLACE NAME"
         android:textSize="16sp" />
-    <TextView
-        android:id="@+id/time_visit"
-        android:layout_below="@id/place_name_text"
-        android:layout_height="match_parent"
-        android:layout_width="wrap_content"
-        android:layout_marginLeft="5dp"
-        android:text="description description else else elseelse"
-        android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/time_visit"
+            android:layout_below="@id/place_name_text"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:text="description description else else elseelse"
+            android:textSize="14sp" />
+
 
 </RelativeLayout>
 

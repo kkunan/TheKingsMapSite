@@ -74,8 +74,8 @@ public class HistoryItemAdapter extends RecyclerView.Adapter<HistoryItemAdapter.
             SimpleDateFormat simpleDateFormat = Constants.DMY_DATE_FORMATTER;
 
             vTitle.setText(item.header);
-            String dateTimeText = Html.fromHtml("<b>%s</b>"+simpleDateFormat.format(visitedDate)) +
-                    " "+ item.placeDescription;
+            String dateTimeText = Html.fromHtml("<b>"+simpleDateFormat.format(visitedDate)+"</b>") +
+                    "\n"+ item.placeDescription;
 
             if(boldDateAndDescription!=null)
                 boldDateAndDescription.setText(dateTimeText);

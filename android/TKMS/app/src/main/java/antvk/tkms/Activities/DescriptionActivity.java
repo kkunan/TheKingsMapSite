@@ -1,6 +1,7 @@
 package antvk.tkms.Activities;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,7 +18,7 @@ import antvk.tkms.R;
 import antvk.tkms.Utils.ImageUtils;
 import antvk.tkms.Struct.Information.InformationItem.Event;
 
-import static antvk.tkms.Activities.MapsActivity.mapIndex;
+import static antvk.tkms.Activities.MapsActivity.*;
 
 @RequiresApi(api = Build.VERSION_CODES.N)
 public class DescriptionActivity extends ActivityWithBackButton{
@@ -91,5 +92,12 @@ public class DescriptionActivity extends ActivityWithBackButton{
     @Override
     public void onBackPressed() {
         gobackToPreviousScreen();
+    }
+
+    public void onShareButtonClick(View view) {
+
+        Bitmap bitmap = ImageUtils.createBitmapFromView(findViewById(R.id.whole_content_view));
+        Intent share = ImageUtils.shareBitmap(DescriptionActivity.this,getContentResolver(),bitmap);
+        startActivity(Intent.createChooser(share, "Share Image"));
     }
 }

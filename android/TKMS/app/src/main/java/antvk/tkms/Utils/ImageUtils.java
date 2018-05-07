@@ -1,6 +1,7 @@
 package antvk.tkms.Utils;
 
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetManager;
@@ -9,6 +10,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Environment;
+import android.support.v4.content.FileProvider;
 import android.view.View;
 import android.view.Window;
 //
@@ -17,6 +19,7 @@ import android.view.Window;
 //import com.facebook.share.widget.ShareButton;
 //import com.facebook.share.widget.ShareDialog;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -93,6 +96,38 @@ public class ImageUtils extends Activity{
 //        shareButton.setShareContent(content);
 //        shareDialog.show(content);
 //    }
+
+    public static Bitmap createBitmapFromView(View view)
+    {
+        view.setDrawingCacheEnabled(true);
+        view.buildDrawingCache();
+       return view.getDrawingCache();
+    }
+
+    public static Intent shareBitmap(Context context, ContentResolver resolver, Bitmap bitmap)
+    {
+        try {
+            File cachePath = new File(context.getCacheDir(), "images");
+            cachePath.mkdirs(); // don't forget to make the directory
+            FileOutputStream stream = new FileOutputStream(cachePath + "/image.png"); // overwrites this image every time
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+            stream.close();
+
+            File imagePath = new File(context.getCacheDir(), "images");
+            File newFile = new File(imagePath, "image.png");
+            Uri contentUri = FileProvider.getUriForFile(context, "com.example.myapp.fileprovider", newFile);
+
+            if (contentUri != null) {
+                Intent shareIntent = new Intent();
+                shareIntent.setAction(Intent.ACTION_SEND);
+                shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION); // temp permission for receiving app to read this file
+                shareIntent.setDataAndType(contentUri, resolver.getType(contentUri));
+                shareIntent.putExtra(Intent.EXTRA_STREAM, contentUri);
+                return shareIntent;
+            }
+        }catch (Exception e){}
+        return null;
+    }
 
     public static String getImageFolderByMapType(int type)
     {
