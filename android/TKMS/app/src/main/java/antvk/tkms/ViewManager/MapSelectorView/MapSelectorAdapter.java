@@ -23,7 +23,7 @@ import antvk.tkms.ViewManager.EventView.EventViewHolder;
 
 public class MapSelectorAdapter extends RecyclerView.Adapter<MapSelectorAdapter.MapViewHolder> {
 
-    public List<AvailableMap> availableMaps;
+    public static List<AvailableMap> availableMaps;
     public Context context;
 
     public MapSelectorAdapter(Context context,List<AvailableMap> availableMaps) {

@@ -11,10 +11,13 @@ import java.util.List;
 public class InformationItem {
 
     public String header;
+    public String placeNickName;
     public List<Event> events;
     public LatLng location;
     public String placeImage;
     public String placeID;
+    public String placeAddress;
+    public double placeRating;
     public String placeDescription;
 
     public InformationItem(String placeID, String header, List<Event> events , LatLng location, String placeImage, String placeDescription)

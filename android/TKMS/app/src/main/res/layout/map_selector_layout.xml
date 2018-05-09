@@ -50,7 +50,7 @@
         android:id="@+id/add_map_button"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:visibility="gone"
+        android:visibility="visible"
         android:background="@mipmap/add_map"
         android:layout_gravity="center"
         android:onClick="onAddNewMapClick"

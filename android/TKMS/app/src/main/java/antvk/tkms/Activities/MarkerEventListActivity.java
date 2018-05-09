@@ -34,7 +34,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
-import antvk.tkms.Constants;
 import antvk.tkms.Struct.Information.InformationItem;
 import antvk.tkms.R;
 import antvk.tkms.Utils.ImageUtils;
@@ -355,7 +354,7 @@ public class MarkerEventListActivity extends ActivityWithBackButton {
                     switch (which){
                         case DialogInterface.BUTTON_POSITIVE:
                             mapVisitedInformation.setVisit(item.placeID,true);
-                            preferences.edit().putString(mapIndex+"",
+                            MapSelectorActivity.preferences.edit().putString(mapIndex+"",
                                     gson.toJson(mapVisitedInformation)
                                     ).apply();
 
@@ -383,7 +382,7 @@ public class MarkerEventListActivity extends ActivityWithBackButton {
                     switch (which){
                         case DialogInterface.BUTTON_POSITIVE:
                             mapVisitedInformation.setVisit(item.placeID,false);
-                            preferences.edit().putString(mapIndex+"",
+                            MapSelectorActivity.preferences.edit().putString(mapIndex+"",
                                     gson.toJson(mapVisitedInformation)
                             ).apply();
 

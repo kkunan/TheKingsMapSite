@@ -5,7 +5,6 @@ import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
@@ -21,18 +20,12 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.google.android.gms.location.places.GeoDataClient;
-import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.PlaceBufferResponse;
-import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -42,8 +35,6 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -67,7 +58,6 @@ import antvk.tkms.Utils.ImageUtils;
 import antvk.tkms.Utils.LocationUtils;
 import antvk.tkms.Utils.MarkerUtils;
 import antvk.tkms.ViewManager.HistoryItemView.HistoryItemAdapter;
-import antvk.tkms.ViewManager.MapSelectorView.MapSelectorAdapter;
 import antvk.tkms.ViewManager.RecyclerItemClickListener;
 
 import static antvk.tkms.Activities.ActivityWithBackButton.MAP_ID_KEY;
@@ -87,7 +77,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public static LinkedHashMap<Marker, InformationItem> markerInformationItemMap;
 
     LocationManager locationManager;
-    static SharedPreferences preferences;
 
     static LocationUtils locationUtils;
     public static MapVisitedInformation mapVisitedInformation;
@@ -122,7 +111,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             //System.out.println("mapIndex received: "+mapIndex);
         }
 
-        preferences = PreferenceManager.getDefaultSharedPreferences(this);
         sortoutUI();
     }
 
@@ -356,7 +344,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        List<InformationItem> informationItems = getAllItems(this, Constants.getFileName(mapIndex, preferences));
+        List<InformationItem> informationItems = getAllItems(this, Constants.getFileName(mapIndex, MapSelectorActivity.preferences));
         for (InformationItem item : informationItems) {
             Marker marker = createMarker(item);
             mMap.moveCamera(CameraUpdateFactory.newLatLng(marker.getPosition()));
@@ -365,7 +353,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         markerList = new ArrayList<>(markerInformationItemMap.keySet());
 
-        String checkinInfo = preferences.getString(mapIndex + "", null);
+        String checkinInfo = MapSelectorActivity.preferences.getString(mapIndex + "", null);
         if (checkinInfo == null) {
             mapVisitedInformation = MapVisitedInformation.getInitialMapVisitedInformation(
                     informationItems);

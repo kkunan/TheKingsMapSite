@@ -2,7 +2,11 @@ package antvk.tkms.Activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -31,18 +35,28 @@ import static antvk.tkms.Activities.ActivityWithBackButton.MAP_ID_KEY;
 
 public class MapSelectorActivity extends AppCompatActivity{
 
+    public static final String MAP_PREF = "maps";
+
     public static List<AvailableMap> maps;
     static String mapFile = "maps.json";
+    static SharedPreferences preferences;
+
+    static Type listType = new TypeToken<ArrayList<AvailableMap>>() {
+    }.getType();
+
 
     Bundle b;
-    Gson gson = new Gson();
+    static Gson gson = new Gson();
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.map_selector_layout);
 
+    preferences = PreferenceManager.getDefaultSharedPreferences(this);
     maps = getAllItems(getApplicationContext());
 
+    MapsActivity.mapIndex = -1;
 
 //    ArrayList<AvailableMap> leftViewList = new ArrayList<>();
 //    ArrayList<AvailableMap> rightViewList = new ArrayList<>();
@@ -94,15 +108,33 @@ public class MapSelectorActivity extends AppCompatActivity{
                 buffer.append(st + "\n");
             }
 
-            Type listType = new TypeToken<ArrayList<AvailableMap>>() {
-            }.getType();
+
             items = gson.fromJson(buffer.toString(), listType);
 
         } catch (IOException e) {
             e.printStackTrace();
         }
 
+        List<AvailableMap> localMaps = getLocalMaps();
+
+        if(localMaps!=null)
+        {
+            items.addAll(localMaps);
+        }
+
         return items;
+    }
+
+    public static List<AvailableMap> getLocalMaps()
+    {
+        String st = preferences.getString(MAP_PREF,null);
+
+        if(st!=null && st.length()>0)
+        {
+            List<AvailableMap> localMaps = gson.fromJson(st,listType);
+            return localMaps;
+        }
+        return null;
     }
 
 
@@ -130,6 +162,9 @@ public class MapSelectorActivity extends AppCompatActivity{
 
                     @Override public void onLongItemClick(View view, int position) {
                         // do whatever
+                        MapsActivity.mapIndex = position;
+                        Intent intent = new Intent(MapSelectorActivity.this, EditMapActivity.class);
+                        startActivity(intent);
                     }
                 }));
 
@@ -152,6 +187,7 @@ public class MapSelectorActivity extends AppCompatActivity{
 
     public void onAddNewMapClick(View view)
     {
-
+        Intent intent = new Intent(MapSelectorActivity.this, EditMapActivity.class);
+        startActivity(intent);
     }
 }
