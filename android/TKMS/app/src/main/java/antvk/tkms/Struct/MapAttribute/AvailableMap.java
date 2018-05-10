@@ -11,6 +11,7 @@ public class AvailableMap {
     public int mapID;
     public String mapName;
     public String imageLogo;
+    public boolean local;
     public String mapImageFolder;
     public List<InformationItem> informationItems;
 

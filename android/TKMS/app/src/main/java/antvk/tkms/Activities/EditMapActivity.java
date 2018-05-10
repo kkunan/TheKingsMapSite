@@ -1,7 +1,9 @@
 package antvk.tkms.Activities;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,14 +21,23 @@ import antvk.tkms.ViewManager.InfoItemListView.InfoItemAdapter;
 import antvk.tkms.ViewManager.MapSelectorView.MapSelectorAdapter;
 import antvk.tkms.ViewManager.RecyclerItemClickListener;
 
+import static antvk.tkms.Activities.MapSelectorActivity.MAP_PREF;
+import static antvk.tkms.Activities.MapSelectorActivity.gson;
+import static antvk.tkms.Activities.MapSelectorActivity.maps;
+
 public class EditMapActivity extends ActivityWithBackButton{
 
+    int mapID;
     EditText mapNameBox;
     TextView placeListLabel;
+    String mapImagePath;
 
     InfoItemAdapter adapter;
 
+    AvailableMap map;
+
     List<InformationItem> placeList;
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,12 +46,12 @@ public class EditMapActivity extends ActivityWithBackButton{
         mapNameBox = (EditText)findViewById(R.id.map_name_edittext);
         placeListLabel = (TextView)findViewById(R.id.place_list_header);
 
-        int mapID = getExtra(MAP_ID_KEY);
+        mapID = getExtra(MAP_ID_KEY);
         placeList = new ArrayList<>();
 
         if(mapID >= 0)
         {
-            AvailableMap map = MapSelectorActivity.maps.get(mapID);
+            map = maps.get(mapID);
             mapNameBox.setText(map.mapName);
             placeList = map.informationItems;
         }
@@ -94,9 +105,37 @@ public class EditMapActivity extends ActivityWithBackButton{
     }
 
 
-
     public void onSubmitButtonClick(View view)
     {
+        if(mapID < 0)
+        {
+            map = new AvailableMap(maps.size(),mapNameBox.getText().toString(), mapImagePath , placeList);
+            map.local = true;
+            maps.add(map);
+        }
 
+        else
+        {
+            map.local = true;
+            maps.set(mapID,map);
+        }
+
+        List<AvailableMap> localMaps = new ArrayList<>();
+
+        for(AvailableMap availableMap : maps)
+        {
+            if(availableMap.local)
+            {
+                localMaps.add(availableMap);
+            }
+        }
+
+        MapSelectorActivity.preferences.edit().
+                putString(MAP_PREF, gson.toJson(localMaps))
+                .apply();
+
+        Intent intent = new Intent(EditMapActivity.this,MapSelectorActivity.class);
+        startActivity(intent);
+        finish();
     }
 }

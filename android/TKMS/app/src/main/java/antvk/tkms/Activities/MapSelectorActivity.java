@@ -160,6 +160,7 @@ public class MapSelectorActivity extends AppCompatActivity{
 
                     }
 
+                    @RequiresApi(api = Build.VERSION_CODES.N)
                     @Override public void onLongItemClick(View view, int position) {
                         // do whatever
                         MapsActivity.mapIndex = position;
