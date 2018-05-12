@@ -71,7 +71,8 @@ public class EditMapActivity extends ActivityWithBackButton{
             mapNameBox.setText(map.mapName);
             placeList = map.informationItems;
             try {
-                mapImageView.setImageURI(Uri.parse(map.imageLogo));
+                Uri uri = Uri.parse(map.imageLogo);
+                mapImageView.setImageURI(uri);
             }catch (Exception e)
             {
                 mapImageView.setImageResource(R.mipmap.mymap_icon01);
@@ -202,14 +203,14 @@ public class EditMapActivity extends ActivityWithBackButton{
 
                 int id = mapID>=0?mapID:maps.size();
 
-                mapImagePath = resizeAndGet(picturePath,id);
+                mapImagePath = resizeAndGet(picturePath,id, EditMapActivity.this);
                 mapImageView.setImageURI(Uri.parse(mapImagePath));
             }
 
         }
     }
 
-    public String resizeAndGet(String realPath, int mapID)
+    public String resizeAndGet(String realPath, int mapID, Context context)
     {
         Bitmap b= BitmapFactory.decodeFile(realPath);
         int width = b.getWidth();
@@ -218,8 +219,10 @@ public class EditMapActivity extends ActivityWithBackButton{
         int newHeight = 200;
         int newWidth = (int)((double)(width)/(double)(height) * newHeight);
         Bitmap out = Bitmap.createScaledBitmap(b, newWidth, newHeight, false);
-        File dir= Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
 
+        File dir= Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES+"/"+getResources().getString(R.string.app_name));
+        System.out.println("folder: "+dir);
+        dir.mkdir();
         File file = new File(dir, mapID+".png");
         FileOutputStream fOut;
         try {
@@ -229,7 +232,9 @@ public class EditMapActivity extends ActivityWithBackButton{
             fOut.close();
             b.recycle();
             out.recycle();
-        } catch (Exception e) {}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return file.getAbsolutePath();
     }
 
