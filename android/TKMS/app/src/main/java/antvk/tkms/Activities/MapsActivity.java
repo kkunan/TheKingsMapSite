@@ -61,6 +61,7 @@ import antvk.tkms.ViewManager.HistoryItemView.HistoryItemAdapter;
 import antvk.tkms.ViewManager.RecyclerItemClickListener;
 
 import static antvk.tkms.Activities.ActivityWithBackButton.MAP_ID_KEY;
+import static antvk.tkms.Activities.MapSelectorActivity.maps;
 import static antvk.tkms.Activities.MarkerEventListActivity.MARKER_KEY;
 
 @RequiresApi(api = Build.VERSION_CODES.N)
@@ -117,22 +118,20 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     void sortoutUI()
     {
        ActionBar actionBar = getSupportActionBar();
-//        actionBar.setDisplayOptions(actionBar.getDisplayOptions()
-//                | ActionBar.DISPLAY_SHOW_CUSTOM);
-//        ImageView imageView = new ImageView(actionBar.getThemedContext());
-//        imageView.setScaleType(ImageView.ScaleType.CENTER);
-//        imageView.setImageResource(R.mipmap.the_app_icon_round);
-//        ActionBar.LayoutParams layoutParams = new ActionBar.LayoutParams(
-//                ActionBar.LayoutParams.WRAP_CONTENT,
-//                ActionBar.LayoutParams.WRAP_CONTENT, Gravity.LEFT
-//                | Gravity.CENTER_VERTICAL);
-//        layoutParams.leftMargin = 40;
-//        imageView.setLayoutParams(layoutParams);
-//        actionBar.setCustomView(imageView);
+
+       if(maps == null)
+       {
+           maps = MapSelectorActivity.getAllItems(getApplicationContext());
+       }
+
+       if(value == -1)
+       {
+           findViewById(R.id.header_content).setVisibility(View.GONE);
+       }
 
         if(mapIndex>-1)
         {
-            actionBar.setTitle(MapSelectorActivity.maps.get(mapIndex).mapName);
+            actionBar.setTitle(maps.get(mapIndex).mapName);
         }
     }
 

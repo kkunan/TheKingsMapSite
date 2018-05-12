@@ -26,6 +26,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import antvk.tkms.Constants;
 import antvk.tkms.R;
 import antvk.tkms.Struct.MapAttribute.AvailableMap;
 import antvk.tkms.ViewManager.RecyclerItemClickListener;
@@ -94,7 +95,7 @@ public class MapSelectorActivity extends AppCompatActivity{
         sortOutRecycleViews(R.id.map_list_view,maps);
     }
 
-    public List<AvailableMap> getAllItems(Context context) {
+    public static List<AvailableMap> getAllItems(Context context) {
 
         List<AvailableMap> items = new ArrayList<>();
         try {
@@ -115,7 +116,7 @@ public class MapSelectorActivity extends AppCompatActivity{
             e.printStackTrace();
         }
 
-        List<AvailableMap> localMaps = getLocalMaps();
+        List<AvailableMap> localMaps = getLocalMaps(context);
 
         if(localMaps!=null)
         {
@@ -125,8 +126,11 @@ public class MapSelectorActivity extends AppCompatActivity{
         return items;
     }
 
-    public static List<AvailableMap> getLocalMaps()
+    public static List<AvailableMap> getLocalMaps(Context context)
     {
+        if(preferences == null)
+            preferences = PreferenceManager.getDefaultSharedPreferences(context);
+
         String st = preferences.getString(MAP_PREF,null);
 
         if(st!=null && st.length()>0)
