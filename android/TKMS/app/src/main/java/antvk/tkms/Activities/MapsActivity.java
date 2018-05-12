@@ -61,7 +61,7 @@ import antvk.tkms.ViewManager.HistoryItemView.HistoryItemAdapter;
 import antvk.tkms.ViewManager.RecyclerItemClickListener;
 
 import static antvk.tkms.Activities.ActivityWithBackButton.MAP_ID_KEY;
-import static antvk.tkms.Activities.MapSelectorActivity.maps;
+import static antvk.tkms.Activities.MapSelectorActivity.*;
 import static antvk.tkms.Activities.MarkerEventListActivity.MARKER_KEY;
 
 @RequiresApi(api = Build.VERSION_CODES.N)

@@ -2,6 +2,8 @@ package antvk.tkms.ViewManager.MapSelectorView;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.media.Image;
+import android.net.Uri;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,6 +13,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,6 +42,7 @@ public class MapSelectorAdapter extends RecyclerView.Adapter<MapSelectorAdapter.
     @Override
     public void onBindViewHolder(MapViewHolder mapViewHolder, int i) {
         AvailableMap ci = availableMaps.get(i);
+        System.out.println(ci.mapID+" "+ci.mapName+" "+ci.imageLogo);
         mapViewHolder.setValue(ci.mapID,ci.mapName,ci.imageLogo,context);
     }
 
@@ -67,9 +71,30 @@ public class MapSelectorAdapter extends RecyclerView.Adapter<MapSelectorAdapter.
             this.vTitle.setText(mapName);
             this.imageName = imageLogo;
 
+            if(!availableMaps.get(mapID).local)
             imageView.setImageDrawable(
                     ImageUtils.getDrawable(context,AvailableMap.imageFolder,imageLogo)
             );
+            else
+            {
+                if(imageName != null)
+                {
+                    try
+                    {
+                        imageView.setImageURI(Uri.parse(imageName));
+                    }catch (Exception e)
+                    {
+                        imageView.setImageResource(R.mipmap.mymap_icon01);
+                    }
+                }
+
+                else
+                {
+                    imageView.setImageResource(R.mipmap.mymap_icon01);
+                }
+
+
+            }
         }
 
 

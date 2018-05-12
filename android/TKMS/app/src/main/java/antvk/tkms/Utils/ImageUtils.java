@@ -169,6 +169,7 @@ public class ImageUtils extends Activity{
 
     public static Drawable getDrawableFromFile(String path)
     {
+       // System.out.println("image path "+path);
         Drawable d = Drawable.createFromPath(path);
         return d;
     }
