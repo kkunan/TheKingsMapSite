@@ -71,6 +71,9 @@ public class MapSelectorAdapter extends RecyclerView.Adapter<MapSelectorAdapter.
             this.vTitle.setText(mapName);
             this.imageName = imageLogo;
 
+            if(availableMaps.size() <= mapID)
+                return;
+
             if(!availableMaps.get(mapID).local)
             imageView.setImageDrawable(
                     ImageUtils.getDrawable(context,AvailableMap.imageFolder,imageLogo)

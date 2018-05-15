@@ -1,5 +1,6 @@
 package antvk.tkms.Struct.MapAttribute;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import antvk.tkms.Struct.Information.InformationItem;
@@ -21,5 +22,16 @@ public class AvailableMap {
         this.mapName = mapName;
         this.imageLogo = imageLogo;
         this.informationItems = informationItems;
+    }
+
+    public static List<AvailableMap> getLocalOnly(List<AvailableMap> allmaps)
+    {
+        List<AvailableMap> maps = new ArrayList<>();
+        for(AvailableMap map : allmaps)
+        {
+            if(map.local)
+                maps.add(map);
+        }
+        return maps;
     }
 }

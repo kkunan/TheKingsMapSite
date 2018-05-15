@@ -10,6 +10,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -29,6 +30,7 @@ import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.util.List;
@@ -41,6 +43,7 @@ import antvk.tkms.Utils.LocationUtils;
 import antvk.tkms.ViewManager.EventView.EventViewAdapter;
 import antvk.tkms.ViewManager.RecyclerItemClickListener;
 
+import static antvk.tkms.Activities.MapSelectorActivity.*;
 import static antvk.tkms.Activities.MapsActivity.*;
 
 
@@ -50,8 +53,9 @@ public class MarkerEventListActivity extends ActivityWithBackButton {
     public static InformationItem item;
     LocationManager manager;
     int value;
+    Gson gson = new Gson();
 
-    static final double CHECKIN_AVALABLE_RANGE = 500.0;
+    static final double CHECKIN_AVALABLE_RANGE = 100.0;
 
     boolean prevShow = false;
     boolean prevPink = false;
@@ -196,12 +200,25 @@ public class MarkerEventListActivity extends ActivityWithBackButton {
 
     public void setPlaceContent()
     {
-        String imageFolder = ImageUtils.getImageFolderByMapType(mapIndex);
         ImageView placeImageView = (ImageView) findViewById(R.id.place_image);
-        placeImageView.setImageDrawable(ImageUtils.getDrawable(getApplicationContext(),
-                imageFolder,
-                item.placeImage));
+        if(maps.get(mapIndex).local)
+        {
+            try {
+                placeImageView.setImageURI(
+                        Uri.parse(item.placeImage)
+                );
+            }catch (Exception e)
+            {
+                placeImageView.setImageResource(R.mipmap.mymap_icon02);
+            }
+        }
+        else {
+            String imageFolder = ImageUtils.getImageFolderByMapType(mapIndex);
 
+            placeImageView.setImageDrawable(ImageUtils.getDrawable(getApplicationContext(),
+                    imageFolder,
+                    item.placeImage));
+        }
         final String[] address = {"Address unavailable"};
 //        try {
 //            String ret = getPlaceAddress(item.location);

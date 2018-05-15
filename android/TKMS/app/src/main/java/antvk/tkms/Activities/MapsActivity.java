@@ -54,6 +54,7 @@ import antvk.tkms.Constants;
 import antvk.tkms.Struct.Information.InformationItem;
 import antvk.tkms.Struct.Information.MapVisitedInformation;
 import antvk.tkms.R;
+import antvk.tkms.Struct.MapAttribute.AvailableMap;
 import antvk.tkms.Utils.ImageUtils;
 import antvk.tkms.Utils.LocationUtils;
 import antvk.tkms.Utils.MarkerUtils;
@@ -343,7 +344,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        List<InformationItem> informationItems = getAllItems(this, Constants.getFileName(mapIndex, MapSelectorActivity.preferences));
+        AvailableMap map = maps.get(mapIndex);
+
+        List<InformationItem> informationItems = new ArrayList<>();
+
+        if(map.local)
+            informationItems = map.informationItems;
+
+        else informationItems = getAllItems(this, Constants.getFileName(mapIndex, MapSelectorActivity.preferences));
         for (InformationItem item : informationItems) {
             Marker marker = createMarker(item);
             mMap.moveCamera(CameraUpdateFactory.newLatLng(marker.getPosition()));

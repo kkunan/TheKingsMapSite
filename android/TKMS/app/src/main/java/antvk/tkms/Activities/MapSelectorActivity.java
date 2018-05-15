@@ -10,7 +10,9 @@ import android.support.annotation.RequiresApi;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SnapHelper;
 import android.view.ContextMenu;
 import android.view.Gravity;
 import android.view.Menu;
@@ -57,6 +59,7 @@ public class MapSelectorActivity extends AppCompatActivity {
     Bundle b;
     static Gson gson = new Gson();
 
+    MapSelectorAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -184,9 +187,11 @@ public class MapSelectorActivity extends AppCompatActivity {
         LinearLayoutManager llm = new LinearLayoutManager(this);
         llm.setOrientation(LinearLayoutManager.HORIZONTAL);
         recList.setLayoutManager(llm);
-        MapSelectorAdapter adapter = new MapSelectorAdapter(MapSelectorActivity.this, viewList);
+        adapter = new MapSelectorAdapter(MapSelectorActivity.this, viewList);
         recList.setAdapter(adapter);
 
+        SnapHelper helper = new LinearSnapHelper();
+        helper.attachToRecyclerView(recList);
 
 //        for(int i=0;i<viewList.size();i++)
 //        {
@@ -234,8 +239,9 @@ public class MapSelectorActivity extends AppCompatActivity {
             }
             break;
             case R.id.delete_item: {
-                // Edit Action
-
+                maps.remove(contextMenuPosition[0]);
+                preferences.edit().putString(MAP_PREF,gson.toJson(AvailableMap.getLocalOnly(maps))).apply();
+                adapter.notifyDataSetChanged();
             }
         }
         return false;

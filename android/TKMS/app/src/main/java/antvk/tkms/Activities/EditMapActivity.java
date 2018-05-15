@@ -247,11 +247,21 @@ public class EditMapActivity extends ActivityWithBackButton{
                 int column_index = cursor.getColumnIndexOrThrow( proj[0] );
                 result = cursor.getString( column_index );
             }
-            cursor.close( );
+            cursor.close();
         }
         if(result == null) {
             result = "Not found";
         }
         return result;
+    }
+
+    public void onAddNewPlaceClick(View view) {
+        Intent intent = new Intent(EditMapActivity.this, EditPlaceActivity.class);
+        Bundle b = new Bundle();
+        b.putInt(MAP_ID_KEY,mapID);
+        b.putInt(MARKER_KEY,-1);
+
+        intent.putExtras(b);
+        startActivity(intent);
     }
 }
