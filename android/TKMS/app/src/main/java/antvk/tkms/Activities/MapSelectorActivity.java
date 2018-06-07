@@ -161,8 +161,6 @@ public class MapSelectorActivity extends AppCompatActivity {
                     @Override
                     public void onItemClick(View view, int position) {
 
-                        //    System.out.println("position "+position+" "+views.size());
-
                         Intent intent = new Intent(MapSelectorActivity.this, MapsActivity.class);
 
                         b = new Bundle();
@@ -171,7 +169,6 @@ public class MapSelectorActivity extends AppCompatActivity {
                             intent.putExtras(b);
                             startActivity(intent);
                         }
-
                     }
 
                     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -193,14 +190,6 @@ public class MapSelectorActivity extends AppCompatActivity {
         SnapHelper helper = new LinearSnapHelper();
         helper.attachToRecyclerView(recList);
 
-//        for(int i=0;i<viewList.size();i++)
-//        {
-//
-//            ImageView imageView = adapter.mapViewHolders.get(i).imageView;
-//            String imagePath = viewList.get(i).imageLogo;
-//            imageView.setImageDrawable(ImageUtils.getDrawable(getApplicationContext(),AvailableMap.imageFolder,imagePath
-//                   ));
-//        }
     }
 
     @Override

@@ -30,6 +30,9 @@ public class InformationItem {
         this.placeDescription = placeDescription;
     }
 
+    public InformationItem() {
+    }
+
     public static class Event {
         public String title;
         public String date;

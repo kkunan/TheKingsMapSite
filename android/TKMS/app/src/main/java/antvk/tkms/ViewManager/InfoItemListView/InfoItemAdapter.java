@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -47,6 +49,8 @@ public class InfoItemAdapter extends RecyclerView.Adapter<InfoItemAdapter.Inform
     public void onBindViewHolder(InformationItemHolder holder, int position) {
         InformationItem ci = informationItems.get(position);
         holder.setValue(ci);
+
+        System.out.println(new Gson().toJson(ci));
     }
 
     @Override
@@ -68,15 +72,21 @@ public class InfoItemAdapter extends RecyclerView.Adapter<InfoItemAdapter.Inform
             placeName = v.findViewById(R.id.place_name_overlay);
             address = v.findViewById(R.id.place_address);
             placeDescription = v.findViewById(R.id.place_description);
+
+            v.findViewById(R.id.read_more).setVisibility(View.GONE);
+            placeDescription.setVisibility(View.VISIBLE);
         }
 
 
         public void setValue(InformationItem item) {
 
             placeImage.setImageDrawable(ImageUtils.getDrawableFromFile(item.placeImage));
-            placeName.setText(item.placeNickName);
+            placeName.setText(item.header);
             address.setText(item.placeAddress);
             placeDescription.setText(item.placeDescription);
+
+
+
         }
     }
 }

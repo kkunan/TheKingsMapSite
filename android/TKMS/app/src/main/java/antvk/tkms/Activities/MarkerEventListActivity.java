@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -16,6 +17,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
@@ -33,6 +35,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.gson.Gson;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -174,7 +177,8 @@ public class MarkerEventListActivity extends ActivityWithBackButton {
 
                 if(prevPink)
                 {
-                    heartView.setImageDrawable(getDrawable(R.drawable.grey_heart));
+                    Drawable imageDrawable = ContextCompat.getDrawable(getApplicationContext(),R.drawable.grey_heart);
+                    heartView.setImageDrawable(imageDrawable);
                     prevPink = false;
                 }
             }
@@ -191,7 +195,8 @@ public class MarkerEventListActivity extends ActivityWithBackButton {
             }
 
             else if(prevShow){
-                heartView.setImageDrawable(getDrawable(R.drawable.pink_heart));
+                Drawable imageDrawable = ContextCompat.getDrawable(getApplicationContext(),R.drawable.pink_heart);
+                heartView.setImageDrawable(imageDrawable);
                 prevPink = true;
             }
         }
@@ -277,7 +282,8 @@ public class MarkerEventListActivity extends ActivityWithBackButton {
 
         if(mapVisitedInformation.getVisitedAt(item.placeID))
         {
-            heartView.setImageDrawable(getDrawable(R.drawable.pink_heart));
+            Drawable imageDrawable = ContextCompat.getDrawable(getApplicationContext(),R.drawable.pink_heart);
+            heartView.setImageDrawable(imageDrawable);
             heartView.setVisibility(View.VISIBLE);
             prevShow = true;
             prevPink = true;
@@ -285,7 +291,8 @@ public class MarkerEventListActivity extends ActivityWithBackButton {
 
         else
         {
-            heartView.setImageDrawable(getDrawable(R.drawable.grey_heart));
+            Drawable imageDrawable = ContextCompat.getDrawable(getApplicationContext(),R.drawable.grey_heart);
+            heartView.setImageDrawable(imageDrawable);
         }
 
 
@@ -333,6 +340,8 @@ public class MarkerEventListActivity extends ActivityWithBackButton {
         LinearLayoutManager llm = new LinearLayoutManager(this);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recList.setLayoutManager(llm);
+        if(item.events==null)
+            item.events = new ArrayList<>();
         EventViewAdapter adapter = new EventViewAdapter(item.events);
         recList.setAdapter(adapter);
 

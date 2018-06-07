@@ -134,6 +134,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         {
             actionBar.setTitle(maps.get(mapIndex).mapName);
         }
+
+        if(selectedMarker==null)
+        {
+            LinearLayout headerLayout = (LinearLayout) findViewById(R.id.header_content);
+            headerLayout.setVisibility(View.GONE);
+        }
+
     }
 
     private void initializeHeaderView() {
@@ -228,6 +235,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                                 findViewById(R.id.history_activity_view).setVisibility(View.GONE);
                                 if (selectedMarker != null) {
                                     findViewById(R.id.header_content).setVisibility(View.VISIBLE);
+                                }
+                                else
+                                {
+                                    findViewById(R.id.header_content).setVisibility(View.GONE);
                                 }
                                 return true;
                             case R.id.bottombaritem_history:

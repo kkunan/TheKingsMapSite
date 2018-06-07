@@ -16,7 +16,9 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SnapHelper;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -31,6 +33,7 @@ import java.util.List;
 import antvk.tkms.R;
 import antvk.tkms.Struct.Information.InformationItem;
 import antvk.tkms.Struct.MapAttribute.AvailableMap;
+import antvk.tkms.Utils.ClassMapper;
 import antvk.tkms.ViewManager.InfoItemListView.InfoItemAdapter;
 import antvk.tkms.ViewManager.MapSelectorView.MapSelectorAdapter;
 import antvk.tkms.ViewManager.RecyclerItemClickListener;
@@ -65,6 +68,9 @@ public class EditMapActivity extends ActivityWithBackButton{
         mapID = getExtra(MAP_ID_KEY);
         placeList = new ArrayList<>();
 
+        if(maps==null)
+            maps = MapSelectorActivity.getAllItems(this);
+
         if(mapID >= 0)
         {
             map = maps.get(mapID);
@@ -79,9 +85,19 @@ public class EditMapActivity extends ActivityWithBackButton{
             }
         }
 
+        String extraItem = getIntent().getStringExtra(SUB_ITEM);
+        if(extraItem!=null)
+        {
+            InformationItem item = gson.fromJson(extraItem,InformationItem.class);
+            if(placeList==null)
+                placeList = new ArrayList<>();
+            int index = getIntent().getIntExtra(MARKER_KEY,-1);
+            if(index >= 0)
+                placeList.set(index,item);
+            else placeList.add(item);
+        }
 
         adapter = new InfoItemAdapter(EditMapActivity.this,placeList);
-
         sortoutRecycleView(R.id.placeListView,placeList);
     }
 
@@ -113,19 +129,13 @@ public class EditMapActivity extends ActivityWithBackButton{
                 }));
 
         LinearLayoutManager llm = new LinearLayoutManager(this);
-        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        llm.setOrientation(LinearLayoutManager.HORIZONTAL);
         recList.setLayoutManager(llm);
         recList.setAdapter(adapter);
 
 
-//        for(int i=0;i<viewList.size();i++)
-//        {
-//
-//            ImageView imageView = adapter.mapViewHolders.get(i).imageView;
-//            String imagePath = viewList.get(i).imageLogo;
-//            imageView.setImageDrawable(ImageUtils.getDrawable(getApplicationContext(),AvailableMap.imageFolder,imagePath
-//                   ));
-//        }
+        SnapHelper helper = new LinearSnapHelper();
+        helper.attachToRecyclerView(recList);
     }
 
 
@@ -260,6 +270,7 @@ public class EditMapActivity extends ActivityWithBackButton{
         Bundle b = new Bundle();
         b.putInt(MAP_ID_KEY,mapID);
         b.putInt(MARKER_KEY,-1);
+        b.putString(ClassMapper.classIntentKey, "EditMapActivity");
 
         intent.putExtras(b);
         startActivity(intent);
