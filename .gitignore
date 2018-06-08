@@ -115,3 +115,4 @@ local_settings.py
 
 .env
 db.sqlite3
+Django/TKMS/map_site/static/images/

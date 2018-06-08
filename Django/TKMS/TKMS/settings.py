@@ -36,9 +36,13 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'django.contrib.gis',
+    "geoposition",
     'django.contrib.staticfiles',
     'map_site.apps.MapSiteConfig'
 ]
+GEOPOSITION_GOOGLE_MAPS_API_KEY = 'AIzaSyA_J25qJwoSuZ7KPYPLhUvm-ObTtpdV7Jc'
+IMAGE_PATH_FIELD_DIRECTORY = 'map_site/static/images/'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
