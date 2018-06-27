@@ -25,6 +25,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
@@ -39,6 +41,8 @@ import antvk.tkms.ViewManager.MapSelectorView.MapSelectorAdapter;
 import antvk.tkms.ViewManager.RecyclerItemClickListener;
 
 import static antvk.tkms.Activities.MapSelectorActivity.*;
+import static antvk.tkms.Constants.MY_PERMISSIONS_REQUEST_READ_EXT_STORAGE;
+import static antvk.tkms.Constants.PICK_IMAGE;
 
 public class EditMapActivity extends ActivityWithBackButton{
 
@@ -53,7 +57,7 @@ public class EditMapActivity extends ActivityWithBackButton{
     AvailableMap map;
 
     List<InformationItem> placeList;
-    private int MY_PERMISSIONS_REQUEST_READ_EXT_STORAGE = 5555;
+
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -67,6 +71,8 @@ public class EditMapActivity extends ActivityWithBackButton{
 
         mapID = getExtra(MAP_ID_KEY);
         placeList = new ArrayList<>();
+
+        String subItem = getIntent().getExtras().getString(SUB_ITEM);
 
         if(maps==null)
             maps = MapSelectorActivity.getAllItems(this);
@@ -179,8 +185,6 @@ public class EditMapActivity extends ActivityWithBackButton{
     public void OnImageMapClick(View view) {
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-
             ActivityCompat.requestPermissions(EditMapActivity.this,
                     new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                     MY_PERMISSIONS_REQUEST_READ_EXT_STORAGE);
@@ -198,8 +202,6 @@ public class EditMapActivity extends ActivityWithBackButton{
         startActivityForResult(chooserIntent, PICK_IMAGE);
     }
 
-    public static final int PICK_IMAGE = 1;
-
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
@@ -213,14 +215,14 @@ public class EditMapActivity extends ActivityWithBackButton{
 
                 int id = mapID>=0?mapID:maps.size();
 
-                mapImagePath = resizeAndGet(picturePath,id, EditMapActivity.this);
+                mapImagePath = resizeAndGet(picturePath,"map",id);
                 mapImageView.setImageURI(Uri.parse(mapImagePath));
             }
 
         }
     }
 
-    public String resizeAndGet(String realPath, int mapID, Context context)
+    public String resizeAndGet(String realPath,String type, int id)
     {
         Bitmap b= BitmapFactory.decodeFile(realPath);
         int width = b.getWidth();
@@ -233,7 +235,7 @@ public class EditMapActivity extends ActivityWithBackButton{
         File dir= Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES+"/"+getResources().getString(R.string.app_name));
         System.out.println("folder: "+dir);
         dir.mkdir();
-        File file = new File(dir, mapID+".png");
+        File file = new File(dir, type+id+".png");
         FileOutputStream fOut;
         try {
             fOut = new FileOutputStream(file);

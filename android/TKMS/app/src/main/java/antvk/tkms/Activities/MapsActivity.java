@@ -328,11 +328,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 getApplicationContext(),
                 marker);
 
-        animateCameraTo(selectedMarker.getPosition(), 15);
+        animateCameraTo(selectedMarker.getPosition(), Constants.STREET_LEVEL_ZOOM);
         showInfoWindowBelow(marker);
     }
 
-    static void animateCameraTo(LatLng latLng, int zoom) {
+    static void animateCameraTo(LatLng latLng, float zoom) {
         if (mMap != null && latLng != null) {
             CameraUpdate cameraUpdateFactory = CameraUpdateFactory.newLatLngZoom(latLng, zoom);
             mMap.animateCamera(cameraUpdateFactory);
@@ -395,7 +395,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             public boolean onMarkerClick(Marker marker) {
                 selectedMarker = marker;
                 MarkerUtils.enableMarker(getLayoutInflater(), getApplicationContext(), selectedMarker);
-                animateCameraTo(marker.getPosition(), 15);
+                animateCameraTo(marker.getPosition(), Constants.STREET_LEVEL_ZOOM);
                 showInfoWindowBelow(marker);
                 return true;
             }
@@ -506,7 +506,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 //        20: Buildings
         //     mMap.setMinZoomPreference(15);
         if (location != null)
-            animateCameraTo(new LatLng(location.getLatitude(), location.getLongitude()), 15);
+            animateCameraTo(new LatLng(location.getLatitude(), location.getLongitude()), Constants.STREET_LEVEL_ZOOM);
     }
 
 

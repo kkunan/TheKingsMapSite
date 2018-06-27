@@ -11,6 +11,7 @@ import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -19,6 +20,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 
+import antvk.tkms.Constants;
 import antvk.tkms.R;
 import antvk.tkms.Struct.Information.InformationItem;
 import antvk.tkms.Struct.MapAttribute.AvailableMap;
@@ -108,7 +110,8 @@ public class EditPlaceActivity extends ActivityWithBackButton implements OnMapRe
                 .position(item.location);
 
         currentPlaceMarker = gMap.addMarker(options);
-        gMap.moveCamera(CameraUpdateFactory.newLatLng(currentPlaceMarker.getPosition()));
+        CameraUpdate cameraUpdateFactory = CameraUpdateFactory.newLatLngZoom(currentPlaceMarker.getPosition(), Constants.STREET_LEVEL_ZOOM);
+        gMap.moveCamera(cameraUpdateFactory);
     }
     @Override
     public void onBackPressed() {
@@ -142,5 +145,18 @@ public class EditPlaceActivity extends ActivityWithBackButton implements OnMapRe
 
         System.out.println(itemJson);
         gobackToPreviousScreen();
+    }
+
+    public void onAddEventButtonClick(View view) {
+        Intent intent = new Intent(EditPlaceActivity.this, EditEventActivity.class);
+        Bundle b = new Bundle();
+        b.putInt(MAP_ID_KEY,mapIndex);
+        b.putInt(MARKER_KEY,itemID);
+        b.putInt(EVENT_KEY, -1);
+
+        b.putString(ClassMapper.classIntentKey, "EditPlaceActivity");
+
+        intent.putExtras(b);
+        startActivity(intent);
     }
 }

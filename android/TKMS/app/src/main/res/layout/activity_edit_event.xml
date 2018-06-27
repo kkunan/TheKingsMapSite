@@ -6,25 +6,51 @@
     <LinearLayout
         android:orientation="vertical" android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="20dp"
-        android:layout_marginVertical="30dp"
+        android:padding="20dp"
         >
+
         <LinearLayout
 
-            android:layout_marginBottom="20dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            >
+            android:layout_marginBottom="20dp"
+            android:orientation="horizontal">
+
             <TextView
                 android:layout_width="wrap_content"
-                android:text="Event name"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:text="Event name" />
+
             <EditText
                 android:id="@+id/event_name_edittext"
                 android:layout_width="match_parent"
-                android:inputType="text"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:inputType="text" />
+        </LinearLayout>
+
+        <LinearLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:orientation="horizontal"
+            android:weightSum="1"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Event Date and Time"
+                />
+
+            <Button
+                android:id="@+id/event_datetime_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="click to select date and time"
+                android:onClick="onDateTimeSelectorClick"
+                />
+
         </LinearLayout>
 
         <LinearLayout
@@ -69,6 +95,7 @@
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
                 android:src="@mipmap/add_map"
+                android:onClick="onEventImageClick"
                 />
 
         </LinearLayout>
@@ -81,6 +108,7 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
             android:src="@mipmap/the_app_icon"
+            android:onClick="onSubmitButtonClick"
             />
     </LinearLayout>
 

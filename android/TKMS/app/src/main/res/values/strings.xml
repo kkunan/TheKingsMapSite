@@ -8,5 +8,8 @@
     <string name="uncheck">Undo checkin at</string>
     <string name="recent">Recent</string>
     <string name="facebook_app_id">209605959823801</string>
+    <string name="place_description_title">Place description</string>
+    <string name="place_name_text">Place name</string>
+    <string name="add_event_button_des">Add event button</string>
 
-    </resources>
+</resources>

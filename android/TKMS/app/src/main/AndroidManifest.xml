@@ -89,8 +89,6 @@
         <activity android:name=".Activities.MapSelectorActivity"
             android:screenOrientation="portrait"
             >
-
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -104,6 +102,12 @@
             />
 
         <activity android:name=".Activities.EditPlaceActivity"
+            android:screenOrientation="portrait"
+            >
+
+        </activity>
+
+        <activity android:name=".Activities.EditEventActivity"
             android:screenOrientation="portrait"
             >
 

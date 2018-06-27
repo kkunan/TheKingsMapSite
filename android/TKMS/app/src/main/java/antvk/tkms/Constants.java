@@ -8,6 +8,8 @@ import java.text.SimpleDateFormat;
 
 public interface Constants {
 
+    float STREET_LEVEL_ZOOM = 15.0f;
+
     static final String FOOTAGE_IMAGE = "footage_images";
     static final String PIN_FOLDER = FOOTAGE_IMAGE+"/marker";
 
@@ -47,4 +49,7 @@ public interface Constants {
             return preferences.getString("map"+index,null);
         }
     }
+
+    int MY_PERMISSIONS_REQUEST_READ_EXT_STORAGE = 5555;
+    int PICK_IMAGE = 1;
 }

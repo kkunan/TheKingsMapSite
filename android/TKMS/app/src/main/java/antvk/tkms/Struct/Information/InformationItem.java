@@ -36,10 +36,13 @@ public class InformationItem {
     public static class Event {
         public String title;
         public String date;
+        public String time;
         public String dateFormat;
         public String description;
         public String imageName;
         public String url;
+
+        public Event(){}
 
         public Event (String title,String date, String dateFormat, String description, String imageName, String url)
         {
