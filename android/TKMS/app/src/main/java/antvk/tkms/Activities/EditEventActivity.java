@@ -16,6 +16,8 @@ import android.os.Environment;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.RecyclerView;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -43,12 +45,8 @@ import static antvk.tkms.Constants.MY_PERMISSIONS_REQUEST_READ_EXT_STORAGE;
 import static antvk.tkms.Constants.PICK_IMAGE;
 
 @RequiresApi(api = Build.VERSION_CODES.N)
-public class EditEventActivity extends ActivityWithBackButton {
+public class EditEventActivity extends AddStuffsActivity {
 
-    AvailableMap map;
-    InformationItem place;
-    InformationItem.Event event;
-    int mapIndex = -1, placeIndex = -1, itemID = -1;
     Bundle b = new Bundle();
 
     View customView;
@@ -60,25 +58,9 @@ public class EditEventActivity extends ActivityWithBackButton {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_event);
-        itemID = getExtra(MARKER_KEY);
-        mapIndex = getExtra(MAP_ID_KEY);
 
-        if(mapIndex >= 0 && mapIndex < maps.size())
-        {
-            map = maps.get(mapIndex);
-        }
-
-        if(placeIndex > 0)
-        {
-            place = map.informationItems.get(placeIndex);
-        }
-
-        if(itemID > 0)
-        {
-            event = place.events.get(itemID);
-        }
-
-        else event = new InformationItem.Event();
+        if(currentEvent == null)
+            currentEvent = new InformationItem.Event();
 
         eventName = (EditText)findViewById(R.id.event_name_edittext);
         eventDescription = (EditText)findViewById(R.id.event_description_edittext);
@@ -86,36 +68,35 @@ public class EditEventActivity extends ActivityWithBackButton {
     }
 
     @Override
-    public void onBackPressed() {
-        gobackToPreviousScreen();
-    }
+    Bundle setFurtherExtra(Bundle b) {
+        b.putString(MAP_KEY,gson.toJson(currentMap));
+        b.putString(PLACE_KEY,gson.toJson(currentItem));
 
-    private void gobackToPreviousScreen() {
-        String previousClass = getIntent().getStringExtra(ClassMapper.classIntentKey);
-        Class cl = ClassMapper.get(previousClass);
+        //this is because we want the next one to go back to the EditMap page, not here
+        b.putString(ClassMapper.classIntentKey, "EditMapActivity");
 
-        b.putInt(MAP_ID_KEY,mapIndex);
-        b.putInt(MARKER_KEY,placeIndex);
-
-        Intent intent = new Intent(getApplicationContext(),cl);
-        intent.putExtras(b);
-        startActivity(intent);
+        return b;
     }
 
     public void onSubmitButtonClick(View view) {
-        event.title = eventName.getText().toString();
-        event.description = eventDescription.getText().toString();
+        currentEvent.title = eventName.getText().toString();
+        currentEvent.description = eventDescription.getText().toString();
 
-        String itemJson = new Gson().toJson(event);
+        String previousClass = getIntent().getStringExtra(ClassMapper.classIntentKey);
+
+        if(currentEvent.id < 0)
+        {
+            currentEvent.id = currentItem.events.size();
+            currentItem.events.add(currentEvent);
+        }
+
+        else
+        {
+            currentItem.events.set(currentEvent.id,currentEvent);
+        }
 
         // TODO: 07/06/2018 set event up
 
-        if(itemID>=0)
-            b.putInt(EVENT_KEY,itemID);
-
-        b.putString(SUB_ITEM, itemJson);
-
-        System.out.println(itemJson);
         gobackToPreviousScreen();
     }
 
@@ -135,12 +116,12 @@ public class EditEventActivity extends ActivityWithBackButton {
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener(){
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                event.date = getDate(dpDate);
-                event.dateFormat = Constants.DMY_DATE_FORMATTER.toPattern();
-                event.time = getTime(dpTime);
+                currentEvent.date = getDate(dpDate);
+                currentEvent.dateFormat = Constants.DMY_DATE_FORMATTER.toPattern();
+                currentEvent.time = getTime(dpTime);
 
                 Button p1_button = findViewById(R.id.event_datetime_button);
-                p1_button.setText(event.date+"T"+event.time);
+                p1_button.setText(currentEvent.date+"T"+currentEvent.time);
                 dialog.dismiss();
             }
 
@@ -216,58 +197,17 @@ public class EditEventActivity extends ActivityWithBackButton {
         Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         pickIntent.setType("image/*");
 
-        Intent chooserIntent = Intent.createChooser(getIntent, "Select Map Image");
+        Intent chooserIntent = Intent.createChooser(getIntent, "Select Event Image");
         chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] {pickIntent});
 
         startActivityForResult(chooserIntent, PICK_IMAGE);
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
-        if (requestCode == PICK_IMAGE) {
-            //TODO: action
-            if (resultCode == RESULT_OK) {
-                Uri selectedImageUri = data.getData( );
-                String picturePath = EditMapActivity.getPath(EditEventActivity.this, selectedImageUri );
-                System.out.println("Picture Path"+ picturePath);
-
-                if(place.events == null)
-                    place.events = new ArrayList<>();
-
-                int id = itemID>=0?itemID:place.events.size();
-
-                event.imageName = resizeAndGet(picturePath,"event",id);
-                eventImage.setImageURI(Uri.parse(event.imageName));
-            }
-
-        }
+    public void selectPicAction(String picturePath) {
+        int id = currentEvent.id;
+        currentEvent.imageName = resizeAndGet(picturePath,"event",id);
+        eventImage.setImageURI(Uri.parse(currentEvent.imageName));
     }
-    public String resizeAndGet(String realPath,String type, int id)
-    {
-        Bitmap b= BitmapFactory.decodeFile(realPath);
-        int width = b.getWidth();
-        int height = b.getHeight();
 
-        int newHeight = 200;
-        int newWidth = (int)((double)(width)/(double)(height) * newHeight);
-        Bitmap out = Bitmap.createScaledBitmap(b, newWidth, newHeight, false);
-
-        File dir= Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES+"/"+getResources().getString(R.string.app_name));
-        System.out.println("folder: "+dir);
-        dir.mkdir();
-        File file = new File(dir, type+id+".png");
-        FileOutputStream fOut;
-        try {
-            fOut = new FileOutputStream(file);
-            out.compress(Bitmap.CompressFormat.PNG, 100, fOut);
-            fOut.flush();
-            fOut.close();
-            b.recycle();
-            out.recycle();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return file.getAbsolutePath();
-    }
 }

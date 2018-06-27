@@ -74,12 +74,11 @@ public class DescriptionActivity extends ActivityWithBackButton{
 //        }
     }
 
-    void gobackToPreviousScreen(){
-        Intent intent = new Intent(getApplicationContext(),MarkerEventListActivity.class);
-        Bundle b = setExtra(MARKER_KEY,markerId);
-        intent.putExtras(b);
-        startActivity(intent);
 
+    @Override
+    Bundle setFurtherExtra(Bundle b) {
+        b.putInt(MARKER_KEY,markerId);
+        return b;
     }
 
     @Override

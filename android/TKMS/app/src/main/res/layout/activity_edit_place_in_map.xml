@@ -43,6 +43,17 @@
         android:layout_height="200dp"
         />
 
+    <ImageView
+        android:id="@+id/add_map_image_button"
+        android:layout_marginTop="20dp"
+        android:layout_width="100dp"
+        android:layout_gravity="center"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:src="@mipmap/mymap_icon01"
+        android:onClick="onImageViewClick"
+        />
+
     <LinearLayout
 
         android:layout_marginTop="20dp"

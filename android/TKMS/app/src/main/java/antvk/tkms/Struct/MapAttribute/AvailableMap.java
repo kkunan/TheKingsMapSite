@@ -9,12 +9,17 @@ public class AvailableMap {
 
     public static final String imageFolder = "footage_images/maps";
 
-    public int mapID;
+    public int mapID = -1;
     public String mapName;
     public String imageLogo;
     public boolean local;
     public String mapImageFolder;
     public List<InformationItem> informationItems;
+
+    public AvailableMap()
+    {
+        this.informationItems = new ArrayList<>();
+    }
 
     public AvailableMap(int mapID, String mapName, String imageLogo, List<InformationItem> informationItems)
     {
@@ -22,6 +27,7 @@ public class AvailableMap {
         this.mapName = mapName;
         this.imageLogo = imageLogo;
         this.informationItems = informationItems;
+        this.local = true;
     }
 
     public static List<AvailableMap> getLocalOnly(List<AvailableMap> allmaps)

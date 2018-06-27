@@ -41,6 +41,7 @@ import java.util.Locale;
 
 import antvk.tkms.Struct.Information.InformationItem;
 import antvk.tkms.R;
+import antvk.tkms.Utils.ClassMapper;
 import antvk.tkms.Utils.ImageUtils;
 import antvk.tkms.Utils.LocationUtils;
 import antvk.tkms.ViewManager.EventView.EventViewAdapter;
@@ -96,7 +97,7 @@ public class MarkerEventListActivity extends ActivityWithBackButton {
             Location location = manager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
             if(location!=null) {
-                boolean visited = mapVisitedInformation.getVisitedAt(item.placeID);
+                boolean visited = mapVisitedInformation.getVisitedAt(item.id);
                 double distance = LocationUtils.quickDistance(
                         new LatLng(location.getLatitude(), location.getLongitude()
                         ), item.location
@@ -131,7 +132,7 @@ public class MarkerEventListActivity extends ActivityWithBackButton {
                                 ), item.location
                         );
 
-                        boolean visited = mapVisitedInformation.getVisitedAt(item.placeID);
+                        boolean visited = mapVisitedInformation.getVisitedAt(item.id);
                         boolean inDistance = distance <= CHECKIN_AVALABLE_RANGE;
                         inRange = inDistance;
                         sortoutUIByStatus(visited,inDistance);
@@ -280,7 +281,7 @@ public class MarkerEventListActivity extends ActivityWithBackButton {
 
         ImageView heartView = (ImageView) findViewById(R.id.heart_item_page);
 
-        if(mapVisitedInformation.getVisitedAt(item.placeID))
+        if(mapVisitedInformation.getVisitedAt(item.id))
         {
             Drawable imageDrawable = ContextCompat.getDrawable(getApplicationContext(),R.drawable.pink_heart);
             heartView.setImageDrawable(imageDrawable);
@@ -328,6 +329,7 @@ public class MarkerEventListActivity extends ActivityWithBackButton {
                         Bundle b = setExtra(MARKER_KEY,value);
                         b = setExtra(EVENT_KEY,position, b);
                         b = setExtra(MAP_ID_KEY,mapIndex,b);
+                        b.putString(ClassMapper.classIntentKey, "MarkerEventListActivity");
                         intent.putExtras(b);
                         startActivity(intent);
                     }
@@ -371,7 +373,7 @@ public class MarkerEventListActivity extends ActivityWithBackButton {
     }
 
     public void onHeartClick(View view) {
-        boolean visited = mapVisitedInformation.getVisitedAt(item.placeID);
+        boolean visited = mapVisitedInformation.getVisitedAt(item.id);
         if(!visited)
         {
             DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
@@ -435,13 +437,11 @@ public class MarkerEventListActivity extends ActivityWithBackButton {
         gobackToPreviousScreen();
     }
 
-    private void gobackToPreviousScreen() {
-        Intent intent = new Intent(getApplicationContext(),MapsActivity.class);
-        Bundle b = setExtra(MARKER_KEY,value);
-        b = setExtra(MAP_ID_KEY,mapIndex,b);
-        //System.out.println("mapIndex sent: "+mapIndex);
-        intent.putExtras(b);
-        startActivity(intent);
+    @Override
+    Bundle setFurtherExtra(Bundle b) {
+        b.putInt(MARKER_KEY,value);
+        b.putInt(MAP_ID_KEY,mapIndex);
+        return b;
     }
 
 }

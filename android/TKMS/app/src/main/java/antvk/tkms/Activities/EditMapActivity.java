@@ -1,52 +1,34 @@
 package antvk.tkms.Activities;
 
-import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.support.annotation.RequiresApi;
-import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SnapHelper;
-import android.util.Log;
+import android.view.ContextMenu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
-
-import java.io.File;
-import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 import antvk.tkms.R;
-import antvk.tkms.Struct.Information.InformationItem;
 import antvk.tkms.Struct.MapAttribute.AvailableMap;
 import antvk.tkms.Utils.ClassMapper;
 import antvk.tkms.ViewManager.InfoItemListView.InfoItemAdapter;
-import antvk.tkms.ViewManager.MapSelectorView.MapSelectorAdapter;
-import antvk.tkms.ViewManager.RecyclerItemClickListener;
 
 import static antvk.tkms.Activities.MapSelectorActivity.*;
-import static antvk.tkms.Constants.MY_PERMISSIONS_REQUEST_READ_EXT_STORAGE;
-import static antvk.tkms.Constants.PICK_IMAGE;
 
-public class EditMapActivity extends ActivityWithBackButton{
+@RequiresApi(api = Build.VERSION_CODES.N)
+public class EditMapActivity extends ListItemContextMenuActivity{
 
-    int mapID;
     EditText mapNameBox;
     TextView placeListLabel;
     String mapImagePath;
@@ -54,12 +36,6 @@ public class EditMapActivity extends ActivityWithBackButton{
 
     InfoItemAdapter adapter;
 
-    AvailableMap map;
-
-    List<InformationItem> placeList;
-
-
-    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,98 +45,89 @@ public class EditMapActivity extends ActivityWithBackButton{
         placeListLabel = (TextView)findViewById(R.id.place_list_header);
         mapImageView = (ImageView)findViewById(R.id.add_map_image_button);
 
-        mapID = getExtra(MAP_ID_KEY);
-        placeList = new ArrayList<>();
-
-        String subItem = getIntent().getExtras().getString(SUB_ITEM);
-
         if(maps==null)
             maps = MapSelectorActivity.getAllItems(this);
 
-        if(mapID >= 0)
-        {
-            map = maps.get(mapID);
-            mapNameBox.setText(map.mapName);
-            placeList = map.informationItems;
-            try {
-                Uri uri = Uri.parse(map.imageLogo);
-                mapImageView.setImageURI(uri);
-            }catch (Exception e)
-            {
-                mapImageView.setImageResource(R.mipmap.mymap_icon01);
-            }
+        if(currentMap==null)
+            currentMap = new AvailableMap();
+
+        else {
+            mapNameBox.setText(currentMap.mapName);
+            if(currentMap.imageLogo!=null)
+                mapImageView.setImageURI(Uri.parse(currentMap.imageLogo));
         }
 
-        String extraItem = getIntent().getStringExtra(SUB_ITEM);
-        if(extraItem!=null)
-        {
-            InformationItem item = gson.fromJson(extraItem,InformationItem.class);
-            if(placeList==null)
-                placeList = new ArrayList<>();
-            int index = getIntent().getIntExtra(MARKER_KEY,-1);
-            if(index >= 0)
-                placeList.set(index,item);
-            else placeList.add(item);
-        }
-
-        adapter = new InfoItemAdapter(EditMapActivity.this,placeList);
-        sortoutRecycleView(R.id.placeListView,placeList);
+        adapter = new InfoItemAdapter(EditMapActivity.this,currentMap.informationItems);
+        sortOutRecycleViews(R.id.placeListView,LinearLayoutManager.VERTICAL);
     }
 
-    void sortoutRecycleView(int id, List<InformationItem> viewList)
-    {
-        final RecyclerView recList = (RecyclerView) findViewById(id);
-        final List<InformationItem> views = new ArrayList<>(viewList);
-        recList.setHasFixedSize(true);
-        recList.addOnItemTouchListener(
-                new RecyclerItemClickListener(getApplicationContext(), recList ,new RecyclerItemClickListener.OnItemClickListener() {
-                    @Override public void onItemClick(View view, int position) {
+    @Override
+    Bundle setFurtherExtra(Bundle b) {
+        return b;
+    }
 
-                        //    System.out.println("position "+position+" "+views.size());
-
-//                        Intent intent = new Intent(EditMapActivity.this,MapsActivity.class);
-//
-//                        b = new Bundle();
-//                        if(b!=null) {
-//                            b.putInt(MAP_ID_KEY, views.get(position).mapID);
-//                            intent.putExtras(b);
-//                            startActivity(intent);
-//                        }
-
-                    }
-
-                    @Override public void onLongItemClick(View view, int position) {
-                        // do whatever
-                    }
-                }));
-
-        LinearLayoutManager llm = new LinearLayoutManager(this);
-        llm.setOrientation(LinearLayoutManager.HORIZONTAL);
-        recList.setLayoutManager(llm);
+    @Override
+    void postRecycleViewSetup(RecyclerView recList) {
         recList.setAdapter(adapter);
-
 
         SnapHelper helper = new LinearSnapHelper();
         helper.attachToRecyclerView(recList);
     }
 
+    @Override
+    void itemClick(View view, int position) {
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
+        // TODO: 27/06/2018 fix description page to show this without ID
+//        Intent intent = new Intent(EditMapActivity.this,DescriptionActivity.class);
+//        b.putString(ClassMapper.classIntentKey,"EditMapActivity");
+//        b.putInt(MARKER_KEY,position);
+//        intent.putExtras(b);
+//        startActivity(intent);
+    }
+
+    @Override
+    void createContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+
+        if (v.getId()== R.id.placeListView) {
+
+            MenuInflater inflater = getMenuInflater();
+            inflater.inflate(R.menu.list_item_menu, menu);
+            menu.getItem(0).setVisible(true);
+            menu.getItem(1).setTitle("Delete Item");
+
+        }
+    }
+
+    @Override
+    protected void edit(int id) {
+        b = new Bundle();
+        b.putString(ClassMapper.classIntentKey,"EditMapActivity");
+        b.putString(MAP_KEY, gson.toJson(currentMap));
+        b.putString(PLACE_KEY, gson.toJson(currentMap.informationItems.get(id)));
+        Intent intent = new Intent(EditMapActivity.this, EditPlaceActivity.class);
+        intent.putExtras(b);
+        startActivity(intent);
+    }
+
+    @Override
+    protected void delete(int index)
+    {
+        currentMap.informationItems.remove(index);
+        adapter.notifyDataSetChanged();
+    }
+
     public void onSubmitButtonClick(View view)
     {
-
-        if(mapID < 0)
+        if(currentMap.mapID < 0)
         {
-            map = new AvailableMap(maps.size(),mapNameBox.getText().toString(), mapImagePath , placeList);
-            map.local = true;
-            maps.add(map);
+            currentMap = new AvailableMap(maps.size(),mapNameBox.getText().toString(), mapImagePath , currentMap.informationItems);
+            maps.add(currentMap);
         }
 
         else
         {
-            map = new AvailableMap(mapID,mapNameBox.getText().toString(), mapImagePath , placeList);
-            map.local = true;
-            maps.set(mapID,map);
+            currentMap = new AvailableMap(currentMap.mapID,mapNameBox.getText().toString(), mapImagePath , currentMap.informationItems);
+            maps.set(currentMap.mapID,currentMap);
         }
 
         List<AvailableMap> localMaps = new ArrayList<>();
@@ -182,99 +149,25 @@ public class EditMapActivity extends ActivityWithBackButton{
         finish();
     }
 
-    public void OnImageMapClick(View view) {
-
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(EditMapActivity.this,
-                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                    MY_PERMISSIONS_REQUEST_READ_EXT_STORAGE);
-        }
-
-        Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
-        getIntent.setType("image/*");
-
-        Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        pickIntent.setType("image/*");
-
-        Intent chooserIntent = Intent.createChooser(getIntent, "Select Map Image");
-        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] {pickIntent});
-
-        startActivityForResult(chooserIntent, PICK_IMAGE);
+    public void selectPicAction(String picturePath){
+        int id = currentMap.mapID;
+        mapImagePath = resizeAndGet(picturePath,"map",id);
+        mapImageView.setImageURI(Uri.parse(mapImagePath));
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
-        if (requestCode == PICK_IMAGE) {
-            //TODO: action
-            if (resultCode == RESULT_OK) {
-                Uri selectedImageUri = data.getData( );
-                String picturePath = getPath(EditMapActivity.this, selectedImageUri );
-                System.out.println("Picture Path"+ picturePath);
 
-                int id = mapID>=0?mapID:maps.size();
-
-                mapImagePath = resizeAndGet(picturePath,"map",id);
-                mapImageView.setImageURI(Uri.parse(mapImagePath));
-            }
-
-        }
-    }
-
-    public String resizeAndGet(String realPath,String type, int id)
-    {
-        Bitmap b= BitmapFactory.decodeFile(realPath);
-        int width = b.getWidth();
-        int height = b.getHeight();
-
-        int newHeight = 200;
-        int newWidth = (int)((double)(width)/(double)(height) * newHeight);
-        Bitmap out = Bitmap.createScaledBitmap(b, newWidth, newHeight, false);
-
-        File dir= Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES+"/"+getResources().getString(R.string.app_name));
-        System.out.println("folder: "+dir);
-        dir.mkdir();
-        File file = new File(dir, type+id+".png");
-        FileOutputStream fOut;
-        try {
-            fOut = new FileOutputStream(file);
-            out.compress(Bitmap.CompressFormat.PNG, 100, fOut);
-            fOut.flush();
-            fOut.close();
-            b.recycle();
-            out.recycle();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return file.getAbsolutePath();
-    }
-
-    public static String getPath(Context context, Uri uri ) {
-        String result = null;
-        String[] proj = { MediaStore.Images.Media.DATA };
-        Cursor cursor = context.getContentResolver( ).query( uri, proj, null, null, null );
-        if(cursor != null){
-            if ( cursor.moveToFirst( ) ) {
-                int column_index = cursor.getColumnIndexOrThrow( proj[0] );
-                result = cursor.getString( column_index );
-            }
-            cursor.close();
-        }
-        if(result == null) {
-            result = "Not found";
-        }
-        return result;
-    }
 
     public void onAddNewPlaceClick(View view) {
         Intent intent = new Intent(EditMapActivity.this, EditPlaceActivity.class);
         Bundle b = new Bundle();
-        b.putInt(MAP_ID_KEY,mapID);
-        b.putInt(MARKER_KEY,-1);
+        b.putString(MAP_KEY,gson.toJson(currentMap));
         b.putString(ClassMapper.classIntentKey, "EditMapActivity");
 
         intent.putExtras(b);
         startActivity(intent);
+    }
+
+    public void onImageViewClick(View view) {
+     super.onImageViewClick(view);
     }
 }

@@ -43,7 +43,7 @@ public class MarkerUtils {
 
         String fileName;
         InformationItem item = MapsActivity.markerInformationItemMap.get(marker);
-        if(MapsActivity.mapVisitedInformation.getVisitedAt(item.placeID))
+        if(MapsActivity.mapVisitedInformation.getVisitedAt(item.id))
             fileName = ACTIVE_VISITED_LEFT_NAME;
         else
             fileName = ACTIVE_NOVISIT_LEFT_NAME;

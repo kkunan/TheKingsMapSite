@@ -37,7 +37,7 @@
         android:layout_height="wrap_content"
         android:adjustViewBounds="true"
         android:src="@mipmap/mymap_icon01"
-        android:onClick="OnImageMapClick"
+        android:onClick="onImageViewClick"
         />
 
     <RelativeLayout

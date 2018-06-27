@@ -40,11 +40,13 @@ public class MapVisitedInformation {
         return visitedCount/total;
     }
 
-    public boolean getVisitedAt(String placeID)
+    // TODO: 27/06/2018 change this, maybe we should just use another boolean in place
+    public boolean getVisitedAt(int id)
     {
         for(VisitedInformation information : informationList)
         {
-            if(information.item.placeID.equals(placeID))
+            if(information.item!=null && information.item.placeID!=null)
+            if(information.item.id == id)
                 return information.visited;
         }
         return false;

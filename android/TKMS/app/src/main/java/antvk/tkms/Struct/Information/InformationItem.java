@@ -5,11 +5,13 @@ import android.annotation.SuppressLint;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 public class InformationItem {
 
+    public int id = -1;
     public String header;
     public String placeNickName;
     public List<Event> events;
@@ -31,9 +33,11 @@ public class InformationItem {
     }
 
     public InformationItem() {
+        this.events = new ArrayList<>();
     }
 
     public static class Event {
+        public int id = -1;
         public String title;
         public String date;
         public String time;

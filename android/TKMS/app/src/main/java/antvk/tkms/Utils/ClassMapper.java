@@ -11,7 +11,7 @@ public interface ClassMapper {
         {
             case "DescriptionActivity": return DescriptionActivity.class;
             case "EditMapActivity": return EditMapActivity.class;
-            case "EditPlaceActivity": return EditMapActivity.class;
+            case "EditPlaceActivity": return EditPlaceActivity.class;
             case "MapsActivity": return MapsActivity.class;
             case "MapSelectorActivity": return MapSelectorActivity.class;
             case "MarkerEventActivity": return MarkerEventListActivity.class;

@@ -39,12 +39,13 @@ import antvk.tkms.Struct.MapAttribute.AvailableMap;
 import antvk.tkms.ViewManager.RecyclerItemClickListener;
 import antvk.tkms.ViewManager.MapSelectorView.MapSelectorAdapter;
 
+import static antvk.tkms.Activities.ActivityWithBackButton.MAP_KEY;
 import static antvk.tkms.Activities.MapsActivity.*;
 
 import static antvk.tkms.Activities.ActivityWithBackButton.MAP_ID_KEY;
 
 @RequiresApi(api = Build.VERSION_CODES.N)
-public class MapSelectorActivity extends AppCompatActivity {
+public class MapSelectorActivity extends ListItemContextMenuActivity {
 
     public static final String MAP_PREF = "maps";
 
@@ -54,7 +55,6 @@ public class MapSelectorActivity extends AppCompatActivity {
 
     static Type listType = new TypeToken<ArrayList<AvailableMap>>() {
     }.getType();
-    int[] contextMenuPosition = new int[]{-1};
 
     Bundle b;
     static Gson gson = new Gson();
@@ -105,7 +105,17 @@ public class MapSelectorActivity extends AppCompatActivity {
         actionBar.setCustomView(imageView);
         actionBar.setTitle("");
 
-        sortOutRecycleViews(R.id.map_list_view, maps);
+        sortOutRecycleViews(R.id.map_list_view, LinearLayoutManager.HORIZONTAL);
+    }
+
+    @Override
+    Bundle setFurtherExtra(Bundle b) {
+        return null;
+    }
+
+    @Override
+    public void selectPicAction(String picturePath) {
+
     }
 
     public static List<AvailableMap> getAllItems(Context context) {
@@ -152,89 +162,59 @@ public class MapSelectorActivity extends AppCompatActivity {
     }
 
 
-    void sortOutRecycleViews(int id, List<AvailableMap> viewList) {
-        final RecyclerView recList = (RecyclerView) findViewById(id);
-        final List<AvailableMap> views = new ArrayList<>(viewList);
-        recList.setHasFixedSize(true);
-        recList.addOnItemTouchListener(
-                new RecyclerItemClickListener(getApplicationContext(), recList, new RecyclerItemClickListener.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(View view, int position) {
+    @Override
+    void itemClick(View view, int position) {
+        Intent intent = new Intent(MapSelectorActivity.this, MapsActivity.class);
+        b = new Bundle();
+        if (b != null) {
+            b.putInt(MAP_ID_KEY, maps.get(position).mapID);
+            intent.putExtras(b);
+            startActivity(intent);
+        }
+    }
 
-                        Intent intent = new Intent(MapSelectorActivity.this, MapsActivity.class);
-
-                        b = new Bundle();
-                        if (b != null) {
-                            b.putInt(MAP_ID_KEY, views.get(position).mapID);
-                            intent.putExtras(b);
-                            startActivity(intent);
-                        }
-                    }
-
-                    @RequiresApi(api = Build.VERSION_CODES.N)
-                    @Override
-                    public void onLongItemClick(View view, int position) {
-                        // do whatever
-                        contextMenuPosition[0] = position;
-                        registerForContextMenu(recList);
-                        openContextMenu(recList);
-                    }
-                }));
-
-        LinearLayoutManager llm = new LinearLayoutManager(this);
-        llm.setOrientation(LinearLayoutManager.HORIZONTAL);
-        recList.setLayoutManager(llm);
-        adapter = new MapSelectorAdapter(MapSelectorActivity.this, viewList);
+    @Override
+    void postRecycleViewSetup(RecyclerView recList) {
+        adapter = new MapSelectorAdapter(MapSelectorActivity.this, maps);
         recList.setAdapter(adapter);
 
         SnapHelper helper = new LinearSnapHelper();
         helper.attachToRecyclerView(recList);
-
     }
 
     @Override
-    public void onCreateContextMenu(ContextMenu menu, View v,
-                                    ContextMenu.ContextMenuInfo menuInfo) {
-        if (v.getId()==R.id.map_list_view) {
+    void  createContextMenu(ContextMenu menu,View v, ContextMenu.ContextMenuInfo menuInfo) {
+        if (v.getId()== R.id.map_list_view) {
 
             MenuInflater inflater = getMenuInflater();
             inflater.inflate(R.menu.list_item_menu, menu);
-
-            super.onCreateContextMenu(menu, v, menuInfo);
 
             if(maps.get(contextMenuPosition[0]).local) {
                 menu.getItem(0).setVisible(true);
                 menu.getItem(1).setTitle("Delete Item");
             }
-
-//            menu.setHeaderTitle("TEST HEADER");
-//            String[] menuItems = new String[]{"menu 1", "menu 2"};//getResources().getStringArray(R.menu.bottombar_menu);
-//            for (int i = 0; i<menuItems.length; i++) {
-//                menu.add(Menu.NONE, i, i, menuItems[i]);
-//            }
         }
     }
 
     @Override
-    public boolean onContextItemSelected (MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.edit_item: {
-                int index = contextMenuPosition[0];
-                b = new Bundle();
-                b.putInt(MAP_ID_KEY,index);
-                Intent intent = new Intent(MapSelectorActivity.this, EditMapActivity.class);
-                intent.putExtras(b);
-                startActivity(intent);
-            }
-            break;
-            case R.id.delete_item: {
-                maps.remove(contextMenuPosition[0]);
-                preferences.edit().putString(MAP_PREF,gson.toJson(AvailableMap.getLocalOnly(maps))).apply();
-                adapter.notifyDataSetChanged();
-            }
-        }
-        return false;
+    protected void edit(int index)
+    {
+        b = new Bundle();
+        b.putString(MAP_KEY, gson.toJson(maps.get(index)));
+        Intent intent = new Intent(MapSelectorActivity.this, EditMapActivity.class);
+        intent.putExtras(b);
+        startActivity(intent);
     }
+
+    @Override
+    protected void delete(int index)
+    {
+        maps.remove(index);
+        preferences.edit().putString(MAP_PREF,gson.toJson(AvailableMap.getLocalOnly(maps))).apply();
+        adapter.notifyDataSetChanged();
+    }
+
+
     public void onAddNewMapClick(View view)
     {
         Intent intent = new Intent(MapSelectorActivity.this, EditMapActivity.class);

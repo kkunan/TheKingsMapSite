@@ -55,6 +55,7 @@ import antvk.tkms.Struct.Information.InformationItem;
 import antvk.tkms.Struct.Information.MapVisitedInformation;
 import antvk.tkms.R;
 import antvk.tkms.Struct.MapAttribute.AvailableMap;
+import antvk.tkms.Utils.ClassMapper;
 import antvk.tkms.Utils.ImageUtils;
 import antvk.tkms.Utils.LocationUtils;
 import antvk.tkms.Utils.MarkerUtils;
@@ -125,7 +126,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
            maps = MapSelectorActivity.getAllItems(getApplicationContext());
        }
 
-       if(value == -1)
+       if(selectedMarker == null)
        {
            findViewById(R.id.header_content).setVisibility(View.GONE);
        }
@@ -233,13 +234,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                                 // TODO
                                 findViewById(R.id.mapActivity_layout).setVisibility(View.VISIBLE);
                                 findViewById(R.id.history_activity_view).setVisibility(View.GONE);
-                                if (selectedMarker != null) {
-                                    findViewById(R.id.header_content).setVisibility(View.VISIBLE);
-                                }
-                                else
-                                {
-                                    findViewById(R.id.header_content).setVisibility(View.GONE);
-                                }
+
+                                findViewById(R.id.header_content).setVisibility(View.GONE);
+                                selectedMarker = null;
+                                sortoutUI();
                                 return true;
                             case R.id.bottombaritem_history:
                                 // TODO
@@ -364,9 +362,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         else informationItems = getAllItems(this, Constants.getFileName(mapIndex, MapSelectorActivity.preferences));
         for (InformationItem item : informationItems) {
-            Marker marker = createMarker(item);
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(marker.getPosition()));
-
+            // TODO: 27/06/2018 check if no place has location then prompt user to input them. 
+            if(item.location!=null) {
+                Marker marker = createMarker(item);
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(marker.getPosition()));
+            }
         }
 
         markerList = new ArrayList<>(markerInformationItemMap.keySet());
@@ -422,6 +422,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         Bundle b = new Bundle();
 
         b.putInt(MARKER_KEY, markerList.indexOf(marker)); //Your id
+        b.putString(ClassMapper.classIntentKey,"MapsActivity");
 
         //    System.out.println("marker index " + markerList.indexOf(marker));
         intent.putExtras(b); //Put your id to your next Intent
