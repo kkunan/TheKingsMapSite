@@ -5,41 +5,54 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:background="@drawable/rounded_border"
-    android:paddingBottom="10dp"
-    >
-<RelativeLayout android:layout_width="wrap_content"
-    android:layout_height="167dp"
+    android:layout_marginBottom="5dp"
     >
 
-    <ImageView
-        android:id="@+id/place_image"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:adjustViewBounds="true"
-        android:scaleType="fitCenter" />
+        android:orientation="vertical"
+        android:padding="10dp">
 
-    <TextView
-        android:id="@+id/place_name_overlay"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="#aa333333"
-        android:padding="10dp"
-        android:textStyle="bold"
-        android:text="TEST"
-        android:textColor="@android:color/white"
-        android:textSize="20sp" />
+        <ImageView
+            android:id="@+id/place_image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
+            android:visibility="gone" />
 
-    <ImageView
-        android:id="@+id/heart_item_page"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:onClick="onHeartClick"
-        android:src="@drawable/grey_heart"
-        android:visibility="gone" />
-</RelativeLayout>
+        <TextView
+            android:id="@+id/place_name_overlay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="TEST"
+            android:textColor="@color/dark_grey"
+            android:textSize="20sp"
+            android:textStyle="bold"/>
+
+        <ImageView
+            android:id="@+id/heart_item_page"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:onClick="onHeartClick"
+            android:src="@drawable/grey_heart"
+            android:visibility="gone" />
+        <TextView
+            android:id="@+id/place_address"
+            android:textSize="14sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Address line"
+            />
+        <TextView
+            android:textSize="14sp"
+            android:id="@+id/place_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            />
+    </LinearLayout>
     <LinearLayout
         android:id="@+id/read_more"
         android:layout_width="match_parent"
@@ -48,6 +61,7 @@
         android:orientation="horizontal"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
+        android:visibility="gone"
         >
         <TextView
             android:textSize="14sp"
@@ -63,32 +77,8 @@
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:src="@drawable/blue_right_arrow" />
+
+
     </LinearLayout>
-
-
-    <TextView
-        android:id="@+id/place_address"
-        android:textSize="14sp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Address line"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="5dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        />
-
-
-    <TextView
-        android:textSize="14sp"
-        android:id="@+id/place_description"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="5dp"
-        android:visibility="gone"
-        />
 
 </LinearLayout>

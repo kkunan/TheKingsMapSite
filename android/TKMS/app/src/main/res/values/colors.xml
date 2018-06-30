@@ -7,4 +7,5 @@
     <color name="heart_pink">#EC7370</color>
     <color name="heart_grey">#bcbcbc</color>
     <color name="dark_grey">#333333</color>
+    <color name="text_btn">#2dbcc5</color>
 </resources>

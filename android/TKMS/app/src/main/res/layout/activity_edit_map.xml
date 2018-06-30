@@ -3,87 +3,101 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 <LinearLayout
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="20dp"
+    android:layout_margin="20dp"
     >
+
+    <ImageView
+        android:id="@+id/add_map_image_button"
+        android:layout_marginBottom="20dp"
+        android:layout_width="200dp"
+        android:layout_gravity="center"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:src="@mipmap/add_map_icon"
+        android:onClick="onImageViewClick"
+        />
+
+    <LinearLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@drawable/rounded_border"
+        android:orientation="horizontal"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:paddingRight="10dp"
+        android:paddingLeft="10dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Map name"
+            android:textSize="15sp"
+            android:paddingRight="5dp"/>
+
+        <EditText
+            android:id="@+id/map_name_edittext"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:inputType="text"/>
+
+
+
+    </LinearLayout>
 
     <LinearLayout
 
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        >
-    <TextView
-        android:layout_margin="20dp"
-        android:layout_width="wrap_content"
-        android:text="Map name"
-        android:layout_gravity="center"
-        android:layout_height="wrap_content" />
-        <EditText
-            android:id="@+id/map_name_edittext"
-            android:layout_width="match_parent"
-            android:inputType="text"
-            android:layout_height="match_parent" />
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="20dp"
+        android:orientation="vertical">
 
+        <TextView
+            android:id="@+id/place_list_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Places in this map"
+            android:textSize="20sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="+ Add new place"
+            android:textSize="16sp"
+            android:textColor="@color/text_btn"
+            android:layout_marginTop="5dp"
+            android:onClick="onAddNewPlaceClick"/>
 
     </LinearLayout>
 
-    <ImageView
-        android:id="@+id/add_map_image_button"
-        android:layout_marginTop="20dp"
-        android:layout_width="100dp"
-        android:layout_gravity="center"
-        android:layout_height="wrap_content"
-        android:adjustViewBounds="true"
-        android:src="@mipmap/mymap_icon01"
-        android:onClick="onImageViewClick"
-        />
-
-    <RelativeLayout
-
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-    <TextView
-        android:id="@+id/place_list_header"
-        android:layout_centerVertical="true"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Places in this map"
-        android:textSize="20sp"
-        />
-
-    <ImageView
-        android:layout_marginLeft="10dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@mipmap/add_map"
-        android:onClick="onAddNewPlaceClick"
-        android:layout_toRightOf="@+id/place_list_header"/>
-
-    </RelativeLayout>
-
     <android.support.v7.widget.RecyclerView
-        android:layout_marginLeft="30dp"
+        android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
-        android:layout_marginRight="30dp"
+        android:layout_marginRight="10dp"
         android:id="@+id/placeListView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         />
 
-    <ImageView
-        android:id="@+id/submit_button"
-        android:layout_marginTop="30dp"
-        android:layout_gravity="right"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@mipmap/the_app_icon"
-        android:onClick="onSubmitButtonClick"
-        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_gravity="bottom"
+        android:layout_marginTop="10dp">
+        <Button
+            android:id="@+id/submit_button"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Done !"
+            android:background="@color/colorPrimary"
+            android:onClick="onSubmitButtonClick"/>
+    </LinearLayout>
 
 </LinearLayout>
 </ScrollView>
