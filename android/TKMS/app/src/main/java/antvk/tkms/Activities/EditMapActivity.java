@@ -1,5 +1,6 @@
 package antvk.tkms.Activities;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -22,6 +23,7 @@ import java.util.List;
 import antvk.tkms.R;
 import antvk.tkms.Struct.MapAttribute.AvailableMap;
 import antvk.tkms.Utils.ClassMapper;
+import antvk.tkms.Utils.UIUtils;
 import antvk.tkms.ViewManager.InfoItemListView.InfoItemAdapter;
 
 import static antvk.tkms.Activities.MapSelectorActivity.*;
@@ -31,7 +33,6 @@ public class EditMapActivity extends ListItemContextMenuActivity{
 
     EditText mapNameBox;
     TextView placeListLabel;
-    String mapImagePath;
     ImageView mapImageView;
 
     InfoItemAdapter adapter;
@@ -48,8 +49,10 @@ public class EditMapActivity extends ListItemContextMenuActivity{
         if(maps==null)
             maps = MapSelectorActivity.getAllItems(this);
 
-        if(currentMap==null)
+        if(currentMap==null) {
             currentMap = new AvailableMap();
+            mapNameBox.requestFocus();
+        }
 
         else {
             mapNameBox.setText(currentMap.mapName);
@@ -112,21 +115,32 @@ public class EditMapActivity extends ListItemContextMenuActivity{
     @Override
     protected void delete(int index)
     {
-        currentMap.informationItems.remove(index);
-        adapter.notifyDataSetChanged();
+        UIUtils.createAndShowAlertDialog(
+                EditMapActivity.this,
+                "Confirm deleting the place ",
+                "Delete place " + currentMap.informationItems.get(index).header,
+                (dialogInterface, i) -> {
+                    ListItemContextMenuActivity.defaultDelete(currentMap.informationItems,adapter,index);
+//                    currentMap.informationItems.remove(index);
+//                    adapter.notifyDataSetChanged();
+                },
+                (dialogInterface, i) -> {
+                    dialogInterface.dismiss();
+                }
+        );
     }
 
     public void onSubmitButtonClick(View view)
     {
+        currentMap.mapName = mapNameBox.getText().toString();
         if(currentMap.mapID < 0)
         {
-            currentMap = new AvailableMap(maps.size(),mapNameBox.getText().toString(), mapImagePath , currentMap.informationItems);
+            currentMap.mapID = maps.size();
             maps.add(currentMap);
         }
 
         else
         {
-            currentMap = new AvailableMap(currentMap.mapID,mapNameBox.getText().toString(), mapImagePath , currentMap.informationItems);
             maps.set(currentMap.mapID,currentMap);
         }
 
@@ -151,8 +165,9 @@ public class EditMapActivity extends ListItemContextMenuActivity{
 
     public void selectPicAction(String picturePath){
         int id = currentMap.mapID;
-        mapImagePath = resizeAndGet(picturePath,"map",id);
+        String mapImagePath = resizeAndGet(picturePath,"map",id);
         mapImageView.setImageURI(Uri.parse(mapImagePath));
+        currentMap.imageLogo = mapImagePath;
     }
 
 

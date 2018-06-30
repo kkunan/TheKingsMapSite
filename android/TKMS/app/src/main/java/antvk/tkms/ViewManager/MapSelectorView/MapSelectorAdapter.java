@@ -26,12 +26,14 @@ import antvk.tkms.ViewManager.EventView.EventViewHolder;
 
 public class MapSelectorAdapter extends RecyclerView.Adapter<MapSelectorAdapter.MapViewHolder> {
 
-    public static List<AvailableMap> availableMaps;
+    private List<AvailableMap> availableMaps;
     public Context context;
 
     public MapSelectorAdapter(Context context,List<AvailableMap> availableMaps) {
         this.context = context;
         this.availableMaps = availableMaps;
+        if(availableMaps==null)
+            this.availableMaps = new ArrayList<>();
     }
 
     @Override

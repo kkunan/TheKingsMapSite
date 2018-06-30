@@ -36,6 +36,7 @@ import java.util.List;
 import antvk.tkms.Constants;
 import antvk.tkms.R;
 import antvk.tkms.Struct.MapAttribute.AvailableMap;
+import antvk.tkms.Utils.UIUtils;
 import antvk.tkms.ViewManager.RecyclerItemClickListener;
 import antvk.tkms.ViewManager.MapSelectorView.MapSelectorAdapter;
 
@@ -64,6 +65,7 @@ public class MapSelectorActivity extends ListItemContextMenuActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.showBackButton = false;
         setContentView(R.layout.map_selector_layout);
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -209,9 +211,18 @@ public class MapSelectorActivity extends ListItemContextMenuActivity {
     @Override
     protected void delete(int index)
     {
-        maps.remove(index);
+        UIUtils.createAndShowAlertDialog(
+                MapSelectorActivity.this,
+                "Confirm deleting the map ",
+                "Delete map " + maps.get(index).mapName,
+                (dialogInterface, i) -> {
+                    ListItemContextMenuActivity.defaultDelete(maps,adapter,index);
+                },
+                (dialogInterface, i) -> {
+                    dialogInterface.dismiss();
+                }
+        );
         preferences.edit().putString(MAP_PREF,gson.toJson(AvailableMap.getLocalOnly(maps))).apply();
-        adapter.notifyDataSetChanged();
     }
 
 

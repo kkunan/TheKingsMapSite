@@ -6,6 +6,7 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="20dp"
+    android:focusableInTouchMode="true"
     >
 
     <LinearLayout
@@ -24,7 +25,8 @@
             android:id="@+id/map_name_edittext"
             android:layout_width="match_parent"
             android:inputType="text"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            />
 
 
     </LinearLayout>
