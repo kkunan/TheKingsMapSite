@@ -6,7 +6,12 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+<<<<<<< HEAD
     android:layout_margin="20dp"
+=======
+    android:padding="20dp"
+    android:focusableInTouchMode="true"
+>>>>>>> origin/android-app
     >
 
     <ImageView
@@ -41,8 +46,14 @@
         <EditText
             android:id="@+id/map_name_edittext"
             android:layout_width="match_parent"
+<<<<<<< HEAD
             android:layout_height="match_parent"
             android:inputType="text"/>
+=======
+            android:inputType="text"
+            android:layout_height="match_parent"
+            />
+>>>>>>> origin/android-app
 
 
 

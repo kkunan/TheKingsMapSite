@@ -30,9 +30,13 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import antvk.tkms.Constants;
 import antvk.tkms.R;
 import antvk.tkms.Struct.Information.InformationItem;
+import antvk.tkms.Struct.MapAttribute.AvailableMap;
 import antvk.tkms.Utils.ClassMapper;
 import antvk.tkms.ViewManager.EventView.EventViewAdapter;
 
+import static antvk.tkms.Activities.MapSelectorActivity.*;
+
+@RequiresApi(api = Build.VERSION_CODES.N)
 public class EditPlaceActivity extends ListItemContextMenuActivity implements OnMapReadyCallback{
 
     PlaceAutocompleteFragment autocompleteFragment;
@@ -45,7 +49,6 @@ public class EditPlaceActivity extends ListItemContextMenuActivity implements On
     EventViewAdapter adapter;
 
     Bundle b = new Bundle();
-    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,8 +83,10 @@ public class EditPlaceActivity extends ListItemContextMenuActivity implements On
             }
         });
 
-        if(currentItem == null)
+        if(currentItem == null) {
             currentItem = new InformationItem();
+            placeNameEditText.requestFocus();
+        }
 
         else{
             sortoutUI();
@@ -184,6 +189,12 @@ public class EditPlaceActivity extends ListItemContextMenuActivity implements On
 
         else{
             currentMap.informationItems.set(currentItem.id,currentItem);
+        }
+
+        if(currentMap.mapID>0)
+        {
+            maps.set(currentMap.mapID,currentMap);
+            preferences.edit().putString(MAP_PREF,gson.toJson(AvailableMap.getLocalOnly(maps))).apply();
         }
 
         gobackToPreviousScreen();

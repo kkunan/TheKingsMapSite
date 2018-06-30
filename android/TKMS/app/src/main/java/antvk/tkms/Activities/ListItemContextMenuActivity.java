@@ -12,6 +12,9 @@ import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import antvk.tkms.R;
 import antvk.tkms.ViewManager.RecyclerItemClickListener;
 
@@ -79,6 +82,11 @@ public abstract class ListItemContextMenuActivity extends AddStuffsActivity {
         return false;
     }
 
-    protected void edit(int id) {}
-    protected void delete(int id){}
+    protected abstract void edit(int id);
+    protected abstract void delete(int id);
+
+    public static void defaultDelete(List listToRemove, RecyclerView.Adapter adapter, int id){
+        listToRemove.remove(id);
+        adapter.notifyDataSetChanged();
+    }
 }
