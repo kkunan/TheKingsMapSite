@@ -108,6 +108,9 @@ public class MarkerEventListActivity extends ActivityWithBackButton {
             }
             Location location = manager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
+            if(location==null)
+                location = manager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+
             if(location!=null) {
                 boolean visited = item.visited;
                 double distance = LocationUtils.quickDistance(

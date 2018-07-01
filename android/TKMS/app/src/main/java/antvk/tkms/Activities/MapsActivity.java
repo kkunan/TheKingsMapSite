@@ -64,7 +64,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
     public static final int MY_PERMISSIONS_REQUEST_FINE_LOCATION = 1111;
-    public final int MY_PERMISSIONS_REQUEST_COARSE_LOCATION = 1112;
+    public static final int MY_PERMISSIONS_REQUEST_COARSE_LOCATION = 1112;
 
     public static GoogleMap mMap;
     public static List<Marker> markerList;
@@ -495,6 +495,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         mMap.setMyLocationEnabled(true);
         Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        if(location==null)
+            location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 //        1: World
 //        5: Landmass/continent
 //        10: City

@@ -57,6 +57,7 @@ public class EditPlaceActivity extends AddStuffsActivity implements OnMapReadyCa
     GoogleMap gMap;
     Marker currentPlaceMarker;
 
+    Spinner dropdown;
     EditText descriptionEditText, placeNameEditText;
     ImageView placeImageView;
 //    EventViewAdapter adapter;
@@ -82,7 +83,7 @@ public class EditPlaceActivity extends AddStuffsActivity implements OnMapReadyCa
         autocompleteFragment = (PlaceAutocompleteFragment) getFragmentManager()
                 .findFragmentById(R.id.place_autocomplete_fragment);
 
-        Spinner dropdown = findViewById(R.id.place_category_dropdown);
+        dropdown = findViewById(R.id.place_category_dropdown);
         placeCategories = getPlaceCategory();
         String[] items = toStringName(placeCategories);
         ArrayAdapter<String> dropdown_adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items);
@@ -91,7 +92,11 @@ public class EditPlaceActivity extends AddStuffsActivity implements OnMapReadyCa
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 // TODO: 01/07/2018 set place background
+                if(currentItem==null)
+                    currentItem = new PlaceItem();
+
                 currentItem.placeCategory = placeCategories.get(i);
+                if(currentItem.placeCategory!=null)
                 placeImageView.setImageBitmap(ImageUtils.getBitmapFromAsset(EditPlaceActivity.this,
                         Constants.PLACE_CATEGORY_PATH+"/"+currentItem.placeCategory.imagePath));
             }
@@ -107,9 +112,15 @@ public class EditPlaceActivity extends AddStuffsActivity implements OnMapReadyCa
         assert locationManager != null;
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
             ActivityCompat.requestPermissions(EditPlaceActivity.this,
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     MapsActivity.MY_PERMISSIONS_REQUEST_FINE_LOCATION);
+
+            ActivityCompat.requestPermissions(EditPlaceActivity.this,
+                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                    MapsActivity.MY_PERMISSIONS_REQUEST_COARSE_LOCATION);
+            return;
         }
 
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
@@ -121,11 +132,13 @@ public class EditPlaceActivity extends AddStuffsActivity implements OnMapReadyCa
 
             @Override
             public void onPlaceSelected(Place place) {
+                if(currentItem==null)
+                    currentItem = new PlaceItem();
                 currentItem.placeID = place.getId();
                 currentItem.location = place.getLatLng();
                 currentItem.placeRealName = place.getName().toString();
                 if (gMap != null) {
-                    setMarker(currentItem.header, currentItem.location);
+                    currentPlaceMarker = setMarker(currentItem.header, currentItem.location);
                     CameraUpdate cameraUpdateFactory = CameraUpdateFactory.newLatLngZoom(currentPlaceMarker.getPosition(), Constants.STREET_LEVEL_ZOOM);
                     gMap.moveCamera(cameraUpdateFactory);
                 }
@@ -233,8 +246,6 @@ public class EditPlaceActivity extends AddStuffsActivity implements OnMapReadyCa
             placeImageView.setImageURI(Uri.parse(currentItem.placeCategory.imagePath));
     }
 
-    boolean firstLoad = true;
-
     @Override
     public void onMapReady(GoogleMap googleMap) {
         gMap = googleMap;
@@ -242,9 +253,9 @@ public class EditPlaceActivity extends AddStuffsActivity implements OnMapReadyCa
             ActivityCompat.requestPermissions(EditPlaceActivity.this,
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     MapsActivity.MY_PERMISSIONS_REQUEST_FINE_LOCATION);
+            return;
         }
         gMap.setMyLocationEnabled(true);
-
 
         if(currentItem.location!=null) {
             currentPlaceMarker = setMarker(currentItem.header,currentItem.location);
@@ -254,10 +265,14 @@ public class EditPlaceActivity extends AddStuffsActivity implements OnMapReadyCa
 
         else {
             Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            if (firstLoad && location != null) {
+
+            if(location==null)
+                location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+
+            if (location != null) {
                 gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
                         new LatLng(location.getLatitude(), location.getLongitude()), Constants.STREET_LEVEL_ZOOM));
-                firstLoad = false;
+
             }
         }
         gMap.setOnMapLongClickListener(latLng -> {
@@ -289,7 +304,11 @@ public class EditPlaceActivity extends AddStuffsActivity implements OnMapReadyCa
 
     public void onSubmitButtonClick(View view) {
 
+        if(currentItem==null)
+            currentItem = new PlaceItem();
         currentItem.header = placeNameEditText.getText().toString();
+        currentItem.placeCategory = placeCategories.get(dropdown.getSelectedItemPosition());
+
         if(currentPlaceMarker!=null)
             currentItem.location = currentPlaceMarker.getPosition();
 
