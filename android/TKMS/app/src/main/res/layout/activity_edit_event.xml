@@ -6,42 +6,51 @@
     <LinearLayout
         android:orientation="vertical" android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="20dp"
-        >
+        android:layout_margin="20dp">
 
         <LinearLayout
 
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:orientation="horizontal">
+            android:layout_height="60dp"
+            android:background="@drawable/rounded_border"
+            android:orientation="horizontal"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:paddingRight="10dp"
+            android:paddingLeft="10dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Event name" />
+                android:text="Title"
+                android:textSize="15sp"
+                android:paddingRight="5dp" />
 
             <EditText
                 android:id="@+id/event_name_edittext"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="text" />
+                android:layout_height="match_parent"
+                android:inputType="text"
+                android:focusableInTouchMode="true" />
         </LinearLayout>
 
         <LinearLayout
-
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
+            android:layout_height="60dp"
+            android:background="@drawable/rounded_border"
             android:orientation="horizontal"
-            android:weightSum="1"
-            >
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:paddingRight="10dp"
+            android:paddingLeft="10dp"
+            android:layout_marginTop="10dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Event Date and Time"
-                />
+                android:text="Date-Time"
+                android:textSize="15sp"
+                android:paddingRight="5dp"/>
 
             <Button
                 android:id="@+id/event_datetime_button"
@@ -49,21 +58,26 @@
                 android:layout_height="wrap_content"
                 android:hint="click to select date and time"
                 android:onClick="onDateTimeSelectorClick"
-                />
+                android:layout_marginLeft="5dp"/>
 
         </LinearLayout>
 
         <LinearLayout
 
-            android:layout_marginTop="20dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            >
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:paddingRight="10dp"
+            android:paddingLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/rounded_border">
             <TextView
                 android:layout_width="wrap_content"
-                android:text="Event description"
-                android:layout_height="wrap_content" />
+                android:text="Experiences Description"
+                android:layout_height="wrap_content"
+                android:textSize="15sp"/>
             <EditText
                 android:id="@+id/event_description_edittext"
                 android:layout_width="match_parent"
@@ -79,14 +93,15 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
+            android:visibility="gone"
             >
 
             <TextView
                 android:layout_width="wrap_content"
-                android:text="Event image"
+                android:text="Event images"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                />
+                android:textSize="15sp"/>
             <ImageView
                 android:id="@+id/event_image"
                 android:layout_marginTop="10dp"
@@ -109,7 +124,22 @@
             android:layout_alignParentRight="true"
             android:src="@mipmap/the_app_icon"
             android:onClick="onSubmitButtonClick"
+            android:visibility="gone"
             />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_gravity="bottom"
+            android:layout_marginTop="20dp">
+            <Button
+                android:id="@+id/submit_button"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Done !"
+                android:background="@color/colorPrimary"
+                android:onClick="onSubmitButtonClick"/>
+        </LinearLayout>
     </LinearLayout>
 
 
