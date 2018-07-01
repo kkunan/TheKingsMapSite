@@ -71,6 +71,12 @@ public class EditPlaceActivity extends AddStuffsActivity implements OnMapReadyCa
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_edit_place_in_map);
+        if (currentItem == null) {
+            currentItem = new PlaceItem();
+            placeNameEditText.requestFocus();
+        } else {
+            sortoutUI();
+        }
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map_fragment_edit_place);
@@ -151,12 +157,6 @@ public class EditPlaceActivity extends AddStuffsActivity implements OnMapReadyCa
             }
         });
 
-        if (currentItem == null) {
-            currentItem = new PlaceItem();
-            placeNameEditText.requestFocus();
-        } else {
-            sortoutUI();
-        }
 
 //        adapter = new EventViewAdapter(currentItem.events);
 //        sortOutRecycleViews(R.id.eventListView, LinearLayoutManager.HORIZONTAL);
