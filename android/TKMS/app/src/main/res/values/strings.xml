@@ -11,5 +11,8 @@
     <string name="place_description_title">Place description</string>
     <string name="place_name_text">Place name</string>
     <string name="add_event_button_des">Add event button</string>
+    <string name="your_description_of_this_place">Your description of this place</string>
+    <string name="search_for_the_place">Search for the place</string>
+    <string name="done">Done !</string>
 
 </resources>

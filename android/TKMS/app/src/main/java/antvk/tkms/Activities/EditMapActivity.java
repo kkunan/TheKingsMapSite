@@ -129,6 +129,7 @@ public class EditMapActivity extends ListItemContextMenuActivity{
     public void onSubmitButtonClick(View view)
     {
         currentMap.mapName = mapNameBox.getText().toString();
+        currentMap.local = true;
         if(currentMap.mapID < 0)
         {
             currentMap.mapID = localMaps.size();

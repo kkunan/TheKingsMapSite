@@ -39,6 +39,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import antvk.tkms.Constants;
 import antvk.tkms.Struct.Information.PlaceItem;
 import antvk.tkms.R;
 import antvk.tkms.Struct.MapAttribute.AvailableMap;
@@ -76,6 +77,11 @@ public class MarkerEventListActivity extends ActivityWithBackButton {
         setContentView(R.layout.activity_description_itemlist);
 
         value = getExtra(MARKER_KEY);
+
+        if(localMaps==null)
+        {
+            MapSelectorActivity.getLocalMaps(getApplicationContext());
+        }
 
         currentMap = gson.fromJson(getIntent().getStringExtra(MAP_KEY),AvailableMap.class);
 
@@ -215,9 +221,10 @@ public class MarkerEventListActivity extends ActivityWithBackButton {
         ImageView placeImageView = (ImageView) findViewById(R.id.place_image);
 
             try {
-                placeImageView.setImageURI(
-                        Uri.parse(item.placeImage)
-                );
+                if(item.placeCategory!=null)
+                placeImageView.setImageBitmap(ImageUtils.getBitmapFromAsset(MarkerEventListActivity.this,
+                        Constants.PLACE_CATEGORY_PATH+"/"+item.placeCategory.imagePath));
+
             }catch (Exception e)
             {
                 placeImageView.setImageResource(R.mipmap.mymap_icon02);
@@ -325,7 +332,7 @@ public class MarkerEventListActivity extends ActivityWithBackButton {
 
                         Bundle b = setExtra(MARKER_KEY,value);
                         b = setExtra(EVENT_KEY,position, b);
-                        b .putString(MAP_KEY,gson.toJson(currentMap));
+                        b.putString(MAP_KEY,gson.toJson(currentMap));
                         b.putString(ClassMapper.classIntentKey, "MarkerEventListActivity");
                         intent.putExtras(b);
                         startActivity(intent);
@@ -373,27 +380,23 @@ public class MarkerEventListActivity extends ActivityWithBackButton {
         boolean visited = item.visited;
         if(!visited)
         {
-            DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
+                switch (which){
+                    case DialogInterface.BUTTON_POSITIVE:
+                        item.visited = true;
+                        currentMap.placeItems.set(item.id,item);
+                        localMaps.set(currentMap.mapID,currentMap);
 
+                        MapSelectorActivity.preferences.edit().putString(
+                                MAP_PREF,
+                                gson.toJson(localMaps)
+                                ).apply();
 
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    switch (which){
-                        case DialogInterface.BUTTON_POSITIVE:
-                            item.visited = true;
-                            localMaps.set(currentMap.mapID,currentMap);
+                        sortoutUIByStatus(true,true);
+                        break;
 
-                            MapSelectorActivity.preferences.edit().putString(
-                                    MAP_PREF,
-                                    gson.toJson(localMaps)
-                                    ).apply();
-
-                            sortoutUIByStatus(true,true);
-                            break;
-
-                        case DialogInterface.BUTTON_NEGATIVE:
-                            break;
-                    }
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        break;
                 }
             };
 
@@ -410,6 +413,7 @@ public class MarkerEventListActivity extends ActivityWithBackButton {
                 switch (which){
                     case DialogInterface.BUTTON_POSITIVE:
                         item.visited = false;
+                        currentMap.placeItems.set(item.id,item);
                         localMaps.set(currentMap.mapID,currentMap);
                         MapSelectorActivity.preferences.edit().putString(MAP_PREF,
                                 gson.toJson(localMaps)

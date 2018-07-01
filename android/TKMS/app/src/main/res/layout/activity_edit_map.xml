@@ -6,7 +6,8 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="20dp">
+    android:focusableInTouchMode="true"
+    android:padding="20dp">
 
     <ImageView
         android:id="@+id/add_map_image_button"
@@ -41,8 +42,7 @@
             android:id="@+id/map_name_edittext"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:inputType="text"
-            android:focusableInTouchMode="true"/>
+            android:inputType="text"/>
 
 
     </LinearLayout>

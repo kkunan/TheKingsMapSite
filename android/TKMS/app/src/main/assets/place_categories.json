@@ -1,0 +1,14 @@
+[
+  {
+    "name": "park",
+    "imagePath": "park.png"
+  },
+  {
+    "name": "town",
+    "imagePath": "town.png"
+  },
+  {
+    "name": "travel",
+    "imagePath": "travel.png"
+  }
+]

@@ -21,6 +21,8 @@ public interface Constants {
     static final String DESTINY_IMAGE_FOLDER = "destiny_images";
     static final String TENCENT_IMAGE_FOLDER = "tencent_images";
 
+    String PLACE_CATEGORY_PATH = FOOTAGE_IMAGE+"/place_category";
+
     static final String DEFAULT_NEW_MAP_IMAGEPATH = FOOTAGE_IMAGE+"/icon_mymap_01.png";
 
     // TODO: 07/05/2018 fill local image place

@@ -63,8 +63,8 @@ import static antvk.tkms.Activities.MarkerEventListActivity.MARKER_KEY;
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMapClickListener {
 
 
-    private final int MY_PERMISSIONS_REQUEST_FINE_LOCATION = 1111;
-    private final int MY_PERMISSIONS_REQUEST_COARSE_LOCATION = 1112;
+    public static final int MY_PERMISSIONS_REQUEST_FINE_LOCATION = 1111;
+    public final int MY_PERMISSIONS_REQUEST_COARSE_LOCATION = 1112;
 
     public static GoogleMap mMap;
     public static List<Marker> markerList;
@@ -98,10 +98,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         markerInformationItemMap = new LinkedHashMap<>();
 
         Bundle b = getIntent().getExtras();
+        currentMap = gson.fromJson(getIntent().getStringExtra(MAP_KEY),AvailableMap.class);
         value = -1; // or other values
         if (b != null) {
             value = b.getInt(MARKER_KEY);
-            currentMap = gson.fromJson(getIntent().getStringExtra(MAP_KEY),AvailableMap.class);
             //System.out.println("mapIndex received: "+mapIndex);
         }
 
@@ -123,7 +123,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
        }
 
        if(actionBar!=null)
-        actionBar.setTitle(currentMap.mapName);
+           actionBar.setTitle(currentMap.mapName);
 
         if(selectedMarker==null)
         {
@@ -208,6 +208,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        assert locationManager != null;
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
                 0,
                 0, locationUtils.locationListener);
@@ -282,8 +283,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 ImageView imageView = v.findViewById(R.id.image_text);
                 PlaceItem item = markerInformationItemMap.get(arg0);
                 header.setText(item.header);
-                if (item.placeImage.length() > 0)
-                    imageView.setImageDrawable(ImageUtils.getDrawableFromFile(item.placeImage));
+                if (item.placeCategory !=null)
+                    imageView.setImageBitmap(ImageUtils.getBitmapFromAsset(MapsActivity.this,
+                            Constants.PLACE_CATEGORY_PATH+"/"+item.placeCategory.imagePath));
 
                 return v;
 
@@ -414,6 +416,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         Bundle b = new Bundle();
 
         b.putInt(MARKER_KEY, markerList.indexOf(marker)); //Your id
+        b.putString(MAP_KEY,gson.toJson(currentMap));
         b.putString(ClassMapper.classIntentKey,"MapsActivity");
 
         //    System.out.println("marker index " + markerList.indexOf(marker));

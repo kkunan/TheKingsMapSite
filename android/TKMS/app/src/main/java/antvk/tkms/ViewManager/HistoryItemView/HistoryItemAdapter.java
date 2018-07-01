@@ -15,6 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import antvk.tkms.Activities.EditPlaceActivity;
 import antvk.tkms.Constants;
 import antvk.tkms.R;
 import antvk.tkms.Struct.Information.PlaceItem;
@@ -78,7 +79,9 @@ public class HistoryItemAdapter extends RecyclerView.Adapter<HistoryItemAdapter.
             if(boldDateAndDescription!=null)
                 boldDateAndDescription.setText(dateTimeText);
 
-            imageView.setImageDrawable(ImageUtils.getDrawable(context,item.placeImage));
+            if(item.placeCategory!=null)
+            imageView.setImageBitmap(ImageUtils.getBitmapFromAsset(context,
+                    Constants.PLACE_CATEGORY_PATH+"/"+item.placeCategory.imagePath));
         }
     }
 }

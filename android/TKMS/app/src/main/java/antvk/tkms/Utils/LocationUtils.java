@@ -25,8 +25,7 @@ public class LocationUtils {
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-//                double latitude=location.getLatitude();
-//                double longitude=location.getLongitude();
+
                 currentLocation = location;
                 System.out.println("current location: "+currentLocation);
             }

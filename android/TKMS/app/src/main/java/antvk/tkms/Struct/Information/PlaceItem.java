@@ -14,25 +14,28 @@ public class PlaceItem {
 
     public int id = -1;
     public String header;
-    public String placeNickName;
+    public String placeRealName;
     public List<Event> events;
     public LatLng location;
-    public String placeImage;
+
+    public PlaceCategory placeCategory;
     public String placeID;
     public String placeAddress;
     public double placeRating;
     public String placeDescription;
+    public String userNote;
+
 
     public boolean visited = false;
     public Date visitedDate = null;
 
-    public PlaceItem(String placeID, String header, List<Event> events , LatLng location, String placeImage, String placeDescription)
+    public PlaceItem(String placeID, String header, List<Event> events , LatLng location, PlaceCategory placeCategory, String placeDescription)
     {
         this.placeID = placeID;
         this.header = header;
         this.events = events;
         this.location = location;
-        this.placeImage = placeImage;
+        this.placeCategory = placeCategory;
         this.placeDescription = placeDescription;
     }
 
@@ -83,6 +86,17 @@ public class PlaceItem {
     {
         this.visitedDate = calendar.getTime();
         visited = true;
+    }
+
+    public static class PlaceCategory{
+
+        public String name;
+        public String imagePath;
+
+        public PlaceCategory(String name, String imagePath){
+            this.name = name;
+            this.imagePath = imagePath;
+        }
     }
 
 }
