@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.v7.app.ActionBar;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 
 
 import com.google.gson.Gson;
@@ -23,24 +24,47 @@ public abstract class ActivityWithBackButton extends AppCompatActivity {
     public static Gson gson = new Gson();
 
     public Bundle b;
+    public boolean showBackButton = true;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         b = new Bundle();
+    }
 
-        try {
-            ActionBar actionBar = getSupportActionBar();
-            actionBar.setDisplayHomeAsUpEnabled(true);
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if(showBackButton)
+            try {
+                ActionBar actionBar = getSupportActionBar();
+                assert actionBar != null;
+                actionBar.setDisplayHomeAsUpEnabled(true);
 
-        } catch (NullPointerException e) {
-            e.printStackTrace();
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+            }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
+
     @Override
     public void onBackPressed() {
-        gobackToPreviousScreen();
+        try {
+            gobackToPreviousScreen();
+        }catch (Exception e)
+        {
+            super.onBackPressed();
+        }
     }
 
     protected void gobackToPreviousScreen() {

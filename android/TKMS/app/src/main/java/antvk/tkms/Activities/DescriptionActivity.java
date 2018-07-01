@@ -13,12 +13,9 @@ import android.widget.TextView;
 
 import com.google.android.gms.maps.model.Marker;
 
-import antvk.tkms.Constants;
 import antvk.tkms.R;
 import antvk.tkms.Utils.ImageUtils;
-import antvk.tkms.Struct.Information.InformationItem.Event;
-
-import static antvk.tkms.Activities.MapsActivity.*;
+import antvk.tkms.Struct.Information.PlaceItem.Event;
 
 @RequiresApi(api = Build.VERSION_CODES.N)
 public class DescriptionActivity extends ActivityWithBackButton{
@@ -58,8 +55,7 @@ public class DescriptionActivity extends ActivityWithBackButton{
             descriptionText.setText(event.description);
 
             if(event.imageName.length()>0) {
-                String imageFolder = ImageUtils.getImageFolderByMapType(mapIndex);
-                Drawable drawable = ImageUtils.getDrawable(this.getApplicationContext(), imageFolder, event.imageName);
+                Drawable drawable = ImageUtils.getDrawable(this.getApplicationContext(), event.imageName);
                 ImageView imageView = (ImageView) findViewById(R.id.imageView);
                 imageView.setImageDrawable(drawable);
             }

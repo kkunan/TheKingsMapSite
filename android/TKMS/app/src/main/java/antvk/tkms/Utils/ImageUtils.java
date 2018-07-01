@@ -137,15 +137,15 @@ public class ImageUtils extends Activity{
             case 1 : return Constants.DESTINY_IMAGE_FOLDER;
             case 2 : return Constants.TENCENT_IMAGE_FOLDER;
 
-            default: return Constants.LOCAL_IMAGE_FOLDER;
+            default: return "";
         }
     }
 
-    public static Map<String, Drawable> getDrawables(Context context, String imageFolder, String[] names) {
+    public static Map<String, Drawable> getDrawables(Context context, String[] names) {
         Map<String, Drawable> da = new HashMap<>();
         for (String name : names) {
             try {
-                Drawable d = getDrawable(context, imageFolder, name);
+                Drawable d = getDrawable(context, name);
                 if (d != null) da.put(name, d);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -155,12 +155,11 @@ public class ImageUtils extends Activity{
     }
 
     // this is just a temporary method put here to load in the images
-    public static Drawable getDrawable(Context context, String imageFolder, String name) {
+    public static Drawable getDrawable(Context context, String name) {
         try {
-            InputStream inputstream = context.getAssets().open(imageFolder + "/" + name);
-            System.out.println("input stream: "+inputstream);
+            InputStream inputstream = context.getAssets().open(name);
             Drawable drawable = Drawable.createFromStream(inputstream, null);
-            System.out.println("drawable: "+drawable);            return drawable;
+            return drawable;
         } catch (Exception e) {
             e.printStackTrace();
             return null;

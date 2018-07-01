@@ -1,6 +1,5 @@
 package antvk.tkms.Activities;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -16,9 +15,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import antvk.tkms.R;
 import antvk.tkms.Struct.MapAttribute.AvailableMap;
@@ -46,8 +42,8 @@ public class EditMapActivity extends ListItemContextMenuActivity{
         placeListLabel = (TextView)findViewById(R.id.place_list_header);
         mapImageView = (ImageView)findViewById(R.id.add_map_image_button);
 
-        if(maps==null)
-            maps = MapSelectorActivity.getAllItems(this);
+        if(localMaps==null)
+            localMaps = MapSelectorActivity.getLocalMaps(getApplicationContext());
 
         if(currentMap==null) {
             currentMap = new AvailableMap();
@@ -60,7 +56,7 @@ public class EditMapActivity extends ListItemContextMenuActivity{
                 mapImageView.setImageURI(Uri.parse(currentMap.imageLogo));
         }
 
-        adapter = new InfoItemAdapter(EditMapActivity.this,currentMap.informationItems);
+        adapter = new InfoItemAdapter(EditMapActivity.this,currentMap.placeItems);
         sortOutRecycleViews(R.id.placeListView,LinearLayoutManager.VERTICAL);
     }
 
@@ -106,7 +102,7 @@ public class EditMapActivity extends ListItemContextMenuActivity{
         b = new Bundle();
         b.putString(ClassMapper.classIntentKey,"EditMapActivity");
         b.putString(MAP_KEY, gson.toJson(currentMap));
-        b.putString(PLACE_KEY, gson.toJson(currentMap.informationItems.get(id)));
+        b.putString(PLACE_KEY, gson.toJson(currentMap.placeItems.get(id)));
         Intent intent = new Intent(EditMapActivity.this, EditPlaceActivity.class);
         intent.putExtras(b);
         startActivity(intent);
@@ -118,10 +114,10 @@ public class EditMapActivity extends ListItemContextMenuActivity{
         UIUtils.createAndShowAlertDialog(
                 EditMapActivity.this,
                 "Confirm deleting the place ",
-                "Delete place " + currentMap.informationItems.get(index).header,
+                "Delete place " + currentMap.placeItems.get(index).header,
                 (dialogInterface, i) -> {
-                    ListItemContextMenuActivity.defaultDelete(currentMap.informationItems,adapter,index);
-//                    currentMap.informationItems.remove(index);
+                    ListItemContextMenuActivity.defaultDelete(currentMap.placeItems,adapter,index);
+//                    currentMap.placeItems.remove(index);
 //                    adapter.notifyDataSetChanged();
                 },
                 (dialogInterface, i) -> {
@@ -135,23 +131,13 @@ public class EditMapActivity extends ListItemContextMenuActivity{
         currentMap.mapName = mapNameBox.getText().toString();
         if(currentMap.mapID < 0)
         {
-            currentMap.mapID = maps.size();
-            maps.add(currentMap);
+            currentMap.mapID = localMaps.size();
+            localMaps.add(currentMap);
         }
 
         else
         {
-            maps.set(currentMap.mapID,currentMap);
-        }
-
-        List<AvailableMap> localMaps = new ArrayList<>();
-
-        for(AvailableMap availableMap : maps)
-        {
-            if(availableMap.local)
-            {
-                localMaps.add(availableMap);
-            }
+            localMaps.set(currentMap.mapID,currentMap);
         }
 
         MapSelectorActivity.preferences.edit().

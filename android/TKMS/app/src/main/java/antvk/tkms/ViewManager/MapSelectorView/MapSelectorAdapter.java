@@ -1,28 +1,20 @@
 package antvk.tkms.ViewManager.MapSelectorView;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.media.Image;
 import android.net.Uri;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-import antvk.tkms.Activities.MapsActivity;
 import antvk.tkms.R;
-import antvk.tkms.Struct.Information.InformationItem;
 import antvk.tkms.Struct.MapAttribute.AvailableMap;
 import antvk.tkms.Utils.ImageUtils;
-import antvk.tkms.ViewManager.EventView.EventViewHolder;
 
 public class MapSelectorAdapter extends RecyclerView.Adapter<MapSelectorAdapter.MapViewHolder> {
 
@@ -78,7 +70,7 @@ public class MapSelectorAdapter extends RecyclerView.Adapter<MapSelectorAdapter.
 
             if(!availableMaps.get(mapID).local)
             imageView.setImageDrawable(
-                    ImageUtils.getDrawable(context,AvailableMap.imageFolder,imageLogo)
+                    ImageUtils.getDrawable(context,imageLogo)
             );
             else
             {

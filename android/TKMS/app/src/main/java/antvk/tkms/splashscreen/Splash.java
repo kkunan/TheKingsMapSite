@@ -24,7 +24,7 @@ public class Splash extends Activity {
         setContentView(R.layout.splashscreen);
 
         ImageView imageView = (ImageView)findViewById(R.id.imageView1);
-        imageView.setImageDrawable(ImageUtils.getDrawable(Splash.this, Constants.FOOTAGE_IMAGE,"splash2.png"));
+        imageView.setImageDrawable(ImageUtils.getDrawable(Splash.this, Constants.FOOTAGE_IMAGE+"/splash2.png"));
         handler = new Handler();
 //
         runnable = new Runnable() {

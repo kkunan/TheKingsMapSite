@@ -14,7 +14,7 @@
 				"date":"07-05-2018",
 				"dateFormat":"dd-MM-yyyy",
 				"description": "",
-				"imageName": "hackathon_5.jpg",
+				"imageName": "tencent_iamges/hackathon_5.jpg",
 				"url": ""
 			}
 		],
@@ -23,7 +23,7 @@
 			"longitude":100.574812
 			},
 		"placeID": "ChIJc_O-19Kd4jARtHQix3yELto",
-		"placeImage": "tencent_logo.png",
+		"placeImage": "tencent_iamges/tencent_logo.png",
 		"placeDescription": "Tencent (Thailand) Company Limited"
 	}
 	]

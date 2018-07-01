@@ -15,20 +15,18 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import antvk.tkms.Activities.MapsActivity;
 import antvk.tkms.Constants;
 import antvk.tkms.R;
-import antvk.tkms.Struct.Information.InformationItem;
-import antvk.tkms.Struct.Information.MapVisitedInformation.VisitedInformation;
+import antvk.tkms.Struct.Information.PlaceItem;
 import antvk.tkms.Utils.ImageUtils;
 
 @RequiresApi(api = Build.VERSION_CODES.N)
 public class HistoryItemAdapter extends RecyclerView.Adapter<HistoryItemAdapter.VisitedInformationHolder> {
 
-    public List<VisitedInformation> informationItems;
+    public List<PlaceItem> informationItems;
     public Context context;
 
-    public HistoryItemAdapter(Context context, List<VisitedInformation> informationItems)
+    public HistoryItemAdapter(Context context, List<PlaceItem> informationItems)
     {
         this.informationItems = informationItems;
         this.context = context;
@@ -45,8 +43,8 @@ public class HistoryItemAdapter extends RecyclerView.Adapter<HistoryItemAdapter.
 
     @Override
     public void onBindViewHolder(VisitedInformationHolder holder, int position) {
-        VisitedInformation ci = informationItems.get(position);
-        holder.setValue(ci.item,ci.visitedDate);
+        PlaceItem ci = informationItems.get(position);
+        holder.setValue(ci,ci.visitedDate);
     }
 
     @Override
@@ -69,7 +67,7 @@ public class HistoryItemAdapter extends RecyclerView.Adapter<HistoryItemAdapter.
         }
 
 
-        public void setValue(InformationItem item, Date visitedDate) {
+        public void setValue(PlaceItem item, Date visitedDate) {
 
             SimpleDateFormat simpleDateFormat = Constants.DMY_DATE_FORMATTER;
 
@@ -80,8 +78,7 @@ public class HistoryItemAdapter extends RecyclerView.Adapter<HistoryItemAdapter.
             if(boldDateAndDescription!=null)
                 boldDateAndDescription.setText(dateTimeText);
 
-            String imageFolder = ImageUtils.getImageFolderByMapType(MapsActivity.mapIndex);
-            imageView.setImageDrawable(ImageUtils.getDrawable(context, imageFolder,item.placeImage));
+            imageView.setImageDrawable(ImageUtils.getDrawable(context,item.placeImage));
         }
     }
 }

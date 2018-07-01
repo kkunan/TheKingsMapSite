@@ -2,22 +2,16 @@ package antvk.tkms.Activities;
 
 import android.Manifest;
 import android.app.AlertDialog;
-import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.RecyclerView;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -26,21 +20,13 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TimePicker;
 
-import com.google.gson.Gson;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 
 import antvk.tkms.Constants;
 import antvk.tkms.R;
-import antvk.tkms.Struct.Information.InformationItem;
-import antvk.tkms.Struct.MapAttribute.AvailableMap;
+import antvk.tkms.Struct.Information.PlaceItem;
 import antvk.tkms.Utils.ClassMapper;
 
-import static antvk.tkms.Activities.MapSelectorActivity.*;
 import static antvk.tkms.Constants.MY_PERMISSIONS_REQUEST_READ_EXT_STORAGE;
 import static antvk.tkms.Constants.PICK_IMAGE;
 
@@ -60,7 +46,7 @@ public class EditEventActivity extends AddStuffsActivity {
         setContentView(R.layout.activity_edit_event);
 
         if(currentEvent == null)
-            currentEvent = new InformationItem.Event();
+            currentEvent = new PlaceItem.Event();
 
         eventName = (EditText)findViewById(R.id.event_name_edittext);
         eventDescription = (EditText)findViewById(R.id.event_description_edittext);

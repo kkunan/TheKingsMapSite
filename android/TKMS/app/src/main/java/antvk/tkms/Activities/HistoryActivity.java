@@ -42,7 +42,7 @@
 //        TextView textView = (TextView)findViewById(R.id.complete_counter);
 //        textView.setText(
 //                String.format("%s / %s events complete!"
-//                ,historyItemAdapter.informationItems.size(), MapsActivity.mapVisitedInformation.informationList.size()
+//                ,historyItemAdapter.placeItems.size(), MapsActivity.mapVisitedInformation.informationList.size()
 //                )
 //        );
 //

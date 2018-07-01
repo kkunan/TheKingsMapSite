@@ -62,7 +62,14 @@
             android:adjustViewBounds="true"
             android:src="@mipmap/mymap_icon01"
             android:onClick="onImageViewClick"
+            android:visibility="gone"
             />
+        <Spinner
+            android:id="@+id/place_category_dropdown"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:drawable/btn_dropdown"
+            android:spinnerMode="dropdown"/>
 
     </LinearLayout>
 
@@ -79,7 +86,7 @@
         >
         <TextView
             android:layout_width="wrap_content"
-            android:text="Experiences Description"
+            android:text="Place Description"
             android:layout_height="wrap_content"
             android:textSize="15sp" />
         <EditText

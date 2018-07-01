@@ -3,7 +3,7 @@ package antvk.tkms.Activities;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
-import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
@@ -11,7 +11,6 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.BottomNavigationView;
@@ -37,32 +36,26 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import com.todddavies.components.progressbar.ProgressWheel;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import antvk.tkms.Constants;
-import antvk.tkms.Struct.Information.InformationItem;
-import antvk.tkms.Struct.Information.MapVisitedInformation;
+import antvk.tkms.Struct.Information.PlaceItem;
 import antvk.tkms.R;
 import antvk.tkms.Struct.MapAttribute.AvailableMap;
 import antvk.tkms.Utils.ClassMapper;
 import antvk.tkms.Utils.ImageUtils;
 import antvk.tkms.Utils.LocationUtils;
 import antvk.tkms.Utils.MarkerUtils;
+import antvk.tkms.Utils.UIUtils;
 import antvk.tkms.ViewManager.HistoryItemView.HistoryItemAdapter;
 import antvk.tkms.ViewManager.RecyclerItemClickListener;
 
-import static antvk.tkms.Activities.ActivityWithBackButton.MAP_ID_KEY;
 import static antvk.tkms.Activities.MapSelectorActivity.*;
 import static antvk.tkms.Activities.MarkerEventListActivity.MARKER_KEY;
 
@@ -73,22 +66,20 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private final int MY_PERMISSIONS_REQUEST_FINE_LOCATION = 1111;
     private final int MY_PERMISSIONS_REQUEST_COARSE_LOCATION = 1112;
 
-    public static int mapIndex;
     public static GoogleMap mMap;
-    public static Map<String, Drawable> imageDrawables;
     public static List<Marker> markerList;
-    public static LinkedHashMap<Marker, InformationItem> markerInformationItemMap;
+    public static LinkedHashMap<Marker, PlaceItem> markerInformationItemMap;
 
     LocationManager locationManager;
 
     static LocationUtils locationUtils;
-    public static MapVisitedInformation mapVisitedInformation;
 
     public static Gson gson;
     static Marker selectedMarker;
 
     int value;
 
+    AvailableMap currentMap;
 
     HistoryItemAdapter historyItemAdapter;
 
@@ -110,8 +101,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         value = -1; // or other values
         if (b != null) {
             value = b.getInt(MARKER_KEY);
-            mapIndex = b.getInt(MAP_ID_KEY);
+            currentMap = gson.fromJson(getIntent().getStringExtra(MAP_KEY),AvailableMap.class);
             //System.out.println("mapIndex received: "+mapIndex);
+        }
+
+        else
+        {
+            // TODO: 01/07/2018 PROMPT USER THAT SOMETHING IS WRONG
         }
 
         sortoutUI();
@@ -121,20 +117,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     {
        ActionBar actionBar = getSupportActionBar();
 
-       if(maps == null)
-       {
-           maps = MapSelectorActivity.getAllItems(getApplicationContext());
-       }
-
        if(selectedMarker == null)
        {
            findViewById(R.id.header_content).setVisibility(View.GONE);
        }
 
-        if(mapIndex>-1)
-        {
-            actionBar.setTitle(maps.get(mapIndex).mapName);
-        }
+       if(actionBar!=null)
+        actionBar.setTitle(currentMap.mapName);
 
         if(selectedMarker==null)
         {
@@ -147,14 +136,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void initializeHeaderView() {
 
         ProgressWheel progressBar = (ProgressWheel) findViewById(R.id.heart_spinner);
-        double percent = mapVisitedInformation.getVisitedPercentage();
+        double percent = currentMap.getVisitedRatio();
         progressBar.incrementProgress((int) (Math.ceil(percent * 360)));
         progressBar.setText((int) (Math.ceil(percent * 100)) + "");
 
         TextView textView = (TextView) findViewById(R.id.complete_counter);
         textView.setText(
                 String.format("%s / %s events complete!"
-                        , historyItemAdapter.informationItems.size(), mapVisitedInformation.informationList.size()
+                        , historyItemAdapter.informationItems.size(), currentMap.placeItems.size()
                 )
         );
 
@@ -291,10 +280,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 //   TextView latlngtext = (TextView) v.findViewById(R.id.location_text);
 
                 ImageView imageView = v.findViewById(R.id.image_text);
-                InformationItem item = markerInformationItemMap.get(arg0);
+                PlaceItem item = markerInformationItemMap.get(arg0);
                 header.setText(item.header);
                 if (item.placeImage.length() > 0)
-                    imageView.setImageDrawable(imageDrawables.get(item.placeImage));
+                    imageView.setImageDrawable(ImageUtils.getDrawableFromFile(item.placeImage));
 
                 return v;
 
@@ -353,42 +342,53 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        AvailableMap map = maps.get(mapIndex);
+        List<PlaceItem> placeItems = new ArrayList<>();
 
-        List<InformationItem> informationItems = new ArrayList<>();
+        placeItems = currentMap.placeItems;
 
-        if(map.local)
-            informationItems = map.informationItems;
-
-        else informationItems = getAllItems(this, Constants.getFileName(mapIndex, MapSelectorActivity.preferences));
-        for (InformationItem item : informationItems) {
+        for (PlaceItem item : placeItems) {
             // TODO: 27/06/2018 check if no place has location then prompt user to input them. 
             if(item.location!=null) {
                 Marker marker = createMarker(item);
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(marker.getPosition()));
             }
+            else{
+                UIUtils.createAndShowAlertDialog(
+                        MapsActivity.this,
+                        "No place on map!",
+                        "Seems like you haven't added any places on the map." +
+                                "\nPlease do so first.",
+                        (DialogInterface.OnClickListener) (dialogInterface, i) -> {
+                            Intent intent = new Intent(MapsActivity.this,EditMapActivity.class);
+                            intent.putExtra(MAP_KEY,gson.toJson(currentMap));
+                            startActivity(intent);
+                            finish();
+                        },
+                        null
+                );
+            }
         }
 
         markerList = new ArrayList<>(markerInformationItemMap.keySet());
+//
+//        String checkinInfo = MapSelectorActivity.preferences.getString(mapIndex + "", null);
+//        if (checkinInfo == null) {
+//            mapVisitedInformation = MapVisitedInformation.getInitialMapVisitedInformation(
+//                    placeItems);
+//        } else {
+//            mapVisitedInformation = gson.fromJson(checkinInfo, MapVisitedInformation.class);
+//
+//        }
 
-        String checkinInfo = MapSelectorActivity.preferences.getString(mapIndex + "", null);
-        if (checkinInfo == null) {
-            mapVisitedInformation = MapVisitedInformation.getInitialMapVisitedInformation(
-                    informationItems);
-        } else {
-            mapVisitedInformation = gson.fromJson(checkinInfo, MapVisitedInformation.class);
-
-        }
-
-        historyItemAdapter = new HistoryItemAdapter(getApplicationContext(), mapVisitedInformation.getVisitedList());
+        historyItemAdapter = new HistoryItemAdapter(getApplicationContext(), currentMap.getVisitedList());
         initializeHeaderView();
         initializeRecycleView();
 
         // System.out.println("progress: "+mapVisitedInformation.getVisitedPercentage());
 
         ProgressWheel pw = (ProgressWheel) findViewById(R.id.pw_spinner);
-        pw.incrementProgress((int) (mapVisitedInformation.getVisitedPercentage() * 360));
-        pw.setText((int) Math.ceil(100 * mapVisitedInformation.getVisitedPercentage()) + "");
+        pw.incrementProgress((int) (currentMap.getVisitedRatio() * 360));
+        pw.setText((int) Math.ceil(100 * currentMap.getVisitedRatio()) + "");
 
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
@@ -401,14 +401,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
 
-        try {
-            String imageFolder = ImageUtils.getImageFolderByMapType(mapIndex);
-            String[] imageFile = getAssets().list(imageFolder);
-            imageDrawables = ImageUtils.getDrawables(this, imageFolder, imageFile);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         ;
 
 //        if (value != -1)
@@ -447,7 +439,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         TextView header = (TextView) findViewById(R.id.below_info_header_text);
 //        ImageView imageView = findViewById(R.id.image_text);
-        InformationItem item = markerInformationItemMap.get(marker);
+        PlaceItem item = markerInformationItemMap.get(marker);
         header.setText(item.header.replaceAll("\\ ", "\n"));
 
 //        GeoDataClient mGeoDataClient = Places.getGeoDataClient(getApplicationContext());
@@ -511,19 +503,19 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
 
-    public Marker createMarker(InformationItem informationItem) {
+    public Marker createMarker(PlaceItem placeItem) {
         MarkerOptions options = new MarkerOptions()
-                .title(informationItem.header)
-                .position(informationItem.location)
+                .title(placeItem.header)
+                .position(placeItem.location)
                 .icon(
                         BitmapDescriptorFactory.fromBitmap(MarkerUtils
                                 .createStoreMarker(getLayoutInflater(), this.getApplicationContext(),
-                                        null, MarkerUtils.INACTIVE_NAME, informationItem.header))
+                                        null, MarkerUtils.INACTIVE_NAME, placeItem.header))
                 );
 
         Marker marker = mMap.addMarker(options);
 
-        markerInformationItemMap.put(marker, informationItem);
+        markerInformationItemMap.put(marker, placeItem);
         return marker;
     }
 
@@ -567,30 +559,30 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
 
-    public List<InformationItem> getAllItems(Context context, String file) {
-
-        List<InformationItem> items = new ArrayList<>();
-        try {
-            InputStream inputStream = context.getAssets().open(file);
-
-            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-            String st = "";
-
-            StringBuffer buffer = new StringBuffer();
-            while ((st = reader.readLine()) != null) {
-                buffer.append(st + "\n");
-            }
-
-            Type listType = new TypeToken<ArrayList<InformationItem>>() {
-            }.getType();
-            items = gson.fromJson(buffer.toString(), listType);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return items;
-    }
+//    public List<PlaceItem> getAllItems(Context context, String file) {
+//
+//        List<PlaceItem> items = new ArrayList<>();
+//        try {
+//            InputStream inputStream = context.getAssets().open(file);
+//
+//            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+//            String st = "";
+//
+//            StringBuffer buffer = new StringBuffer();
+//            while ((st = reader.readLine()) != null) {
+//                buffer.append(st + "\n");
+//            }
+//
+//            Type listType = new TypeToken<ArrayList<PlaceItem>>() {
+//            }.getType();
+//            items = gson.fromJson(buffer.toString(), listType);
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//
+//        return items;
+//    }
 
     @Override
     public void onMapClick(LatLng latLng) {

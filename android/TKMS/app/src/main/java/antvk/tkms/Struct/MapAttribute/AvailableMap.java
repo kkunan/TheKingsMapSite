@@ -3,7 +3,7 @@ package antvk.tkms.Struct.MapAttribute;
 import java.util.ArrayList;
 import java.util.List;
 
-import antvk.tkms.Struct.Information.InformationItem;
+import antvk.tkms.Struct.Information.PlaceItem;
 
 public class AvailableMap {
 
@@ -14,30 +14,49 @@ public class AvailableMap {
     public String imageLogo;
     public boolean local;
     public String mapImageFolder;
-    public List<InformationItem> informationItems;
+    public List<PlaceItem> placeItems;
 
-    public AvailableMap()
-    {
-        this.informationItems = new ArrayList<>();
+    public AvailableMap() {
+        this.placeItems = new ArrayList<>();
     }
 
-    public AvailableMap(int mapID, String mapName, String imageLogo, List<InformationItem> informationItems)
-    {
+    public AvailableMap(int mapID, String mapName, String imageLogo, List<PlaceItem> placeItems) {
         this.mapID = mapID;
         this.mapName = mapName;
         this.imageLogo = imageLogo;
-        this.informationItems = informationItems;
+        this.placeItems = placeItems;
         this.local = true;
     }
 
-    public static List<AvailableMap> getLocalOnly(List<AvailableMap> allmaps)
-    {
-        List<AvailableMap> maps = new ArrayList<>();
-        for(AvailableMap map : allmaps)
-        {
-            if(map.local)
-                maps.add(map);
+    public double getVisitedRatio() {
+        double total = (double) placeItems.size();
+
+        if (total == 0)
+            return 0;
+
+        double visitedCount = 0.0;
+        for (PlaceItem information : placeItems) {
+            if (information.visited)
+                visitedCount++;
         }
-        return maps;
+
+        return visitedCount / total;
     }
+
+    public List<PlaceItem> getVisitedList()
+    {
+        List<PlaceItem> visitedList = new ArrayList<>();
+        for (PlaceItem information : placeItems) {
+            if (information.visited)
+                visitedList.add(information);
+        }
+        return visitedList;
+    }
+
+    public String toPreferenceKey()
+    {
+        String local = this.local?"local":"external";
+        return local+"_"+mapID;
+    }
+
 }

@@ -3,29 +3,22 @@ package antvk.tkms.Utils;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.media.Image;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
-import android.text.Layout;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Marker;
 
-import org.w3c.dom.Text;
-
 import java.util.List;
-import java.util.Map;
 
 import antvk.tkms.Constants;
 import antvk.tkms.Activities.MapsActivity;
 import antvk.tkms.R;
-import antvk.tkms.Struct.Information.InformationItem;
+import antvk.tkms.Struct.Information.PlaceItem;
 
 @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
 public class MarkerUtils {
@@ -42,8 +35,8 @@ public class MarkerUtils {
         List<Marker> markerList = MapsActivity.markerList;
 
         String fileName;
-        InformationItem item = MapsActivity.markerInformationItemMap.get(marker);
-        if(MapsActivity.mapVisitedInformation.getVisitedAt(item.id))
+        PlaceItem item = MapsActivity.markerInformationItemMap.get(marker);
+        if(item.visited)
             fileName = ACTIVE_VISITED_LEFT_NAME;
         else
             fileName = ACTIVE_NOVISIT_LEFT_NAME;
@@ -95,14 +88,14 @@ public class MarkerUtils {
 //        );
 
         markerRating.setBackground(
-                ImageUtils.getDrawable(context,Constants.PIN_FOLDER,imageBG)
+                ImageUtils.getDrawable(context,Constants.PIN_FOLDER+"/"+imageBG)
         );
 
         ImageView markerImage = (ImageView)markerLayout.findViewById(R.id.marker_image);
 
         if(leftImage!=null)
         {
-            markerImage.setImageDrawable(ImageUtils.getDrawable(context,Constants.PIN_FOLDER,leftImage));
+            markerImage.setImageDrawable(ImageUtils.getDrawable(context,Constants.PIN_FOLDER+"/"+leftImage));
         }
 
         text = text.replaceAll("\\ ","\n")+"\n";

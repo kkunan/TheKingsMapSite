@@ -12,8 +12,12 @@ import android.support.v7.widget.SnapHelper;
 import android.view.ContextMenu;
 import android.view.MenuInflater;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
@@ -29,8 +33,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import antvk.tkms.Constants;
 import antvk.tkms.R;
-import antvk.tkms.Struct.Information.InformationItem;
-import antvk.tkms.Struct.MapAttribute.AvailableMap;
+import antvk.tkms.Struct.Information.PlaceItem;
 import antvk.tkms.Utils.ClassMapper;
 import antvk.tkms.ViewManager.EventView.EventViewAdapter;
 
@@ -66,6 +69,22 @@ public class EditPlaceActivity extends ListItemContextMenuActivity implements On
         autocompleteFragment = (PlaceAutocompleteFragment) getFragmentManager()
                 .findFragmentById(R.id.place_autocomplete_fragment);
 
+        Spinner dropdown = findViewById(R.id.place_category_dropdown);
+        String[] items = new String[]{"category1", "category2", "category3"};//,"add your category..."};
+        ArrayAdapter<String> dropdown_adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items);
+        dropdown.setAdapter(dropdown_adapter);
+        dropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                // TODO: 01/07/2018 set place background
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
         autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
 
             @Override
@@ -84,7 +103,7 @@ public class EditPlaceActivity extends ListItemContextMenuActivity implements On
         });
 
         if(currentItem == null) {
-            currentItem = new InformationItem();
+            currentItem = new PlaceItem();
             placeNameEditText.requestFocus();
         }
 
@@ -176,25 +195,25 @@ public class EditPlaceActivity extends ListItemContextMenuActivity implements On
         return b;
     }
 
-    public void OnEditPlaceSubmitButtonClick(View view) {
+    public void onSubmitButtonClick(View view) {
 
         currentItem.placeDescription = descriptionEditText.getText().toString();
         currentItem.header = placeNameEditText.getText().toString();
 
         if(currentItem.id < 0)
         {
-            currentItem.id = currentMap.informationItems.size();
-            currentMap.informationItems.add(currentItem);
+            currentItem.id = currentMap.placeItems.size();
+            currentMap.placeItems.add(currentItem);
         }
 
         else{
-            currentMap.informationItems.set(currentItem.id,currentItem);
+            currentMap.placeItems.set(currentItem.id,currentItem);
         }
 
         if(currentMap.mapID>0)
         {
-            maps.set(currentMap.mapID,currentMap);
-            preferences.edit().putString(MAP_PREF,gson.toJson(AvailableMap.getLocalOnly(maps))).apply();
+            localMaps.set(currentMap.mapID,currentMap);
+            preferences.edit().putString(MAP_PREF,gson.toJson(localMaps)).apply();
         }
 
         gobackToPreviousScreen();
@@ -222,4 +241,6 @@ public class EditPlaceActivity extends ListItemContextMenuActivity implements On
     public void onImageViewClick(View view) {
         super.onImageViewClick(view);
     }
+
+
 }

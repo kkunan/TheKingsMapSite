@@ -16,10 +16,9 @@ import android.view.View;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.util.List;
 
 import antvk.tkms.R;
-import antvk.tkms.Struct.Information.InformationItem;
+import antvk.tkms.Struct.Information.PlaceItem;
 import antvk.tkms.Struct.MapAttribute.AvailableMap;
 
 import static antvk.tkms.Constants.MY_PERMISSIONS_REQUEST_READ_EXT_STORAGE;
@@ -28,8 +27,8 @@ import static antvk.tkms.Constants.PICK_IMAGE;
 public abstract class AddStuffsActivity extends ActivityWithBackButton{
 
     public AvailableMap currentMap;
-    public InformationItem currentItem;
-    public InformationItem.Event currentEvent;
+    public PlaceItem currentItem;
+    public PlaceItem.Event currentEvent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,10 +38,10 @@ public abstract class AddStuffsActivity extends ActivityWithBackButton{
             currentMap = gson.fromJson(mapJson,AvailableMap.class);
 
             String placeJson = getIntent().getStringExtra(PLACE_KEY);
-            currentItem = gson.fromJson(placeJson,InformationItem.class);
+            currentItem = gson.fromJson(placeJson,PlaceItem.class);
 
             String eventJson = getIntent().getStringExtra(EVENT_KEY);
-            currentEvent = gson.fromJson(eventJson,InformationItem.Event.class);
+            currentEvent = gson.fromJson(eventJson,PlaceItem.Event.class);
 
         }catch (Exception e){e.printStackTrace();}
     }

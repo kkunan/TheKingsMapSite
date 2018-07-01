@@ -6,10 +6,11 @@ import com.google.android.gms.maps.model.LatLng;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-public class InformationItem {
+public class PlaceItem {
 
     public int id = -1;
     public String header;
@@ -22,7 +23,10 @@ public class InformationItem {
     public double placeRating;
     public String placeDescription;
 
-    public InformationItem(String placeID, String header, List<Event> events , LatLng location, String placeImage, String placeDescription)
+    public boolean visited = false;
+    public Date visitedDate = null;
+
+    public PlaceItem(String placeID, String header, List<Event> events , LatLng location, String placeImage, String placeDescription)
     {
         this.placeID = placeID;
         this.header = header;
@@ -32,7 +36,7 @@ public class InformationItem {
         this.placeDescription = placeDescription;
     }
 
-    public InformationItem() {
+    public PlaceItem() {
         this.events = new ArrayList<>();
     }
 
@@ -73,6 +77,12 @@ public class InformationItem {
             }
             return null;
         }
+    }
+
+    public void setVisit(Calendar calendar)
+    {
+        this.visitedDate = calendar.getTime();
+        visited = true;
     }
 
 }

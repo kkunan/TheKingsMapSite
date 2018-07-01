@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import antvk.tkms.Constants;
-import antvk.tkms.Struct.Information.InformationItem.Event;
+import antvk.tkms.Struct.Information.PlaceItem.Event;
 import antvk.tkms.R;
 
 public class EventViewAdapter extends RecyclerView.Adapter<EventViewHolder> {

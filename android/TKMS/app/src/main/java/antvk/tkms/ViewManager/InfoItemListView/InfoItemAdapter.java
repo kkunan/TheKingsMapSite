@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,26 +12,21 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
-import antvk.tkms.Activities.MapsActivity;
-import antvk.tkms.Constants;
 import antvk.tkms.R;
-import antvk.tkms.Struct.Information.InformationItem;
-import antvk.tkms.Struct.Information.MapVisitedInformation.VisitedInformation;
+import antvk.tkms.Struct.Information.PlaceItem;
 import antvk.tkms.Utils.ImageUtils;
 
 @RequiresApi(api = Build.VERSION_CODES.N)
 public class InfoItemAdapter extends RecyclerView.Adapter<InfoItemAdapter.InformationItemHolder> {
 
-    public List<InformationItem> informationItems;
+    public List<PlaceItem> placeItems;
     public Context context;
 
-    public InfoItemAdapter(Context context, List<InformationItem> informationItems)
+    public InfoItemAdapter(Context context, List<PlaceItem> placeItems)
     {
-        this.informationItems = informationItems;
+        this.placeItems = placeItems;
         this.context = context;
     }
 
@@ -47,7 +41,7 @@ public class InfoItemAdapter extends RecyclerView.Adapter<InfoItemAdapter.Inform
 
     @Override
     public void onBindViewHolder(InformationItemHolder holder, int position) {
-        InformationItem ci = informationItems.get(position);
+        PlaceItem ci = placeItems.get(position);
         holder.setValue(ci);
 
         System.out.println(new Gson().toJson(ci));
@@ -55,7 +49,7 @@ public class InfoItemAdapter extends RecyclerView.Adapter<InfoItemAdapter.Inform
 
     @Override
     public int getItemCount() {
-        return informationItems.size();
+        return placeItems.size();
     }
 
 
@@ -78,7 +72,7 @@ public class InfoItemAdapter extends RecyclerView.Adapter<InfoItemAdapter.Inform
         }
 
 
-        public void setValue(InformationItem item) {
+        public void setValue(PlaceItem item) {
 
             placeImage.setImageDrawable(ImageUtils.getDrawableFromFile(item.placeImage));
             placeName.setText(item.header);

@@ -39,8 +39,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import antvk.tkms.Struct.Information.InformationItem;
+import antvk.tkms.Struct.Information.PlaceItem;
 import antvk.tkms.R;
+import antvk.tkms.Struct.MapAttribute.AvailableMap;
 import antvk.tkms.Utils.ClassMapper;
 import antvk.tkms.Utils.ImageUtils;
 import antvk.tkms.Utils.LocationUtils;
@@ -54,7 +55,7 @@ import static antvk.tkms.Activities.MapsActivity.*;
 @RequiresApi(api = Build.VERSION_CODES.N)
 public class MarkerEventListActivity extends ActivityWithBackButton {
 
-    public static InformationItem item;
+    public static PlaceItem item;
     LocationManager manager;
     int value;
     Gson gson = new Gson();
@@ -65,6 +66,10 @@ public class MarkerEventListActivity extends ActivityWithBackButton {
     boolean prevPink = false;
     boolean inRange = false;
 
+    AvailableMap currentMap;
+
+    List<AvailableMap> localMaps = MapSelectorActivity.localMaps;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,6 +77,7 @@ public class MarkerEventListActivity extends ActivityWithBackButton {
 
         value = getExtra(MARKER_KEY);
 
+        currentMap = gson.fromJson(getIntent().getStringExtra(MAP_KEY),AvailableMap.class);
 
         if (value != -1) {
             item = markerInformationItemMap.get(
@@ -97,7 +103,7 @@ public class MarkerEventListActivity extends ActivityWithBackButton {
             Location location = manager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
             if(location!=null) {
-                boolean visited = mapVisitedInformation.getVisitedAt(item.id);
+                boolean visited = item.visited;
                 double distance = LocationUtils.quickDistance(
                         new LatLng(location.getLatitude(), location.getLongitude()
                         ), item.location
@@ -132,7 +138,7 @@ public class MarkerEventListActivity extends ActivityWithBackButton {
                                 ), item.location
                         );
 
-                        boolean visited = mapVisitedInformation.getVisitedAt(item.id);
+                        boolean visited = item.visited;
                         boolean inDistance = distance <= CHECKIN_AVALABLE_RANGE;
                         inRange = inDistance;
                         sortoutUIByStatus(visited,inDistance);
@@ -207,8 +213,7 @@ public class MarkerEventListActivity extends ActivityWithBackButton {
     public void setPlaceContent()
     {
         ImageView placeImageView = (ImageView) findViewById(R.id.place_image);
-        if(maps.get(mapIndex).local)
-        {
+
             try {
                 placeImageView.setImageURI(
                         Uri.parse(item.placeImage)
@@ -217,14 +222,6 @@ public class MarkerEventListActivity extends ActivityWithBackButton {
             {
                 placeImageView.setImageResource(R.mipmap.mymap_icon02);
             }
-        }
-        else {
-            String imageFolder = ImageUtils.getImageFolderByMapType(mapIndex);
-
-            placeImageView.setImageDrawable(ImageUtils.getDrawable(getApplicationContext(),
-                    imageFolder,
-                    item.placeImage));
-        }
         final String[] address = {"Address unavailable"};
 //        try {
 //            String ret = getPlaceAddress(item.location);
@@ -281,7 +278,7 @@ public class MarkerEventListActivity extends ActivityWithBackButton {
 
         ImageView heartView = (ImageView) findViewById(R.id.heart_item_page);
 
-        if(mapVisitedInformation.getVisitedAt(item.id))
+        if(item.visited)
         {
             Drawable imageDrawable = ContextCompat.getDrawable(getApplicationContext(),R.drawable.pink_heart);
             heartView.setImageDrawable(imageDrawable);
@@ -328,7 +325,7 @@ public class MarkerEventListActivity extends ActivityWithBackButton {
 
                         Bundle b = setExtra(MARKER_KEY,value);
                         b = setExtra(EVENT_KEY,position, b);
-                        b = setExtra(MAP_ID_KEY,mapIndex,b);
+                        b .putString(MAP_KEY,gson.toJson(currentMap));
                         b.putString(ClassMapper.classIntentKey, "MarkerEventListActivity");
                         intent.putExtras(b);
                         startActivity(intent);
@@ -373,17 +370,22 @@ public class MarkerEventListActivity extends ActivityWithBackButton {
     }
 
     public void onHeartClick(View view) {
-        boolean visited = mapVisitedInformation.getVisitedAt(item.id);
+        boolean visited = item.visited;
         if(!visited)
         {
             DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+
+
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     switch (which){
                         case DialogInterface.BUTTON_POSITIVE:
-                            mapVisitedInformation.setVisit(item.placeID,true);
-                            MapSelectorActivity.preferences.edit().putString(mapIndex+"",
-                                    gson.toJson(mapVisitedInformation)
+                            item.visited = true;
+                            localMaps.set(currentMap.mapID,currentMap);
+
+                            MapSelectorActivity.preferences.edit().putString(
+                                    MAP_PREF,
+                                    gson.toJson(localMaps)
                                     ).apply();
 
                             sortoutUIByStatus(true,true);
@@ -404,23 +406,21 @@ public class MarkerEventListActivity extends ActivityWithBackButton {
 
         else
         {
-            DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    switch (which){
-                        case DialogInterface.BUTTON_POSITIVE:
-                            mapVisitedInformation.setVisit(item.placeID,false);
-                            MapSelectorActivity.preferences.edit().putString(mapIndex+"",
-                                    gson.toJson(mapVisitedInformation)
-                            ).apply();
+            DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
+                switch (which){
+                    case DialogInterface.BUTTON_POSITIVE:
+                        item.visited = false;
+                        localMaps.set(currentMap.mapID,currentMap);
+                        MapSelectorActivity.preferences.edit().putString(MAP_PREF,
+                                gson.toJson(localMaps)
+                        ).apply();
 
-                            sortoutUIByStatus(false,inRange);
+                        sortoutUIByStatus(false,inRange);
 
-                            break;
+                        break;
 
-                        case DialogInterface.BUTTON_NEGATIVE:
-                            break;
-                    }
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        break;
                 }
             };
 
@@ -440,7 +440,7 @@ public class MarkerEventListActivity extends ActivityWithBackButton {
     @Override
     Bundle setFurtherExtra(Bundle b) {
         b.putInt(MARKER_KEY,value);
-        b.putInt(MAP_ID_KEY,mapIndex);
+        b.putString(MAP_KEY,gson.toJson(currentMap));
         return b;
     }
 
