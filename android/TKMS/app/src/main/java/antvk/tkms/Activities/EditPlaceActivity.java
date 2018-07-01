@@ -71,12 +71,6 @@ public class EditPlaceActivity extends AddStuffsActivity implements OnMapReadyCa
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_edit_place_in_map);
-        if (currentItem == null) {
-            currentItem = new PlaceItem();
-            placeNameEditText.requestFocus();
-        } else {
-            sortoutUI();
-        }
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map_fragment_edit_place);
@@ -85,6 +79,13 @@ public class EditPlaceActivity extends AddStuffsActivity implements OnMapReadyCa
         descriptionEditText = (EditText) findViewById(R.id.place_description_edittext);
         placeNameEditText = (EditText) findViewById(R.id.place_name_edittext);
         placeImageView = findViewById(R.id.add_map_image_button);
+
+        if (currentItem == null) {
+            currentItem = new PlaceItem();
+            placeNameEditText.requestFocus();
+        } else {
+            sortoutUI();
+        }
 
         autocompleteFragment = (PlaceAutocompleteFragment) getFragmentManager()
                 .findFragmentById(R.id.place_autocomplete_fragment);

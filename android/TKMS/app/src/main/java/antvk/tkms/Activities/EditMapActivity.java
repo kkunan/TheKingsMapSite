@@ -101,6 +101,8 @@ public class EditMapActivity extends ListItemContextMenuActivity{
     protected void edit(int id) {
         b = new Bundle();
         b.putString(ClassMapper.classIntentKey,"EditMapActivity");
+        currentMap.mapName = mapNameBox.getText().toString();
+
         b.putString(MAP_KEY, gson.toJson(currentMap));
         b.putString(PLACE_KEY, gson.toJson(currentMap.placeItems.get(id)));
         Intent intent = new Intent(EditMapActivity.this, EditPlaceActivity.class);
