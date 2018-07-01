@@ -160,8 +160,8 @@ public class EditMapActivity extends ListItemContextMenuActivity{
     }
 
 
-
     public void onAddNewPlaceClick(View view) {
+        currentMap.mapName = mapNameBox.getText().toString();
         Intent intent = new Intent(EditMapActivity.this, EditPlaceActivity.class);
         Bundle b = new Bundle();
         b.putString(MAP_KEY,gson.toJson(currentMap));
