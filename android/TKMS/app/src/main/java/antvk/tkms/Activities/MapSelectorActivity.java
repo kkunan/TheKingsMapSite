@@ -65,7 +65,7 @@ public class MapSelectorActivity extends ListItemContextMenuActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.showBackButton = false;
+        //this.showBackButton = false;
         setContentView(R.layout.map_selector_layout);
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
