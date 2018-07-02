@@ -1,4 +1,4 @@
-package antvk.tkms.Activities;
+package antvk.tkms.Activities.Show;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -13,12 +13,14 @@ import android.widget.TextView;
 
 import com.google.android.gms.maps.model.Marker;
 
+import antvk.tkms.Activities.ActivityWithBackButton;
 import antvk.tkms.R;
 import antvk.tkms.Utils.ImageUtils;
-import antvk.tkms.Struct.PlaceItem.PlaceItem.Event;
+import antvk.tkms.Struct.PlaceItem.Event;
 
 @RequiresApi(api = Build.VERSION_CODES.N)
-public class DescriptionActivity extends ActivityWithBackButton{
+public class EventDescriptionActivity extends ActivityWithBackButton {
+
 
     Event event;
     int markerId, eventId;
@@ -27,8 +29,9 @@ public class DescriptionActivity extends ActivityWithBackButton{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_description);
+        setContentView(R.layout.activity_event_description);
 
+        hasEditableStuffs = false;
         markerId = getExtra(MARKER_KEY);
         eventId = getExtra(EVENT_KEY);
 
@@ -72,7 +75,7 @@ public class DescriptionActivity extends ActivityWithBackButton{
 
 
     @Override
-    Bundle setFurtherExtra(Bundle b) {
+    public Bundle setFurtherExtra(Bundle b) {
         b.putInt(MARKER_KEY,markerId);
         return b;
     }
@@ -92,7 +95,7 @@ public class DescriptionActivity extends ActivityWithBackButton{
     public void onShareButtonClick(View view) {
 
         Bitmap bitmap = ImageUtils.createBitmapFromView(findViewById(R.id.whole_content_view));
-        Intent share = ImageUtils.shareBitmap(DescriptionActivity.this,getContentResolver(),bitmap);
+        Intent share = ImageUtils.shareBitmap(EventDescriptionActivity.this,getContentResolver(),bitmap);
         startActivity(Intent.createChooser(share, "Share Image"));
     }
 }

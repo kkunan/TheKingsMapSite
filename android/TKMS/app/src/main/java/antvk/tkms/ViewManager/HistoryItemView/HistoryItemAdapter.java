@@ -17,7 +17,7 @@ import java.util.List;
 
 import antvk.tkms.Constants;
 import antvk.tkms.R;
-import antvk.tkms.Struct.PlaceItem.PlaceItem;
+import antvk.tkms.Struct.PlaceItem;
 import antvk.tkms.Utils.ImageUtils;
 
 @RequiresApi(api = Build.VERSION_CODES.N)
@@ -36,7 +36,7 @@ public class HistoryItemAdapter extends RecyclerView.Adapter<HistoryItemAdapter.
     public VisitedInformationHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.
                 from(parent.getContext()).
-                inflate(R.layout.history_view, parent, false);
+                inflate(R.layout.listview_history_item, parent, false);
 
         return new VisitedInformationHolder(itemView);
     }

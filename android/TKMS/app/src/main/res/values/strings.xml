@@ -14,5 +14,9 @@
     <string name="your_description_of_this_place">Your description of this place</string>
     <string name="search_for_the_place">Search for the place</string>
     <string name="done">Done !</string>
+    <string name="input_map_name_here">input map name here</string>
+    <string name="map_name">Map name</string>
+    <string name="places_in_this_map">Places in this map</string>
+    <string name="add_new_place">+ Add new place</string>
 
 </resources>

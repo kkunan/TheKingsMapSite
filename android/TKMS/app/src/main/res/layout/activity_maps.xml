@@ -22,7 +22,7 @@
         android:layout_height="match_parent"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        tools:context=".Activities.MapsActivity"
+        tools:context=".Activities.Show.MapsActivity"
         android:layout_alignParentLeft="true" />
 
     <com.todddavies.components.progressbar.ProgressWheel
@@ -63,7 +63,7 @@
         android:onClick="onGotoClosestPlaceClick"
         />
 </RelativeLayout>
-    <include layout="@layout/activity_history"
+    <include layout="@layout/layout_history"
         android:id="@+id/history_activity_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -79,7 +79,7 @@
         >
 
 
-        <include layout="@layout/below_infowindow" />
+        <include layout="@layout/layout_below_infowindow" />
     </LinearLayout>
     <!--<LinearLayout-->
     <!--android:layout_width="match_parent"-->

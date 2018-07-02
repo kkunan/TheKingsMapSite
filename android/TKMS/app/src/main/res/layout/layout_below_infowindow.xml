@@ -64,7 +64,7 @@
         <!--<RelativeLayout-->
             <!--android:layout_width="match_parent"-->
             <!--android:layout_height="20dp">-->
-            <!--<include layout="@layout/rating_box"-->
+            <!--<include layout="@layout/layout_rating_box"-->
                 <!--android:id="@+id/rating_box_box"-->
                 <!--android:layout_width="100dp"-->
                 <!--android:layout_marginLeft="50dp"-->

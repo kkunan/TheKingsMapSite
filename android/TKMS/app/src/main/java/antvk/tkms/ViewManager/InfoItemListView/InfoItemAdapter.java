@@ -16,7 +16,7 @@ import java.util.List;
 
 import antvk.tkms.Constants;
 import antvk.tkms.R;
-import antvk.tkms.Struct.PlaceItem.PlaceItem;
+import antvk.tkms.Struct.PlaceItem;
 import antvk.tkms.Utils.ImageUtils;
 
 @RequiresApi(api = Build.VERSION_CODES.N)
@@ -35,7 +35,7 @@ public class InfoItemAdapter extends RecyclerView.Adapter<InfoItemAdapter.Inform
     public InformationItemHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.
                 from(parent.getContext()).
-                inflate(R.layout.place_info_view, parent, false);
+                inflate(R.layout.listview_place, parent, false);
 
         return new InformationItemHolder(itemView);
     }

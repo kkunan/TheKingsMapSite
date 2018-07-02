@@ -15,7 +15,7 @@
         <!--ProgressWheel:pwTextSize="14sp"-->
 
 
-       <include layout="@layout/place_info_view"/>
+       <include layout="@layout/listview_place"/>
 
 
     <TextView

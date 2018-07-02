@@ -1,4 +1,4 @@
-package antvk.tkms.Struct.PlaceItem;
+package antvk.tkms.Struct;
 
 import android.annotation.SuppressLint;
 import android.os.Build;
@@ -12,8 +12,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import antvk.tkms.Activities.MarkerEventListActivity;
-import antvk.tkms.Constants;
+import antvk.tkms.Activities.Show.PlaceDescriptionActivity;
 
 public class PlaceItem {
 
@@ -48,7 +47,7 @@ public class PlaceItem {
     @RequiresApi(api = Build.VERSION_CODES.N)
     public PlaceItem() {
         this.events = new ArrayList<>();
-        this.radius = MarkerEventListActivity.CHECKIN_AVALABLE_RANGE;
+        this.radius = PlaceDescriptionActivity.CHECKIN_AVALABLE_RANGE;
     }
 
     public static class Event {

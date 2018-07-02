@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import antvk.tkms.R;
-import antvk.tkms.Struct.MapAttribute.AvailableMap;
+import antvk.tkms.Struct.AvailableMap;
 import antvk.tkms.Utils.ImageUtils;
 
 public class MapSelectorAdapter extends RecyclerView.Adapter<MapSelectorAdapter.MapViewHolder> {
@@ -44,7 +44,7 @@ public class MapSelectorAdapter extends RecyclerView.Adapter<MapSelectorAdapter.
     public MapViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View itemView = LayoutInflater.
                 from(viewGroup.getContext()).
-                inflate(R.layout.halfview, viewGroup, false);
+                inflate(R.layout.listview_map_selector, viewGroup, false);
 
         return new MapViewHolder(itemView);
     }

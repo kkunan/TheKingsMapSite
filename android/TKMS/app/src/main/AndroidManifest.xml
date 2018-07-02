@@ -61,32 +61,32 @@
         <!--<activity android:name="splashscreen.Main" />-->
 
         <activity
-            android:name=".Activities.MapsActivity"
+            android:name=".Activities.Show.MapsActivity"
             android:screenOrientation="portrait"
             android:label="@string/title_activity_maps">
 
         </activity>
 
         <activity
-            android:name=".Activities.MarkerEventListActivity"
+            android:name=".Activities.Show.PlaceDescriptionActivity"
             android:screenOrientation="portrait"
             >
             <meta-data
             android:name="android.support.PARENT_ACTIVITY"
-            android:value=".Activities.MapsActivity">
+            android:value=".Activities.Show.MapsActivity">
             </meta-data>
         </activity>
 
-        <activity android:name=".Activities.DescriptionActivity"
+        <activity android:name=".Activities.Show.EventDescriptionActivity"
             android:screenOrientation="portrait"
             >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".Activities.MarkerEventListActivity">
+                android:value=".Activities.Show.PlaceDescriptionActivity">
             </meta-data>
         </activity>
 
-        <activity android:name=".Activities.MapSelectorActivity"
+        <activity android:name=".Activities.Show.MapSelectorActivity"
             android:screenOrientation="portrait"
             >
             <intent-filter>
@@ -97,17 +97,17 @@
 
         </activity>
 
-        <activity android:name=".Activities.EditMapActivity"
+        <activity android:name=".Activities.Edit.EditMapActivity"
             android:screenOrientation="portrait"
             />
 
-        <activity android:name=".Activities.EditPlaceActivity"
+        <activity android:name=".Activities.Edit.EditPlaceActivity"
             android:screenOrientation="portrait"
             >
 
         </activity>
 
-        <activity android:name=".Activities.EditEventActivity"
+        <activity android:name=".Activities.Edit.EditEventActivity"
             android:screenOrientation="portrait"
             >
 

@@ -18,8 +18,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 
 import antvk.tkms.R;
-import antvk.tkms.Struct.PlaceItem.PlaceItem;
-import antvk.tkms.Struct.MapAttribute.AvailableMap;
+import antvk.tkms.Struct.PlaceItem;
+import antvk.tkms.Struct.AvailableMap;
 
 import static antvk.tkms.Constants.MY_PERMISSIONS_REQUEST_READ_EXT_STORAGE;
 import static antvk.tkms.Constants.PICK_IMAGE;

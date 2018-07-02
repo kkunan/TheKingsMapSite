@@ -1,9 +1,7 @@
-package antvk.tkms.Struct.MapAttribute;
+package antvk.tkms.Struct;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import antvk.tkms.Struct.PlaceItem.PlaceItem;
 
 public class AvailableMap {
 

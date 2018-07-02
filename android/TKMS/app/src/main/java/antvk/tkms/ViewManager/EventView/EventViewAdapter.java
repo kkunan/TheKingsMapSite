@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import antvk.tkms.Constants;
-import antvk.tkms.Struct.PlaceItem.PlaceItem.Event;
+import antvk.tkms.Struct.PlaceItem.Event;
 import antvk.tkms.R;
 
 public class EventViewAdapter extends RecyclerView.Adapter<EventViewHolder> {
@@ -36,7 +36,7 @@ public class EventViewAdapter extends RecyclerView.Adapter<EventViewHolder> {
         public EventViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
             View itemView = LayoutInflater.
                     from(viewGroup.getContext()).
-                    inflate(R.layout.cardview, viewGroup, false);
+                    inflate(R.layout.listview_event, viewGroup, false);
 
             return new EventViewHolder(itemView);
         }

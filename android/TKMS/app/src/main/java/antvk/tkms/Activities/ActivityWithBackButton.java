@@ -1,6 +1,7 @@
 package antvk.tkms.Activities;
 
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.ActionBar;
 import android.os.Bundle;
@@ -11,9 +12,13 @@ import android.view.MenuItem;
 import com.google.gson.Gson;
 
 import antvk.tkms.Utils.ClassMapper;
+import antvk.tkms.Utils.UIUtils;
 
 
 public abstract class ActivityWithBackButton extends AppCompatActivity {
+
+    protected boolean hasEditableStuffs = true;
+
     public static final String MAP_KEY = "map";
     public static final String PLACE_KEY = "placeKey";
     public static final String EVENT_KEY = "eventKey";
@@ -63,22 +68,39 @@ public abstract class ActivityWithBackButton extends AppCompatActivity {
             gobackToPreviousScreen();
         }catch (Exception e)
         {
+            e.printStackTrace();
             super.onBackPressed();
         }
     }
 
     protected void gobackToPreviousScreen() {
+
         String previousClass = getIntent().getStringExtra(ClassMapper.classIntentKey);
         Class cl = ClassMapper.get(previousClass);
-
         b = setFurtherExtra(b);
 
-        Intent intent = new Intent(getApplicationContext(),cl);
-        intent.putExtras(b);
-        startActivity(intent);
+        if(hasEditableStuffs)
+        UIUtils.createAndShowAlertDialog(
+                ActivityWithBackButton.this,
+                "Warning!",
+                "Ignore all your changes?"
+                , (dialogInterface, i) -> {
+
+                    Intent intent = new Intent(getApplicationContext(),cl);
+                    intent.putExtras(b);
+                    startActivity(intent);
+                },
+                (dialogInterface, i) -> {
+                    dialogInterface.dismiss();
+
+                }
+        );
+        else
+            onBackPressed();
+
     }
 
-    abstract Bundle setFurtherExtra(Bundle b);
+    public abstract Bundle setFurtherExtra(Bundle b);
 
     protected int getExtra(String key)
     {

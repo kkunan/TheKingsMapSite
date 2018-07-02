@@ -1,4 +1,4 @@
-package antvk.tkms.Activities;
+package antvk.tkms.Activities.Edit;
 
 import android.Manifest;
 import android.app.AlertDialog;
@@ -22,9 +22,10 @@ import android.widget.TimePicker;
 
 import java.util.Calendar;
 
+import antvk.tkms.Activities.AddStuffsActivity;
 import antvk.tkms.Constants;
 import antvk.tkms.R;
-import antvk.tkms.Struct.PlaceItem.PlaceItem;
+import antvk.tkms.Struct.PlaceItem;
 import antvk.tkms.Utils.ClassMapper;
 
 import static antvk.tkms.Constants.MY_PERMISSIONS_REQUEST_READ_EXT_STORAGE;
@@ -89,7 +90,7 @@ public class EditEventActivity extends AddStuffsActivity {
     public void onDateTimeSelectorClick(View view) {
 
         LayoutInflater inflater = (LayoutInflater) getLayoutInflater();
-        customView = inflater.inflate(R.layout.datetime_picker_layout, null);
+        customView = inflater.inflate(R.layout.layout_datetime_picker, null);
 
         // Define your date pickers
         final DatePicker dpDate = customView.findViewById(R.id.event_date_picker);

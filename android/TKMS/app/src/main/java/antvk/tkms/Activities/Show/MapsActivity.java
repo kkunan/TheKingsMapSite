@@ -1,7 +1,6 @@
-package antvk.tkms.Activities;
+package antvk.tkms.Activities.Show;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -41,10 +40,12 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import antvk.tkms.Activities.ActivityWithBackButton;
+import antvk.tkms.Activities.Edit.EditMapActivity;
 import antvk.tkms.Constants;
-import antvk.tkms.Struct.PlaceItem.PlaceItem;
+import antvk.tkms.Struct.PlaceItem;
 import antvk.tkms.R;
-import antvk.tkms.Struct.MapAttribute.AvailableMap;
+import antvk.tkms.Struct.AvailableMap;
 import antvk.tkms.Utils.ClassMapper;
 import antvk.tkms.Utils.ImageUtils;
 import antvk.tkms.Utils.LocationUtils;
@@ -52,9 +53,6 @@ import antvk.tkms.Utils.MarkerUtils;
 import antvk.tkms.Utils.UIUtils;
 import antvk.tkms.ViewManager.HistoryItemView.HistoryItemAdapter;
 import antvk.tkms.ViewManager.RecyclerItemClickListener;
-
-import static antvk.tkms.Activities.MapSelectorActivity.*;
-import static antvk.tkms.Activities.MarkerEventListActivity.MARKER_KEY;
 
 @RequiresApi(api = Build.VERSION_CODES.N)
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMapClickListener {
@@ -95,35 +93,29 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         markerInformationItemMap = new LinkedHashMap<>();
 
         Bundle b = getIntent().getExtras();
-        currentMap = gson.fromJson(getIntent().getStringExtra(MAP_KEY),AvailableMap.class);
+        currentMap = gson.fromJson(getIntent().getStringExtra(ActivityWithBackButton.MAP_KEY), AvailableMap.class);
         value = -1; // or other values
         if (b != null) {
-            value = b.getInt(MARKER_KEY);
+            value = b.getInt(ActivityWithBackButton.MARKER_KEY);
             //System.out.println("mapIndex received: "+mapIndex);
-        }
-
-        else
-        {
+        } else {
             // TODO: 01/07/2018 PROMPT USER THAT SOMETHING IS WRONG
         }
 
         sortoutUI();
     }
 
-    void sortoutUI()
-    {
-       ActionBar actionBar = getSupportActionBar();
+    void sortoutUI() {
+        ActionBar actionBar = getSupportActionBar();
 
-       if(selectedMarker == null)
-       {
-           findViewById(R.id.header_content).setVisibility(View.GONE);
-       }
+        if (selectedMarker == null) {
+            findViewById(R.id.header_content).setVisibility(View.GONE);
+        }
 
-       if(actionBar!=null)
-           actionBar.setTitle(currentMap.mapName);
+        if (actionBar != null)
+            actionBar.setTitle(currentMap.mapName);
 
-        if(selectedMarker==null)
-        {
+        if (selectedMarker == null) {
             LinearLayout headerLayout = (LinearLayout) findViewById(R.id.header_content);
             headerLayout.setVisibility(View.GONE);
         }
@@ -156,7 +148,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     @Override
                     public void onItemClick(View view, int position) {
 
-//                            Intent intent = new Intent(getApplicationContext(),DescriptionActivity.class);
+//                            Intent intent = new Intent(getApplicationContext(),EventDescriptionActivity.class);
 //
 //                            Bundle b = setExtra(MARKER_KEY,value);
 //                            b = setExtra(EVENT_KEY,position, b);
@@ -268,7 +260,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                 System.out.println("get info contents");
                 // Getting view from the layout file info_window_layout
-                View v = getLayoutInflater().inflate(R.layout.info_window, null);
+                View v = getLayoutInflater().inflate(R.layout.layout_info_window, null);
 
                 // Getting the position from the marker
                 LatLng latLng = arg0.getPosition();
@@ -280,9 +272,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 ImageView imageView = v.findViewById(R.id.image_text);
                 PlaceItem item = markerInformationItemMap.get(arg0);
                 header.setText(item.header);
-                if (item.placeCategory !=null)
+                if (item.placeCategory != null)
                     imageView.setImageBitmap(ImageUtils.getBitmapFromAsset(MapsActivity.this,
-                            Constants.PLACE_CATEGORY_PATH+"/"+item.placeCategory.imagePath));
+                            Constants.PLACE_CATEGORY_PATH + "/" + item.placeCategory.imagePath));
 
                 return v;
 
@@ -341,31 +333,34 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        List<PlaceItem> placeItems = new ArrayList<>();
+        List<PlaceItem> placeItems = currentMap.placeItems;
 
-        placeItems = currentMap.placeItems;
-
+        boolean isAnyLocation = false;
         for (PlaceItem item : placeItems) {
             // TODO: 27/06/2018 check if no place has location then prompt user to input them. 
-            if(item.location!=null) {
+            if (item.location != null) {
                 Marker marker = createMarker(item);
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(marker.getPosition()));
+                isAnyLocation = true;
             }
-            else{
-                UIUtils.createAndShowAlertDialog(
-                        MapsActivity.this,
-                        "No place on map!",
-                        "Seems like you haven't added any places on the map." +
-                                "\nPlease do so first.",
-                        (DialogInterface.OnClickListener) (dialogInterface, i) -> {
-                            Intent intent = new Intent(MapsActivity.this,EditMapActivity.class);
-                            intent.putExtra(MAP_KEY,gson.toJson(currentMap));
-                            startActivity(intent);
-                            finish();
-                        },
-                        null
-                );
-            }
+        }
+
+        if(!isAnyLocation)
+        {
+            UIUtils.createAndShowAlertDialog(
+                    MapsActivity.this,
+                    "No place on map!",
+                    "Seems like you haven't added any places on the map." +
+                            "\nPlease do so first.",
+                    (DialogInterface.OnClickListener) (dialogInterface, i) -> {
+                        Intent intent = new Intent(MapsActivity.this, EditMapActivity.class);
+                        intent.putExtra(ActivityWithBackButton.MAP_KEY, gson.toJson(currentMap));
+                        startActivity(intent);
+                        finish();
+                    },
+                    null
+            );
+
         }
 
         markerList = new ArrayList<>(markerInformationItemMap.keySet());
@@ -409,12 +404,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     void gotoDescriptionPage(Marker marker) {
-        Intent intent = new Intent(MapsActivity.this, MarkerEventListActivity.class);
+        Intent intent = new Intent(MapsActivity.this, PlaceDescriptionActivity.class);
         Bundle b = new Bundle();
 
-        b.putInt(MARKER_KEY, markerList.indexOf(marker)); //Your id
-        b.putString(MAP_KEY,gson.toJson(currentMap));
-        b.putString(ClassMapper.classIntentKey,"MapsActivity");
+        b.putInt(ActivityWithBackButton.MARKER_KEY, markerList.indexOf(marker)); //Your id
+        b.putString(ActivityWithBackButton.MAP_KEY, gson.toJson(currentMap));
+        b.putString(ClassMapper.classIntentKey, "MapsActivity");
 
         //    System.out.println("marker index " + markerList.indexOf(marker));
         intent.putExtras(b); //Put your id to your next Intent
@@ -428,68 +423,28 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     void showInfoWindowBelow(Marker marker) {
-//        View mapView = findViewById(R.id.map);
-//        LinearLayout.LayoutParams mapViewParams = (LinearLayout.LayoutParams) mapView.getLayoutParams();
-//
-//        mapViewParams.weight = (float) (1f - belowPortion);
-//        mapView.setLayoutParams(mapViewParams);
 
         LinearLayout headerLayout = (LinearLayout) findViewById(R.id.header_content);
         headerLayout.setVisibility(View.VISIBLE);
 
         TextView header = (TextView) findViewById(R.id.below_info_header_text);
-//        ImageView imageView = findViewById(R.id.image_text);
         PlaceItem item = markerInformationItemMap.get(marker);
         header.setText(item.header.replaceAll("\\ ", "\n"));
 
-//        GeoDataClient mGeoDataClient = Places.getGeoDataClient(getApplicationContext());
-//        final Place[] myPlace = new Place[1];
-//        final PlaceBufferResponse[] places = {null};
-//        final float[] rating = new float[1];
-//
-//        mGeoDataClient.getPlaceById(item.placeID).addOnCompleteListener(new OnCompleteListener<PlaceBufferResponse>() {
-//            @Override
-//            public void onComplete(@NonNull Task<PlaceBufferResponse> task) {
-//                if (task.isSuccessful()) {
-//                    places[0] = task.getResult();
-//                    try {
-//                        myPlace[0] = places[0].get(0);
-//                        System.out.println("Place found: " + myPlace[0].getName());
-//                        Place place = myPlace[0];
-//                        if (place != null) {
-//                                rating[0] = place.getRating();
-//                            }
-//                            } catch (Exception e) {
-//                        }
-//                        }
-//                        }
-//                        });
-//
-//        try {
-//            ProgressBar ratingBar = (ProgressBar) findViewById(R.id.progress_star);
-//            TextView ratingText = (TextView) findViewById(R.id.rating_textview);
-//
-//            if (rating[0] <= 0) {
-//
-//                ratingBar.setProgress((int) ((rating[0] / 5.0) * 100));
-//                ratingText.setText(rating[0] + "");
-//            } else {
-//
-//                ratingBar.setVisibility(View.GONE);
-//                ratingText.setVisibility(View.GONE);
-//
-//            }
-//        }catch (Exception e)
-//        {
-//            e.printStackTrace();
-//        }
-//        imageView.setImageDrawable(imageDrawables.get(item.imageName));
-
     }
 
-    @SuppressLint("MissingPermission")
     void enableLocationOnMap() {
 
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(MapsActivity.this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    MY_PERMISSIONS_REQUEST_FINE_LOCATION);
+
+            ActivityCompat.requestPermissions(MapsActivity.this,
+                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                    MY_PERMISSIONS_REQUEST_COARSE_LOCATION);
+            return;
+        }
         mMap.setMyLocationEnabled(true);
         Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         if(location==null)

@@ -1,9 +1,7 @@
-package antvk.tkms.Activities;
+package antvk.tkms.Activities.Edit;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.pm.PackageManager;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationManager;
@@ -12,14 +10,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
-import android.util.AttributeSet;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ScrollView;
 import android.widget.Spinner;
 
 import com.google.android.gms.common.api.Status;
@@ -48,16 +43,19 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import antvk.tkms.Activities.AddStuffsActivity;
+import antvk.tkms.Activities.Show.MapsActivity;
+import antvk.tkms.Activities.Show.PlaceDescriptionActivity;
 import antvk.tkms.Constants;
 import antvk.tkms.R;
-import antvk.tkms.Struct.PlaceItem.PlaceItem;
+import antvk.tkms.Struct.PlaceItem;
 import antvk.tkms.Utils.ClassMapper;
 import antvk.tkms.Utils.ImageUtils;
 import antvk.tkms.Utils.LocationUtils;
 import antvk.tkms.Utils.UIUtils;
 import antvk.tkms.ViewManager.CustomScrollView;
 
-import static antvk.tkms.Activities.MapSelectorActivity.*;
+import static antvk.tkms.Activities.Show.MapSelectorActivity.*;
 
 @RequiresApi(api = Build.VERSION_CODES.N)
 public class EditPlaceActivity extends AddStuffsActivity implements OnMapReadyCallback {
@@ -83,7 +81,7 @@ public class EditPlaceActivity extends AddStuffsActivity implements OnMapReadyCa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_edit_place_in_map);
+        setContentView(R.layout.activity_edit_place);
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map_fragment_edit_place);
@@ -336,10 +334,10 @@ public class EditPlaceActivity extends AddStuffsActivity implements OnMapReadyCa
                 {
                     double dist = SphericalUtil.computeDistanceBetween(radiusPickerMarker.getPosition(),currentPlaceMarker.getPosition());
 
-                    if(dist<MarkerEventListActivity.CHECKIN_AVALABLE_RANGE) {
+                    if(dist< PlaceDescriptionActivity.CHECKIN_AVALABLE_RANGE) {
                         marker.setPosition(
                                 SphericalUtil.computeOffset(currentPlaceMarker.getPosition(),
-                                        MarkerEventListActivity.CHECKIN_AVALABLE_RANGE,
+                                        PlaceDescriptionActivity.CHECKIN_AVALABLE_RANGE,
                                         90
                                 )
                         );
@@ -497,7 +495,7 @@ public class EditPlaceActivity extends AddStuffsActivity implements OnMapReadyCa
     }
 
     @Override
-    Bundle setFurtherExtra(Bundle b) {
+    public Bundle setFurtherExtra(Bundle b) {
         b.putString(MAP_KEY,gson.toJson(currentMap));
 
         // TODO: 27/06/2018 we want to check the case that it enters from description page as well, or not?
@@ -510,8 +508,8 @@ public class EditPlaceActivity extends AddStuffsActivity implements OnMapReadyCa
         if(currentItem==null)
             currentItem = new PlaceItem();
 
-        if(currentItem.radius < MarkerEventListActivity.CHECKIN_AVALABLE_RANGE)
-            currentItem.radius = MarkerEventListActivity.CHECKIN_AVALABLE_RANGE;
+        if(currentItem.radius < PlaceDescriptionActivity.CHECKIN_AVALABLE_RANGE)
+            currentItem.radius = PlaceDescriptionActivity.CHECKIN_AVALABLE_RANGE;
 
         currentItem.header = placeNameEditText.getText().toString();
         currentItem.placeCategory = placeCategories.get(dropdown.getSelectedItemPosition());
@@ -529,6 +527,7 @@ public class EditPlaceActivity extends AddStuffsActivity implements OnMapReadyCa
                         dialogInterface.dismiss();
                     },null
             );
+            return;
         }
 
         currentItem.userNote = descriptionEditText.getText().toString();

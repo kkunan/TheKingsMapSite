@@ -1,4 +1,4 @@
-package antvk.tkms.Activities;
+package antvk.tkms.Activities.Edit;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -16,16 +16,20 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
+import antvk.tkms.Activities.ListItemContextMenuActivity;
+import antvk.tkms.Activities.Show.MapSelectorActivity;
 import antvk.tkms.R;
-import antvk.tkms.Struct.MapAttribute.AvailableMap;
+import antvk.tkms.Struct.AvailableMap;
 import antvk.tkms.Utils.ClassMapper;
 import antvk.tkms.Utils.UIUtils;
 import antvk.tkms.ViewManager.InfoItemListView.InfoItemAdapter;
 
-import static antvk.tkms.Activities.MapSelectorActivity.*;
+import static antvk.tkms.Activities.Show.MapSelectorActivity.*;
 
 @RequiresApi(api = Build.VERSION_CODES.N)
-public class EditMapActivity extends ListItemContextMenuActivity{
+public class EditMapActivity extends ListItemContextMenuActivity {
 
     EditText mapNameBox;
     TextView placeListLabel;
@@ -77,7 +81,7 @@ public class EditMapActivity extends ListItemContextMenuActivity{
     void itemClick(View view, int position) {
 
         // TODO: 27/06/2018 fix description page to show this without ID
-//        Intent intent = new Intent(EditMapActivity.this,DescriptionActivity.class);
+//        Intent intent = new Intent(EditMapActivity.this,EventDescriptionActivity.class);
 //        b.putString(ClassMapper.classIntentKey,"EditMapActivity");
 //        b.putInt(MARKER_KEY,position);
 //        intent.putExtras(b);
@@ -131,6 +135,20 @@ public class EditMapActivity extends ListItemContextMenuActivity{
     public void onSubmitButtonClick(View view)
     {
         currentMap.mapName = mapNameBox.getText().toString();
+
+        AtomicBoolean hasError = new AtomicBoolean(false);
+
+        if (mapNameBox.getText().toString().trim().equalsIgnoreCase("")) {
+            mapNameBox.setError("Name can not be blank");
+            hasError.set(true);
+        }
+
+        if(adapter.placeItems == null || adapter.placeItems.size() ==0)
+        {
+            placeListLabel.setError("No places added");
+            return;
+        }
+
         currentMap.local = true;
         if(currentMap.mapID < 0)
         {

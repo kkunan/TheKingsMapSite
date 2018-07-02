@@ -16,9 +16,9 @@ import com.google.android.gms.maps.model.Marker;
 import java.util.List;
 
 import antvk.tkms.Constants;
-import antvk.tkms.Activities.MapsActivity;
+import antvk.tkms.Activities.Show.MapsActivity;
 import antvk.tkms.R;
-import antvk.tkms.Struct.PlaceItem.PlaceItem;
+import antvk.tkms.Struct.PlaceItem;
 
 @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
 public class MarkerUtils {
@@ -78,7 +78,7 @@ public class MarkerUtils {
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     public static Bitmap createStoreMarker(LayoutInflater inflater, Context context, String leftImage, String imageBG, String text) {
-        View markerLayout = inflater.inflate(R.layout.marker_inactive, null);
+        View markerLayout = inflater.inflate(R.layout.layout_marker_inactive, null);
 
         TextView markerRating = (TextView) markerLayout.findViewById(R.id.marker_text);
 

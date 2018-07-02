@@ -34,16 +34,18 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Map name"
+            android:text="@string/map_name"
             android:textSize="15sp"
-            android:paddingRight="5dp"/>
+            android:paddingRight="5dp"
+            android:paddingEnd="5dp" />
 
         <EditText
             android:id="@+id/map_name_edittext"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:maxLength="100"
-            android:inputType="text"/>
+            android:hint="@string/input_map_name_here"
+            android:inputType="text"
+            android:maxLength="100" />
 
 
     </LinearLayout>
@@ -61,13 +63,13 @@
             android:id="@+id/place_list_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Places in this map"
+            android:text="@string/places_in_this_map"
             android:textSize="20sp" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="+ Add new place"
+            android:text="@string/add_new_place"
             android:textSize="16sp"
             android:textColor="@color/text_btn"
             android:layout_marginTop="5dp"
@@ -94,7 +96,7 @@
             android:id="@+id/submit_button"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Done !"
+            android:text="@string/done"
             android:background="@color/colorPrimary"
             android:onClick="onSubmitButtonClick"/>
     </LinearLayout>

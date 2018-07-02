@@ -1,4 +1,4 @@
-package antvk.tkms.Activities;
+package antvk.tkms.Activities.Show;
 
 import android.Manifest;
 import android.app.AlertDialog;
@@ -13,7 +13,6 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -29,8 +28,6 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.PlaceBufferResponse;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.gson.Gson;
 
 import java.io.IOException;
@@ -38,22 +35,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import antvk.tkms.Activities.ActivityWithBackButton;
 import antvk.tkms.Constants;
-import antvk.tkms.Struct.PlaceItem.PlaceItem;
+import antvk.tkms.Struct.PlaceItem;
 import antvk.tkms.R;
-import antvk.tkms.Struct.MapAttribute.AvailableMap;
+import antvk.tkms.Struct.AvailableMap;
 import antvk.tkms.Utils.ClassMapper;
 import antvk.tkms.Utils.ImageUtils;
 import antvk.tkms.Utils.LocationUtils;
 import antvk.tkms.ViewManager.EventView.EventViewAdapter;
 import antvk.tkms.ViewManager.RecyclerItemClickListener;
 
-import static antvk.tkms.Activities.MapSelectorActivity.*;
-import static antvk.tkms.Activities.MapsActivity.*;
+import static antvk.tkms.Activities.Show.MapSelectorActivity.*;
+import static antvk.tkms.Activities.Show.MapsActivity.*;
 
 
 @RequiresApi(api = Build.VERSION_CODES.N)
-public class MarkerEventListActivity extends ActivityWithBackButton {
+public class PlaceDescriptionActivity extends ActivityWithBackButton {
 
     public static PlaceItem item;
     LocationManager manager;
@@ -73,7 +71,8 @@ public class MarkerEventListActivity extends ActivityWithBackButton {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_description_itemlist);
+        setContentView(R.layout.activity_place_description);
+        hasEditableStuffs = false;
 
         value = getExtra(MARKER_KEY);
 
@@ -97,7 +96,7 @@ public class MarkerEventListActivity extends ActivityWithBackButton {
             initializeRecycleView();
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 // TODO: Consider calling
-                ActivityCompat.requestPermissions(MarkerEventListActivity.this,
+                ActivityCompat.requestPermissions(PlaceDescriptionActivity.this,
                         new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                         MapsActivity.MY_PERMISSIONS_REQUEST_FINE_LOCATION);
                 //    ActivityCompat#requestPermissions
@@ -130,7 +129,7 @@ public class MarkerEventListActivity extends ActivityWithBackButton {
         manager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(MarkerEventListActivity.this,
+            ActivityCompat.requestPermissions(PlaceDescriptionActivity.this,
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     MapsActivity.MY_PERMISSIONS_REQUEST_FINE_LOCATION);
             // TODO: Consider calling
@@ -230,7 +229,7 @@ public class MarkerEventListActivity extends ActivityWithBackButton {
 
             try {
                 if(item.placeCategory!=null)
-                placeImageView.setImageBitmap(ImageUtils.getBitmapFromAsset(MarkerEventListActivity.this,
+                placeImageView.setImageBitmap(ImageUtils.getBitmapFromAsset(PlaceDescriptionActivity.this,
                         Constants.PLACE_CATEGORY_PATH+"/"+item.placeCategory.imagePath));
 
             }catch (Exception e)
@@ -250,44 +249,44 @@ public class MarkerEventListActivity extends ActivityWithBackButton {
         GeoDataClient mGeoDataClient = Places.getGeoDataClient(getApplicationContext());
         final Place[] myPlace = new Place[1];
         final PlaceBufferResponse[] places = {null};
-        mGeoDataClient.getPlaceById(item.placeID).addOnCompleteListener(new OnCompleteListener<PlaceBufferResponse>() {
-            @Override
-            public void onComplete(@NonNull Task<PlaceBufferResponse> task) {
-                if (task.isSuccessful()) {
-                        places[0] = task.getResult();
-                    try {
-                        myPlace[0] = places[0].get(0);
-                        System.out.println("Place found: " + myPlace[0].getName());
-                        Place place = myPlace[0];
-                        if (place != null) {
-                            item.placeDescription =
-                                    "Name: " + place.getName() +
-                                            "\nPhone number: " + place.getPhoneNumber()
-                                            + "\nrating: " + place.getRating()
-                            ;
-                            address[0] = place.getAddress().toString();
-                        }
-                    }catch (Exception e){
-                        System.out.println("places: "+ places[0]);
-                        e.printStackTrace();
+
+        if(item.placeID!=null)
+        mGeoDataClient.getPlaceById(item.placeID).addOnCompleteListener(task -> {
+
+            if (task.isSuccessful()) {
+                    places[0] = task.getResult();
+                try {
+                    myPlace[0] = places[0].get(0);
+                    System.out.println("Place found: " + myPlace[0].getName());
+                    Place place = myPlace[0];
+                    if (place != null) {
+                        item.placeDescription =
+                                "Name: " + place.getName() +
+                                        "\nPhone number: " + place.getPhoneNumber()
+                                        + "\nrating: " + place.getRating()
+                        ;
+                        address[0] = place.getAddress().toString();
                     }
-                        runOnUiThread(
-                                new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        descriptionView.setText(item.placeDescription);
-                                        TextView addressView = (TextView) findViewById(R.id.place_address);
-                                        addressView.setText(address[0]);
-                                    }
-                                }
-                        );
-
-                        places[0].release();
-
-
-                } else {
-
+                }catch (Exception e){
+                    System.out.println("places: "+ places[0]);
+                    e.printStackTrace();
                 }
+                    runOnUiThread(
+                            new Runnable() {
+                                @Override
+                                public void run() {
+                                    descriptionView.setText(item.placeDescription);
+                                    TextView addressView = (TextView) findViewById(R.id.place_address);
+                                    addressView.setText(address[0]);
+                                }
+                            }
+                    );
+
+                    places[0].release();
+
+
+            } else {
+
             }
         });
 
@@ -336,12 +335,12 @@ public class MarkerEventListActivity extends ActivityWithBackButton {
                 new RecyclerItemClickListener(getApplicationContext(), recList ,new RecyclerItemClickListener.OnItemClickListener() {
                     @Override public void onItemClick(View view, int position) {
 
-                        Intent intent = new Intent(getApplicationContext(),DescriptionActivity.class);
+                        Intent intent = new Intent(getApplicationContext(),EventDescriptionActivity.class);
 
                         Bundle b = setExtra(MARKER_KEY,value);
                         b = setExtra(EVENT_KEY,position, b);
                         b.putString(MAP_KEY,gson.toJson(currentMap));
-                        b.putString(ClassMapper.classIntentKey, "MarkerEventListActivity");
+                        b.putString(ClassMapper.classIntentKey, "PlaceDescriptionActivity");
                         intent.putExtras(b);
                         startActivity(intent);
                     }
@@ -408,7 +407,7 @@ public class MarkerEventListActivity extends ActivityWithBackButton {
                 }
             };
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(MarkerEventListActivity.this);
+            AlertDialog.Builder builder = new AlertDialog.Builder(PlaceDescriptionActivity.this);
             builder.setMessage(
                     getString(R.string.checkin)+" "+item.header+"?"
             ).setPositiveButton("Yes", dialogClickListener)
@@ -436,7 +435,7 @@ public class MarkerEventListActivity extends ActivityWithBackButton {
                 }
             };
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(MarkerEventListActivity.this);
+            AlertDialog.Builder builder = new AlertDialog.Builder(PlaceDescriptionActivity.this);
             builder.setMessage(
                     getString(R.string.uncheck)+" "+item.header+"?"
             ).setPositiveButton("Yes", dialogClickListener)
@@ -450,7 +449,7 @@ public class MarkerEventListActivity extends ActivityWithBackButton {
     }
 
     @Override
-    Bundle setFurtherExtra(Bundle b) {
+    public Bundle setFurtherExtra(Bundle b) {
         b.putInt(MARKER_KEY,value);
         b.putString(MAP_KEY,gson.toJson(currentMap));
         return b;

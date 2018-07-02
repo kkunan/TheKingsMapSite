@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<antvk.tkms.ViewManager.CustomScrollView
+<antvk.tkms.ViewManager.CustomScrollView xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/scrollView"
     android:layout_height="match_parent"
     android:layout_width="match_parent"
@@ -126,7 +126,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
-                />
+                tools:layout="@layout/place_autocomplete_fragment" />
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">

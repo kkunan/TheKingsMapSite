@@ -7,7 +7,7 @@ import android.os.Handler;
 import android.view.Window;
 import android.widget.ImageView;
 
-import antvk.tkms.Activities.MapSelectorActivity;
+import antvk.tkms.Activities.Show.MapSelectorActivity;
 import antvk.tkms.Constants;
 import antvk.tkms.R;
 import antvk.tkms.Utils.ImageUtils;

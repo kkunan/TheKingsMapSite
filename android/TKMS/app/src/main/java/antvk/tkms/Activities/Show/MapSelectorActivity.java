@@ -1,4 +1,4 @@
-package antvk.tkms.Activities;
+package antvk.tkms.Activities.Show;
 
 import android.content.Context;
 import android.content.Intent;
@@ -8,18 +8,14 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SnapHelper;
 import android.view.ContextMenu;
 import android.view.Gravity;
-import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 
 import com.google.gson.Gson;
@@ -33,17 +29,13 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-import antvk.tkms.Constants;
+import antvk.tkms.Activities.Edit.EditMapActivity;
+import antvk.tkms.Activities.ListItemContextMenuActivity;
 import antvk.tkms.R;
-import antvk.tkms.Struct.MapAttribute.AvailableMap;
+import antvk.tkms.Struct.AvailableMap;
+import antvk.tkms.Utils.ClassMapper;
 import antvk.tkms.Utils.UIUtils;
-import antvk.tkms.ViewManager.RecyclerItemClickListener;
 import antvk.tkms.ViewManager.MapSelectorView.MapSelectorAdapter;
-
-import static antvk.tkms.Activities.ActivityWithBackButton.MAP_KEY;
-import static antvk.tkms.Activities.MapsActivity.*;
-
-import static antvk.tkms.Activities.ActivityWithBackButton.MAP_ID_KEY;
 
 @RequiresApi(api = Build.VERSION_CODES.N)
 public class MapSelectorActivity extends ListItemContextMenuActivity {
@@ -53,10 +45,9 @@ public class MapSelectorActivity extends ListItemContextMenuActivity {
    // public static List<AvailableMap> maps;
 
     public static List<AvailableMap> localMaps;
-    public static List<AvailableMap> externalMaps;
 
     static String mapFile = "maps.json";
-    static SharedPreferences preferences;
+    public static SharedPreferences preferences;
 
     static Type listType = new TypeToken<ArrayList<AvailableMap>>() {
     }.getType();
@@ -70,7 +61,7 @@ public class MapSelectorActivity extends ListItemContextMenuActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.showBackButton = false;
-        setContentView(R.layout.map_selector_layout);
+        setContentView(R.layout.activity_map_selector);
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
 //        maps = getAllItems(getApplicationContext());
@@ -113,7 +104,7 @@ public class MapSelectorActivity extends ListItemContextMenuActivity {
     }
 
     @Override
-    Bundle setFurtherExtra(Bundle b) {
+    public Bundle setFurtherExtra(Bundle b) {
         return null;
     }
 
@@ -169,14 +160,7 @@ public class MapSelectorActivity extends ListItemContextMenuActivity {
 
     AvailableMap getItemFromClick(int position)
     {
-        if(position < localMaps.size())
-        {
-            return localMaps.get(position);
-        }
-        else
-        {
-            return externalMaps.get(position-localMaps.size());
-        }
+        return localMaps.get(position);
     }
 
 
@@ -191,10 +175,7 @@ public class MapSelectorActivity extends ListItemContextMenuActivity {
 
     @Override
     void postRecycleViewSetup(RecyclerView recList) {
-        List<AvailableMap> combined = new ArrayList<>(localMaps);
-        if(externalMaps!=null)
-            combined.addAll(externalMaps);
-        adapter = new MapSelectorAdapter(MapSelectorActivity.this, combined);
+        adapter = new MapSelectorAdapter(MapSelectorActivity.this, localMaps);
         recList.setAdapter(adapter);
 
         SnapHelper helper = new LinearSnapHelper();
@@ -220,6 +201,7 @@ public class MapSelectorActivity extends ListItemContextMenuActivity {
     {
         b = new Bundle();
         b.putString(MAP_KEY, gson.toJson(getItemFromClick(index)));
+        b.putString(ClassMapper.classIntentKey,"MapSelectorActivity");
         Intent intent = new Intent(MapSelectorActivity.this, EditMapActivity.class);
         intent.putExtras(b);
         startActivity(intent);
@@ -233,14 +215,16 @@ public class MapSelectorActivity extends ListItemContextMenuActivity {
                 "Confirm deleting the map ",
                 "Delete map " + getItemFromClick(index).mapName,
                 (dialogInterface, i) -> {
-                    List<AvailableMap> toDelete = index < localMaps.size()? localMaps: externalMaps;
-                    ListItemContextMenuActivity.defaultDelete(toDelete,adapter,index);
+                    localMaps.remove(index);
+                    adapter.notifyDataSetChanged();
+                    preferences.edit().putString(MAP_PREF,gson.toJson(localMaps)).apply();
+                    dialogInterface.dismiss();
                 },
                 (dialogInterface, i) -> {
                     dialogInterface.dismiss();
                 }
         );
-        preferences.edit().putString(MAP_PREF,gson.toJson(localMaps)).apply();
+
     }
 
 
