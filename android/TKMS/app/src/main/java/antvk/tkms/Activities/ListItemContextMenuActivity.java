@@ -20,7 +20,7 @@ import antvk.tkms.ViewManager.RecyclerItemClickListener;
 
 public abstract class ListItemContextMenuActivity extends AddStuffsActivity {
 
-    int[] contextMenuPosition = new int[]{-1};
+    public int[] contextMenuPosition = new int[]{-1};
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,8 +56,8 @@ public abstract class ListItemContextMenuActivity extends AddStuffsActivity {
 
     }
 
-    abstract void postRecycleViewSetup(RecyclerView recList);
-    abstract void itemClick(View view, int position);
+    public abstract void postRecycleViewSetup(RecyclerView recList);
+    public abstract void itemClick(View view, int position);
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v,
@@ -65,7 +65,7 @@ public abstract class ListItemContextMenuActivity extends AddStuffsActivity {
         createContextMenu(menu, v, menuInfo);
     }
 
-    abstract void createContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo);
+    public abstract void createContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo);
 
     @Override
     public boolean onContextItemSelected (MenuItem item) {

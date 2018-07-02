@@ -55,7 +55,7 @@ public class EditEventActivity extends AddStuffsActivity {
     }
 
     @Override
-    Bundle setFurtherExtra(Bundle b) {
+    public Bundle setFurtherExtra(Bundle b) {
         b.putString(MAP_KEY,gson.toJson(currentMap));
         b.putString(PLACE_KEY,gson.toJson(currentItem));
 

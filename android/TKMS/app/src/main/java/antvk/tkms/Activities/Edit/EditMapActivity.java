@@ -65,12 +65,12 @@ public class EditMapActivity extends ListItemContextMenuActivity {
     }
 
     @Override
-    Bundle setFurtherExtra(Bundle b) {
+    public Bundle setFurtherExtra(Bundle b) {
         return b;
     }
 
     @Override
-    void postRecycleViewSetup(RecyclerView recList) {
+    public void postRecycleViewSetup(RecyclerView recList) {
         recList.setAdapter(adapter);
 
         SnapHelper helper = new LinearSnapHelper();
@@ -78,7 +78,7 @@ public class EditMapActivity extends ListItemContextMenuActivity {
     }
 
     @Override
-    void itemClick(View view, int position) {
+    public void itemClick(View view, int position) {
 
         // TODO: 27/06/2018 fix description page to show this without ID
 //        Intent intent = new Intent(EditMapActivity.this,EventDescriptionActivity.class);
@@ -89,7 +89,7 @@ public class EditMapActivity extends ListItemContextMenuActivity {
     }
 
     @Override
-    void createContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+    public void createContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
 
         if (v.getId()== R.id.placeListView) {
 

@@ -48,7 +48,7 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.0'
     implementation 'com.appolica:interactive-info-window:v1.0.6'
     implementation 'com.android.support:recyclerview-v7:26.1.0'
-    implementation 'com.android.support:listview_event-v7:26.1.0'
+    implementation 'com.android.support:cardview-v7:26.1.0'
     implementation 'com.github.Todd-Davies:ProgressWheel:1.2'
     implementation 'com.google.android.gms:play-services-places:15.0.1'
     implementation 'com.google.maps.android:android-maps-utils:0.5'

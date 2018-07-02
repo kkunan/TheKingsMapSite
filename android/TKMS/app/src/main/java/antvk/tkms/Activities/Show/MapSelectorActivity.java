@@ -165,7 +165,7 @@ public class MapSelectorActivity extends ListItemContextMenuActivity {
 
 
     @Override
-    void itemClick(View view, int position) {
+    public void itemClick(View view, int position) {
         Intent intent = new Intent(MapSelectorActivity.this, MapsActivity.class);
         b = new Bundle();
         b.putString(MAP_KEY, gson.toJson(getItemFromClick(position)));
@@ -174,7 +174,7 @@ public class MapSelectorActivity extends ListItemContextMenuActivity {
     }
 
     @Override
-    void postRecycleViewSetup(RecyclerView recList) {
+    public void postRecycleViewSetup(RecyclerView recList) {
         adapter = new MapSelectorAdapter(MapSelectorActivity.this, localMaps);
         recList.setAdapter(adapter);
 
@@ -183,7 +183,7 @@ public class MapSelectorActivity extends ListItemContextMenuActivity {
     }
 
     @Override
-    void  createContextMenu(ContextMenu menu,View v, ContextMenu.ContextMenuInfo menuInfo) {
+    public void  createContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         if (v.getId()== R.id.map_list_view) {
 
             MenuInflater inflater = getMenuInflater();
