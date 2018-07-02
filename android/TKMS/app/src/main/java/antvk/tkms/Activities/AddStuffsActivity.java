@@ -18,7 +18,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 
 import antvk.tkms.R;
-import antvk.tkms.Struct.Information.PlaceItem;
+import antvk.tkms.Struct.PlaceItem.PlaceItem;
 import antvk.tkms.Struct.MapAttribute.AvailableMap;
 
 import static antvk.tkms.Constants.MY_PERMISSIONS_REQUEST_READ_EXT_STORAGE;

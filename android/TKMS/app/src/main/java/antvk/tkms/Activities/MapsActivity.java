@@ -6,7 +6,6 @@ import android.annotation.TargetApi;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
@@ -38,14 +37,12 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.todddavies.components.progressbar.ProgressWheel;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import antvk.tkms.Constants;
-import antvk.tkms.Struct.Information.PlaceItem;
+import antvk.tkms.Struct.PlaceItem.PlaceItem;
 import antvk.tkms.R;
 import antvk.tkms.Struct.MapAttribute.AvailableMap;
 import antvk.tkms.Utils.ClassMapper;

@@ -24,7 +24,7 @@ import java.util.Calendar;
 
 import antvk.tkms.Constants;
 import antvk.tkms.R;
-import antvk.tkms.Struct.Information.PlaceItem;
+import antvk.tkms.Struct.PlaceItem.PlaceItem;
 import antvk.tkms.Utils.ClassMapper;
 
 import static antvk.tkms.Constants.MY_PERMISSIONS_REQUEST_READ_EXT_STORAGE;

@@ -11,7 +11,6 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -40,7 +39,7 @@ import java.util.List;
 import java.util.Locale;
 
 import antvk.tkms.Constants;
-import antvk.tkms.Struct.Information.PlaceItem;
+import antvk.tkms.Struct.PlaceItem.PlaceItem;
 import antvk.tkms.R;
 import antvk.tkms.Struct.MapAttribute.AvailableMap;
 import antvk.tkms.Utils.ClassMapper;
@@ -61,7 +60,7 @@ public class MarkerEventListActivity extends ActivityWithBackButton {
     int value;
     Gson gson = new Gson();
 
-    static final double CHECKIN_AVALABLE_RANGE = 100.0;
+    public static final double CHECKIN_AVALABLE_RANGE = 50.0;
 
     boolean prevShow = false;
     boolean prevPink = false;
@@ -98,6 +97,9 @@ public class MarkerEventListActivity extends ActivityWithBackButton {
             initializeRecycleView();
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 // TODO: Consider calling
+                ActivityCompat.requestPermissions(MarkerEventListActivity.this,
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        MapsActivity.MY_PERMISSIONS_REQUEST_FINE_LOCATION);
                 //    ActivityCompat#requestPermissions
                 // here to request the missing permissions, and then overriding
                 //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
@@ -117,7 +119,7 @@ public class MarkerEventListActivity extends ActivityWithBackButton {
                         new LatLng(location.getLatitude(), location.getLongitude()
                         ), item.location
                 );
-                boolean inDistance = distance <= CHECKIN_AVALABLE_RANGE;
+                boolean inDistance = distance <= item.radius;
                 sortoutUIByStatus(visited, inDistance);
             }
         }
@@ -128,6 +130,9 @@ public class MarkerEventListActivity extends ActivityWithBackButton {
         manager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(MarkerEventListActivity.this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    MapsActivity.MY_PERMISSIONS_REQUEST_FINE_LOCATION);
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding
@@ -148,7 +153,7 @@ public class MarkerEventListActivity extends ActivityWithBackButton {
                         );
 
                         boolean visited = item.visited;
-                        boolean inDistance = distance <= CHECKIN_AVALABLE_RANGE;
+                        boolean inDistance = distance <= item.radius;
                         inRange = inDistance;
                         sortoutUIByStatus(visited,inDistance);
                     }

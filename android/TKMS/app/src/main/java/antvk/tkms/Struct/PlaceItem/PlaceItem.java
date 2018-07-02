@@ -1,6 +1,8 @@
-package antvk.tkms.Struct.Information;
+package antvk.tkms.Struct.PlaceItem;
 
 import android.annotation.SuppressLint;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -10,6 +12,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import antvk.tkms.Activities.MarkerEventListActivity;
+import antvk.tkms.Constants;
+
 public class PlaceItem {
 
     public int id = -1;
@@ -17,6 +22,7 @@ public class PlaceItem {
     public String placeRealName;
     public List<Event> events;
     public LatLng location;
+    public double radius;
 
     public PlaceCategory placeCategory;
     public String placeID;
@@ -39,8 +45,10 @@ public class PlaceItem {
         this.placeDescription = placeDescription;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public PlaceItem() {
         this.events = new ArrayList<>();
+        this.radius = MarkerEventListActivity.CHECKIN_AVALABLE_RANGE;
     }
 
     public static class Event {

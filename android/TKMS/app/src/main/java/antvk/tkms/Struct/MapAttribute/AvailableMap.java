@@ -3,7 +3,7 @@ package antvk.tkms.Struct.MapAttribute;
 import java.util.ArrayList;
 import java.util.List;
 
-import antvk.tkms.Struct.Information.PlaceItem;
+import antvk.tkms.Struct.PlaceItem.PlaceItem;
 
 public class AvailableMap {
 

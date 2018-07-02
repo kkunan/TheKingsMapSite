@@ -15,10 +15,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import antvk.tkms.Activities.EditPlaceActivity;
 import antvk.tkms.Constants;
 import antvk.tkms.R;
-import antvk.tkms.Struct.Information.PlaceItem;
+import antvk.tkms.Struct.PlaceItem.PlaceItem;
 import antvk.tkms.Utils.ImageUtils;
 
 @RequiresApi(api = Build.VERSION_CODES.N)

@@ -18,7 +18,7 @@ import java.util.List;
 import antvk.tkms.Constants;
 import antvk.tkms.Activities.MapsActivity;
 import antvk.tkms.R;
-import antvk.tkms.Struct.Information.PlaceItem;
+import antvk.tkms.Struct.PlaceItem.PlaceItem;
 
 @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
 public class MarkerUtils {

@@ -15,7 +15,7 @@ import com.google.android.gms.maps.model.Marker;
 
 import antvk.tkms.R;
 import antvk.tkms.Utils.ImageUtils;
-import antvk.tkms.Struct.Information.PlaceItem.Event;
+import antvk.tkms.Struct.PlaceItem.PlaceItem.Event;
 
 @RequiresApi(api = Build.VERSION_CODES.N)
 public class DescriptionActivity extends ActivityWithBackButton{
