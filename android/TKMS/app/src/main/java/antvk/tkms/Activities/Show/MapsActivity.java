@@ -507,6 +507,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
 
         Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        if(location==null)
+            location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 
         System.out.println("goto closest place click! "+location);
         if(location!=null)

@@ -96,7 +96,7 @@ public abstract class ActivityWithBackButton extends AppCompatActivity {
                 }
         );
         else
-            onBackPressed();
+            super.onBackPressed();
 
     }
 

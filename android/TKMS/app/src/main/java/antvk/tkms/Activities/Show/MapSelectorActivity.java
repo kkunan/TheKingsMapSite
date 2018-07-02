@@ -231,6 +231,7 @@ public class MapSelectorActivity extends ListItemContextMenuActivity {
     public void onAddNewMapClick(View view)
     {
         Intent intent = new Intent(MapSelectorActivity.this, EditMapActivity.class);
+        intent.putExtra(ClassMapper.classIntentKey,"MapSelectorActivity");
         startActivity(intent);
     }
 }
