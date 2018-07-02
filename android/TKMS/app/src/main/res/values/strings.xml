@@ -18,5 +18,11 @@
     <string name="map_name">Map name</string>
     <string name="places_in_this_map">Places in this map</string>
     <string name="add_new_place">+ Add new place</string>
+    <string name="place_description_hint">e.g. This is your hometown.</string>
+    <string name="place_category">Place category</string>
+    <string name="place_name">Place name</string>
+    <string name="input_your_place_name">Input your place name</string>
+    <string name="show_how_to_use_map">Show How to use map</string>
+    <string name="hide_how_to_use_map">Hide How to use map</string>
 
 </resources>

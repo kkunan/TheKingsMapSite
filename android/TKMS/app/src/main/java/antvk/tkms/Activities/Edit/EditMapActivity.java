@@ -51,7 +51,7 @@ public class EditMapActivity extends ListItemContextMenuActivity {
 
         if(currentMap==null) {
             currentMap = new AvailableMap();
-            mapNameBox.requestFocus();
+//            mapNameBox.requestFocus();
         }
 
         else {

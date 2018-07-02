@@ -13,6 +13,7 @@ import android.support.v4.app.ActivityCompat;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -91,11 +92,14 @@ public class EditPlaceActivity extends AddStuffsActivity implements OnMapReadyCa
         placeNameEditText = (EditText) findViewById(R.id.place_name_edittext);
         placeImageView = findViewById(R.id.add_map_image_button);
 
+        ImageView guideImageView = findViewById(R.id.how_to_use_imageView);
+        guideImageView.setImageBitmap(ImageUtils.getBitmapFromAsset(EditPlaceActivity.this,"not_fancy_guide.PNG"));
+
         scrollView = findViewById(R.id.scrollView);
 
         if (currentItem == null) {
             currentItem = new PlaceItem();
-            placeNameEditText.requestFocus();
+//            placeNameEditText.requestFocus();
         } else {
             sortoutUI();
         }
@@ -580,4 +584,19 @@ public class EditPlaceActivity extends AddStuffsActivity implements OnMapReadyCa
     }
 
 
+    public void onShowHideMapGuideClick(View view) {
+
+        ImageView guide = findViewById(R.id.how_to_use_imageView);
+        Button button = (Button)view;
+        if(guide.getVisibility() == View.VISIBLE)
+        {
+            button.setText(R.string.show_how_to_use_map);
+            guide.setVisibility(View.GONE);
+        }
+
+        else {
+            button.setText(R.string.hide_how_to_use_map);
+            guide.setVisibility(View.VISIBLE);
+        }
+    }
 }

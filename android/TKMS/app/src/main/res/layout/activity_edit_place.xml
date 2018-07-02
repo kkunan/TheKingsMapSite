@@ -25,11 +25,12 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Place name"
+            android:text="@string/place_name"
             android:textSize="15sp"
             android:paddingRight="5dp" />
         <EditText
             android:id="@+id/place_name_edittext"
+            android:hint="@string/input_your_place_name"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:inputType="text"
@@ -52,7 +53,7 @@
 
         <TextView
             android:layout_width="wrap_content"
-            android:text="Place category"
+            android:text="@string/place_category"
             android:layout_height="match_parent"
             android:gravity="center"
             android:textSize="15sp"/>
@@ -95,6 +96,7 @@
             android:textSize="15sp" />
         <EditText
             android:id="@+id/place_description_edittext"
+            android:hint="@string/place_description_hint"
             android:layout_width="match_parent"
             android:minLines="4"
             android:maxLines="5"
@@ -120,6 +122,20 @@
             android:layout_height="match_parent"
             android:orientation="vertical"
             >
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:textColor="@android:color/holo_blue_light"
+                android:text="@string/show_how_to_use_map"
+                android:onClick="onShowHideMapGuideClick"
+                />
+            <ImageView
+                android:id="@+id/how_to_use_imageView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                />
             <fragment
                 android:text="@string/search_for_the_place"
                 android:id="@+id/place_autocomplete_fragment"
