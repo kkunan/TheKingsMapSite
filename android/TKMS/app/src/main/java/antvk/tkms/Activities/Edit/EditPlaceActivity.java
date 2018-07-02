@@ -505,6 +505,13 @@ public class EditPlaceActivity extends AddStuffsActivity implements OnMapReadyCa
 
     public void onSubmitButtonClick(View view) {
 
+        if(placeNameEditText.getText().toString().trim().length()==0)
+        {
+            placeNameEditText.setError("Place name cannot be empty.");
+            return;
+        }
+
+
         if(currentItem==null)
             currentItem = new PlaceItem();
 
@@ -548,7 +555,7 @@ public class EditPlaceActivity extends AddStuffsActivity implements OnMapReadyCa
             preferences.edit().putString(MAP_PREF,gson.toJson(localMaps)).apply();
         }
 
-        gobackToPreviousScreen();
+        gobackToPreviousScreen(true);
     }
 
 //    public void onAddEventButtonClick(View view) {

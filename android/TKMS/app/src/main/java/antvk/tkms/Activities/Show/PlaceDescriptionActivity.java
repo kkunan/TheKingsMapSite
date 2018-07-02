@@ -363,7 +363,7 @@ public class PlaceDescriptionActivity extends ActivityWithBackButton {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        gobackToPreviousScreen();
+        gobackToPreviousScreen(true);
         return true;
     }
 
@@ -445,7 +445,7 @@ public class PlaceDescriptionActivity extends ActivityWithBackButton {
 
     @Override
     public void onBackPressed() {
-        gobackToPreviousScreen();
+        gobackToPreviousScreen(false);
     }
 
     @Override

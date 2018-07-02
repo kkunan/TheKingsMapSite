@@ -83,13 +83,13 @@ public class EventDescriptionActivity extends ActivityWithBackButton {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        gobackToPreviousScreen();
+        gobackToPreviousScreen(true);
         return true;
     }
 
     @Override
     public void onBackPressed() {
-        gobackToPreviousScreen();
+        gobackToPreviousScreen(false);
     }
 
     public void onShareButtonClick(View view) {

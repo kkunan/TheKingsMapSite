@@ -123,6 +123,10 @@ public class EditMapActivity extends ListItemContextMenuActivity {
                 "Delete place " + currentMap.placeItems.get(index).header,
                 (dialogInterface, i) -> {
                     ListItemContextMenuActivity.defaultDelete(currentMap.placeItems,adapter,index);
+                    for(int ind=0;ind<currentMap.placeItems.size();ind++)
+                    {
+                        currentMap.placeItems.get(ind).id = ind;
+                    }
 //                    currentMap.placeItems.remove(index);
 //                    adapter.notifyDataSetChanged();
                 },
@@ -136,11 +140,9 @@ public class EditMapActivity extends ListItemContextMenuActivity {
     {
         currentMap.mapName = mapNameBox.getText().toString();
 
-        AtomicBoolean hasError = new AtomicBoolean(false);
-
         if (mapNameBox.getText().toString().trim().equalsIgnoreCase("")) {
             mapNameBox.setError("Name can not be blank");
-            hasError.set(true);
+            return;
         }
 
         if(adapter.placeItems == null || adapter.placeItems.size() ==0)

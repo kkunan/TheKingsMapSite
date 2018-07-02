@@ -65,7 +65,7 @@ public abstract class ActivityWithBackButton extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         try {
-            gobackToPreviousScreen();
+            gobackToPreviousScreen(false);
         }catch (Exception e)
         {
             e.printStackTrace();
@@ -73,13 +73,20 @@ public abstract class ActivityWithBackButton extends AppCompatActivity {
         }
     }
 
-    protected void gobackToPreviousScreen() {
+    protected void gobackToPreviousScreen(boolean fromSubmit) {
 
         String previousClass = getIntent().getStringExtra(ClassMapper.classIntentKey);
         Class cl = ClassMapper.get(previousClass);
         b = setFurtherExtra(b);
 
-        if(hasEditableStuffs)
+        if(fromSubmit)
+        {
+            Intent intent = new Intent(getApplicationContext(),cl);
+            intent.putExtras(b);
+            startActivity(intent);
+        }
+
+        else if(hasEditableStuffs)
         UIUtils.createAndShowAlertDialog(
                 ActivityWithBackButton.this,
                 "Warning!",
@@ -97,6 +104,7 @@ public abstract class ActivityWithBackButton extends AppCompatActivity {
         );
         else
             super.onBackPressed();
+
 
     }
 

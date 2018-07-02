@@ -217,6 +217,12 @@ public class MapSelectorActivity extends ListItemContextMenuActivity {
                 (dialogInterface, i) -> {
                     localMaps.remove(index);
                     adapter.notifyDataSetChanged();
+
+                    for(int in = 0;in<localMaps.size();in++)
+                    {
+                        localMaps.get(in).mapID = in;
+                    }
+
                     preferences.edit().putString(MAP_PREF,gson.toJson(localMaps)).apply();
                     dialogInterface.dismiss();
                 },

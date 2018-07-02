@@ -84,7 +84,7 @@ public class EditEventActivity extends AddStuffsActivity {
 
         // TODO: 07/06/2018 set event up
 
-        gobackToPreviousScreen();
+        gobackToPreviousScreen(true);
     }
 
     public void onDateTimeSelectorClick(View view) {
