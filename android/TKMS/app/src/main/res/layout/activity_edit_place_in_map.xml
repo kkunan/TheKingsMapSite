@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<antvk.tkms.ViewManager.CustomScrollView
+    android:id="@+id/scrollView"
     android:layout_height="match_parent"
-    android:layout_width="match_parent" >
+    android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 <LinearLayout
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -36,6 +37,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:visibility="visible"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -74,6 +76,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:visibility="visible"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -110,60 +113,33 @@
         android:layout_marginTop="10dp"
         android:background="@drawable/rounded_border"
         >
-    <fragment
-        android:text="@string/search_for_the_place"
-        android:id="@+id/place_autocomplete_fragment"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
-        />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            >
+            <fragment
+                android:text="@string/search_for_the_place"
+                android:id="@+id/place_autocomplete_fragment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
+                />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-    <fragment
-        android:id="@+id/map_fragment_edit_place"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        />
+                <fragment
+                    android:id="@+id/map_fragment_edit_place"
+                    android:name="com.google.android.gms.maps.SupportMapFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    />
+
+            </RelativeLayout>
+        </LinearLayout>
+
     </LinearLayout>
-
-    <!--<RelativeLayout-->
-        <!--android:layout_marginTop="20dp"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:visibility="gone">-->
-        <!--<TextView-->
-            <!--android:id="@+id/event_list_header"-->
-            <!--android:layout_centerVertical="true"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="Events in this place"-->
-            <!--android:textSize="20sp"-->
-            <!--/>-->
-
-        <!--<ImageView-->
-            <!--android:id="@+id/add_event_button"-->
-            <!--android:layout_marginStart="10dp"-->
-            <!--android:layout_marginLeft="10dp"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:background="@mipmap/add_map"-->
-            <!--android:layout_toRightOf="@+id/event_list_header"-->
-            <!--android:layout_toEndOf="@+id/event_list_header"-->
-            <!--android:contentDescription="@string/add_event_button_des"-->
-            <!--android:onClick="onAddEventButtonClick"-->
-             <!--/>-->
-
-    <!--</RelativeLayout>-->
-
-    <!--<android.support.v7.widget.RecyclerView-->
-        <!--android:layout_marginLeft="20dp"-->
-        <!--android:layout_marginStart="20dp"-->
-        <!--android:layout_marginTop="10dp"-->
-        <!--android:id="@+id/eventListView"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:visibility="gone"-->
-        <!--/>-->
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -182,4 +158,4 @@
     </LinearLayout>
 
 </LinearLayout>
-</ScrollView>
+</antvk.tkms.ViewManager.CustomScrollView>
