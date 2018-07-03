@@ -10,6 +10,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -17,6 +19,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
@@ -41,6 +44,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -72,7 +76,6 @@ public class EditPlaceActivity extends AddStuffsActivity implements OnMapReadyCa
     EditText descriptionEditText, placeNameEditText;
     ImageView placeImageView;
     CustomScrollView scrollView;
-//    EventViewAdapter adapter;
 
     Bundle b = new Bundle();
 
@@ -104,6 +107,26 @@ public class EditPlaceActivity extends AddStuffsActivity implements OnMapReadyCa
             sortoutUI();
         }
 
+        placeNameEditText.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start,
+                                          int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start,
+                                      int before, int count) {
+                if(isMapNameDuplicate(s.toString()))
+                {
+                    placeNameEditText.setError("You already have another place with this name in this map!");
+                }
+            }
+        });
+
         autocompleteFragment = (PlaceAutocompleteFragment) getFragmentManager()
                 .findFragmentById(R.id.place_autocomplete_fragment);
 
@@ -124,7 +147,6 @@ public class EditPlaceActivity extends AddStuffsActivity implements OnMapReadyCa
                 placeImageView.setImageBitmap(ImageUtils.getBitmapFromAsset(EditPlaceActivity.this,
                         Constants.PLACE_CATEGORY_PATH+"/"+currentItem.placeCategory.imagePath));
             }
-
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
 
@@ -202,7 +224,6 @@ public class EditPlaceActivity extends AddStuffsActivity implements OnMapReadyCa
                     CameraUpdate cameraUpdateFactory = CameraUpdateFactory.newLatLngBounds(latlngBuilder.build(),50);
                     gMap.moveCamera(cameraUpdateFactory);
                 }
-
             }
 
             @Override
@@ -210,10 +231,6 @@ public class EditPlaceActivity extends AddStuffsActivity implements OnMapReadyCa
 
             }
         });
-
-
-//        adapter = new EventViewAdapter(currentItem.events);
-//        sortOutRecycleViews(R.id.eventListView, LinearLayoutManager.HORIZONTAL);
 
     }
 
@@ -250,47 +267,6 @@ public class EditPlaceActivity extends AddStuffsActivity implements OnMapReadyCa
         }
         return categories;
     }
-
-//    @Override
-//    void postRecycleViewSetup(RecyclerView recList) {
-//        recList.setAdapter(adapter);
-//        SnapHelper helper = new LinearSnapHelper();
-//        helper.attachToRecyclerView(recList);
-//    }
-//
-//    @Override
-//    void itemClick(View view, int position) {
-//// TODO: 27/06/2018 reuse the event page
-//    }
-//
-//    @Override
-//    void createContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-//
-//        if (v.getId() == R.id.eventListView) {
-//            MenuInflater inflater = getMenuInflater();
-//            inflater.inflate(R.menu.list_item_menu, menu);
-//            menu.getItem(0).setVisible(true);
-//            menu.getItem(1).setTitle("Delete Item");
-//        }
-//    }
-//
-//    @Override
-//    protected void edit(int id) {
-//        b = new Bundle();
-//        b.putString(ClassMapper.classIntentKey, "EditPlaceActivity");
-//        b.putString(MAP_KEY, gson.toJson(currentMap));
-//        b.putString(PLACE_KEY, gson.toJson(currentItem));
-//        b.putString(EVENT_KEY, gson.toJson(currentItem.events.get(id)));
-//        Intent intent = new Intent(EditPlaceActivity.this, EditEventActivity.class);
-//        intent.putExtras(b);
-//        startActivity(intent);
-//    }
-//
-//    @Override
-//    protected void delete(int index) {
-//        currentItem.events.remove(index);
-//        adapter.notifyDataSetChanged();
-//    }
 
     void sortoutUI() {
         placeNameEditText.setText(currentItem.header);
@@ -391,7 +367,7 @@ public class EditPlaceActivity extends AddStuffsActivity implements OnMapReadyCa
             MarkerOptions markerOptions = new MarkerOptions()
                     .icon(BitmapDescriptorFactory.fromResource(R.mipmap.add_map_icon))
                     .position(newPosition)
-                    .draggable(true)
+                    .draggable(false)
                     ;
 
             if(radiusPickerMarker!=null)
@@ -406,8 +382,12 @@ public class EditPlaceActivity extends AddStuffsActivity implements OnMapReadyCa
             latlngBuilder.include(left);
             latlngBuilder.include(up);
 
-            CameraUpdate cameraUpdateFactory = CameraUpdateFactory.newLatLngBounds(latlngBuilder.build(),50);
-            gMap.moveCamera(cameraUpdateFactory);
+            try {
+                CameraUpdate cameraUpdateFactory = CameraUpdateFactory.newLatLngBounds(latlngBuilder.build(), 50);
+                gMap.moveCamera(cameraUpdateFactory);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
         }
 
         else {
@@ -423,7 +403,6 @@ public class EditPlaceActivity extends AddStuffsActivity implements OnMapReadyCa
             }
         }
         gMap.setOnMapLongClickListener(latLng -> {
-            // TODO: 01/07/2018 reverse geolocation if possible
             if(!dragMode) {
 
                 currentPlaceMarker = setMarker("random spot", latLng);
@@ -471,6 +450,7 @@ public class EditPlaceActivity extends AddStuffsActivity implements OnMapReadyCa
         scrollView.setEnableScrolling(false);
         circleRadius.setStrokeColor(Color.GREEN);
         currentPlaceMarker.setIcon(BitmapDescriptorFactory.fromResource(R.mipmap.tick_icon));
+        radiusPickerMarker.setDraggable(true);
         circleRadius.setFillColor(0x2200FF00);
     }
 
@@ -481,6 +461,7 @@ public class EditPlaceActivity extends AddStuffsActivity implements OnMapReadyCa
         gMap.getUiSettings().setTiltGesturesEnabled(true);
         dragMode = false;
         scrollView.setEnableScrolling(true);
+        radiusPickerMarker.setDraggable(false);
         currentPlaceMarker.setIcon(BitmapDescriptorFactory.defaultMarker());
         circleRadius.setStrokeColor(Color.RED);
         circleRadius.setFillColor(0x220000FF);
@@ -512,6 +493,7 @@ public class EditPlaceActivity extends AddStuffsActivity implements OnMapReadyCa
         if(placeNameEditText.getText().toString().trim().length()==0)
         {
             placeNameEditText.setError("Place name cannot be empty.");
+            placeNameEditText.requestFocus();
             return;
         }
 

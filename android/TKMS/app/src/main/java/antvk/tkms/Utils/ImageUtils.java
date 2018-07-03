@@ -4,33 +4,35 @@ import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
 import android.view.View;
 import android.view.Window;
-//
-//import com.facebook.share.model.SharePhoto;
-//import com.facebook.share.model.SharePhotoContent;
-//import com.facebook.share.widget.ShareButton;
-//import com.facebook.share.widget.ShareDialog;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import antvk.tkms.Constants;
 
+
 public class ImageUtils extends Activity{
+
+        public static int DONE_IMAGE_ACTION = 1000;
+        public static int PICK_IMAGE_FOR_EDIT = 999;
 
     private void takeScreenshot(Window window) {
         Date now = new Date();
@@ -84,18 +86,49 @@ public class ImageUtils extends Activity{
         return bitmap;
     }
 
-//    public static void sharePicToFB(Bitmap image, ShareButton shareButton, ShareDialog shareDialog)
-//    {
-//        SharePhoto photo = new SharePhoto.Builder()
-//                .setBitmap(image)
-//                .build();
-//        SharePhotoContent content = new SharePhotoContent.Builder()
-//                .addPhoto(photo)
-//                .build();
+    public static void startEditImageIntent(Activity activity, Context context, String path){
+//        final Uri uri = Uri.parse(path);
+//        int flags = Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION;
+
+//        Intent editIntent = new Intent(Intent.ACTION_EDIT);
+//        editIntent.setDataAndType(uri, "image/*");
+//        editIntent.addFlags(flags);
+//        editIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
 //
-//        shareButton.setShareContent(content);
-//        shareDialog.show(content);
-//    }
+//        List<ResolveInfo> resInfoList = context.getPackageManager().queryIntentActivities(editIntent, PackageManager.MATCH_DEFAULT_ONLY);
+//        for (ResolveInfo resolveInfo : resInfoList) {
+//            String packageName = resolveInfo.activityInfo.packageName;
+//            context.grantUriPermission(packageName, uri, flags);
+//
+//        }
+        Intent intent = new Intent("com.android.camera.action.CROP");
+        File file = new File(path);
+        Uri uri = Uri.fromFile(file);
+        intent.setData(uri);
+        intent.putExtra("crop", "true");
+        intent.putExtra("aspectX", 1);
+        intent.putExtra("aspectY", 1);
+        intent.putExtra("outputX", 96);
+        intent.putExtra("outputY", 96);
+//        intent.putExtra("noFaceDetection
+// ", true);
+        intent.putExtra("return-data", true);
+        activity.startActivityForResult(intent, DONE_IMAGE_ACTION);
+    }
+
+    public static void chooseImage(Activity activity, int requestCode)
+    {
+        Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
+        getIntent.setType("image/*");
+
+        Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        pickIntent.setType("image/*");
+
+        Intent chooserIntent = Intent.createChooser(getIntent, "Select Image");
+        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] {pickIntent});
+
+        activity.startActivityForResult(chooserIntent, requestCode);
+    }
 
     public static Bitmap createBitmapFromView(View view)
     {

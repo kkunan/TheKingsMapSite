@@ -9,14 +9,15 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SnapHelper;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.ContextMenu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import java.util.concurrent.atomic.AtomicBoolean;
+import android.widget.Toast;
 
 import antvk.tkms.Activities.ListItemContextMenuActivity;
 import antvk.tkms.Activities.Show.MapSelectorActivity;
@@ -47,11 +48,10 @@ public class EditMapActivity extends ListItemContextMenuActivity {
         mapImageView = (ImageView)findViewById(R.id.add_map_image_button);
 
         if(localMaps==null)
-            localMaps = MapSelectorActivity.getLocalMaps(getApplicationContext());
+            localMaps = AvailableMap.getLocalMaps(preferences,getApplicationContext());
 
         if(currentMap==null) {
             currentMap = new AvailableMap();
-//            mapNameBox.requestFocus();
         }
 
         else {
@@ -62,6 +62,28 @@ public class EditMapActivity extends ListItemContextMenuActivity {
 
         adapter = new InfoItemAdapter(EditMapActivity.this,currentMap.placeItems);
         sortOutRecycleViews(R.id.placeListView,LinearLayoutManager.VERTICAL);
+
+
+        mapNameBox.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start,
+                                          int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start,
+                                      int before, int count) {
+                if(isMapNameDuplicate(s.toString()))
+                {
+                    mapNameBox.setError("You already have another map with this name!");
+                }
+            }
+        });
+
     }
 
     @Override
@@ -80,12 +102,6 @@ public class EditMapActivity extends ListItemContextMenuActivity {
     @Override
     public void itemClick(View view, int position) {
 
-        // TODO: 27/06/2018 fix description page to show this without ID
-//        Intent intent = new Intent(EditMapActivity.this,EventDescriptionActivity.class);
-//        b.putString(ClassMapper.classIntentKey,"EditMapActivity");
-//        b.putInt(MARKER_KEY,position);
-//        intent.putExtras(b);
-//        startActivity(intent);
     }
 
     @Override
@@ -142,12 +158,15 @@ public class EditMapActivity extends ListItemContextMenuActivity {
 
         if (mapNameBox.getText().toString().trim().equalsIgnoreCase("")) {
             mapNameBox.setError("Name can not be blank");
+            mapNameBox.requestFocus();
             return;
         }
 
         if(adapter.placeItems == null || adapter.placeItems.size() ==0)
         {
             placeListLabel.setError("No places added");
+            placeListLabel.requestFocus();
+            Toast.makeText(EditMapActivity.this,"Please add at least one place!",Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -163,7 +182,7 @@ public class EditMapActivity extends ListItemContextMenuActivity {
             localMaps.set(currentMap.mapID,currentMap);
         }
 
-        MapSelectorActivity.preferences.edit().
+        preferences.edit().
                 putString(MAP_PREF, gson.toJson(localMaps))
                 .apply();
 
@@ -173,8 +192,7 @@ public class EditMapActivity extends ListItemContextMenuActivity {
     }
 
     public void selectPicAction(String picturePath){
-        int id = currentMap.mapID;
-        String mapImagePath = resizeAndGet(picturePath,"map",id);
+        String mapImagePath = resizeAndGet(picturePath,"map",currentMap.mapName);
         mapImageView.setImageURI(Uri.parse(mapImagePath));
         currentMap.imageLogo = mapImagePath;
     }

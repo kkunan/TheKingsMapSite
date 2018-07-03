@@ -27,9 +27,9 @@ import antvk.tkms.Constants;
 import antvk.tkms.R;
 import antvk.tkms.Struct.PlaceItem;
 import antvk.tkms.Utils.ClassMapper;
+import antvk.tkms.Utils.ImageUtils;
 
 import static antvk.tkms.Constants.MY_PERMISSIONS_REQUEST_READ_EXT_STORAGE;
-import static antvk.tkms.Constants.PICK_IMAGE;
 
 @RequiresApi(api = Build.VERSION_CODES.N)
 public class EditEventActivity extends AddStuffsActivity {
@@ -187,13 +187,12 @@ public class EditEventActivity extends AddStuffsActivity {
         Intent chooserIntent = Intent.createChooser(getIntent, "Select Event Image");
         chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] {pickIntent});
 
-        startActivityForResult(chooserIntent, PICK_IMAGE);
+        startActivityForResult(chooserIntent, ImageUtils.PICK_IMAGE_FOR_EDIT);
     }
 
     @Override
     public void selectPicAction(String picturePath) {
-        int id = currentEvent.id;
-        currentEvent.imageName = resizeAndGet(picturePath,"event",id);
+        currentEvent.imageName = resizeAndGet(picturePath,"event",currentEvent.title);
         eventImage.setImageURI(Uri.parse(currentEvent.imageName));
     }
 

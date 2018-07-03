@@ -78,7 +78,7 @@ public class PlaceDescriptionActivity extends ActivityWithBackButton {
 
         if(localMaps==null)
         {
-            MapSelectorActivity.getLocalMaps(getApplicationContext());
+            AvailableMap.getLocalMaps(preferences,getApplicationContext());
         }
 
         currentMap = gson.fromJson(getIntent().getStringExtra(MAP_KEY),AvailableMap.class);
@@ -394,7 +394,7 @@ public class PlaceDescriptionActivity extends ActivityWithBackButton {
                         currentMap.placeItems.set(item.id,item);
                         localMaps.set(currentMap.mapID,currentMap);
 
-                        MapSelectorActivity.preferences.edit().putString(
+                        preferences.edit().putString(
                                 MAP_PREF,
                                 gson.toJson(localMaps)
                                 ).apply();
@@ -422,7 +422,8 @@ public class PlaceDescriptionActivity extends ActivityWithBackButton {
                         item.visited = false;
                         currentMap.placeItems.set(item.id,item);
                         localMaps.set(currentMap.mapID,currentMap);
-                        MapSelectorActivity.preferences.edit().putString(MAP_PREF,
+
+                        preferences.edit().putString(MAP_PREF,
                                 gson.toJson(localMaps)
                         ).apply();
 

@@ -3,6 +3,8 @@ package antvk.tkms.Activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +13,10 @@ import android.view.MenuItem;
 
 import com.google.gson.Gson;
 
+import java.util.List;
+
+import antvk.tkms.Struct.AvailableMap;
+import antvk.tkms.Struct.PlaceItem;
 import antvk.tkms.Utils.ClassMapper;
 import antvk.tkms.Utils.UIUtils;
 
@@ -19,6 +25,7 @@ public abstract class ActivityWithBackButton extends AppCompatActivity {
 
     protected boolean hasEditableStuffs = true;
 
+    public static final String MAP_PREF = "maps";
     public static final String MAP_KEY = "map";
     public static final String PLACE_KEY = "placeKey";
     public static final String EVENT_KEY = "eventKey";
@@ -31,11 +38,16 @@ public abstract class ActivityWithBackButton extends AppCompatActivity {
     public Bundle b;
     public boolean showBackButton = true;
 
+    public List<AvailableMap> mapList;
+    public SharedPreferences preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         b = new Bundle();
+
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        mapList = AvailableMap.getLocalMaps(preferences,getApplicationContext());
     }
 
     @Override
@@ -50,6 +62,25 @@ public abstract class ActivityWithBackButton extends AppCompatActivity {
             } catch (NullPointerException e) {
                 e.printStackTrace();
             }
+    }
+
+    public boolean isPlaceNameDuplicate(AvailableMap map, String name)
+    {
+        for(PlaceItem item : map.placeItems)
+        {
+            if(item.header.equals(name))
+                return true;
+        }
+        return false;
+    }
+
+    public boolean isMapNameDuplicate(String name){
+        for(AvailableMap map : mapList)
+        {
+            if(map.mapName.equals(name))
+                return true;
+        }
+        return false;
     }
 
     @Override

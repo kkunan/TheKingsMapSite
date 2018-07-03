@@ -40,17 +40,7 @@ import antvk.tkms.ViewManager.MapSelectorView.MapSelectorAdapter;
 @RequiresApi(api = Build.VERSION_CODES.N)
 public class MapSelectorActivity extends ListItemContextMenuActivity {
 
-    public static final String MAP_PREF = "maps";
-
-   // public static List<AvailableMap> maps;
-
     public static List<AvailableMap> localMaps;
-
-    static String mapFile = "maps.json";
-    public static SharedPreferences preferences;
-
-    static Type listType = new TypeToken<ArrayList<AvailableMap>>() {
-    }.getType();
 
     Bundle b;
     static Gson gson = new Gson();
@@ -63,9 +53,8 @@ public class MapSelectorActivity extends ListItemContextMenuActivity {
         this.showBackButton = false;
         setContentView(R.layout.activity_map_selector);
 
-        preferences = PreferenceManager.getDefaultSharedPreferences(this);
 //        maps = getAllItems(getApplicationContext());
-        localMaps = getLocalMaps(getApplicationContext());
+        localMaps = AvailableMap.getLocalMaps(preferences,getApplicationContext());
 
 //    ArrayList<AvailableMap> leftViewList = new ArrayList<>();
 //    ArrayList<AvailableMap> rightViewList = new ArrayList<>();
@@ -111,51 +100,6 @@ public class MapSelectorActivity extends ListItemContextMenuActivity {
     @Override
     public void selectPicAction(String picturePath) {
 
-    }
-
-    public static List<AvailableMap> getExternalMaps(Context context)
-    {
-        List<AvailableMap> items = new ArrayList<>();
-        try {
-            InputStream inputStream = context.getAssets().open(mapFile);
-
-            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-            String st = "";
-
-            StringBuilder buffer = new StringBuilder();
-            while ((st = reader.readLine()) != null) {
-                buffer.append(st).append("\n");
-            }
-
-            items = gson.fromJson(buffer.toString(), listType);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return items;
-    }
-
-    public static List<AvailableMap> getAllItems(Context context) {
-
-
-        List<AvailableMap> localMaps = getLocalMaps(context);
-        List<AvailableMap> items = getExternalMaps(context);
-
-        localMaps.addAll(items);
-
-        return localMaps;
-    }
-
-    public static List<AvailableMap> getLocalMaps(Context context) {
-        if (preferences == null)
-            preferences = PreferenceManager.getDefaultSharedPreferences(context);
-
-        String st = preferences.getString(MAP_PREF, null);
-
-        if (st != null && st.length() > 0) {
-            return gson.fromJson(st, listType);
-        }
-        return new ArrayList<>();
     }
 
     AvailableMap getItemFromClick(int position)

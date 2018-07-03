@@ -8,9 +8,11 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.view.View;
 
@@ -20,9 +22,9 @@ import java.io.FileOutputStream;
 import antvk.tkms.R;
 import antvk.tkms.Struct.PlaceItem;
 import antvk.tkms.Struct.AvailableMap;
+import antvk.tkms.Utils.ImageUtils;
 
 import static antvk.tkms.Constants.MY_PERMISSIONS_REQUEST_READ_EXT_STORAGE;
-import static antvk.tkms.Constants.PICK_IMAGE;
 
 public abstract class AddStuffsActivity extends ActivityWithBackButton{
 
@@ -63,44 +65,61 @@ public abstract class AddStuffsActivity extends ActivityWithBackButton{
         return result;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     public void onImageViewClick(View view){
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(AddStuffsActivity.this,
                     new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                     MY_PERMISSIONS_REQUEST_READ_EXT_STORAGE);
+
+            return;
         }
 
-        Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
-        getIntent.setType("image/*");
-
-        Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        pickIntent.setType("image/*");
-
-        Intent chooserIntent = Intent.createChooser(getIntent, "Select Map Image");
-        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] {pickIntent});
-
-        startActivityForResult(chooserIntent, PICK_IMAGE);
+        ImageUtils.chooseImage(this,ImageUtils.DONE_IMAGE_ACTION);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-        if (requestCode == PICK_IMAGE) {
-            //TODO: action
+        if (requestCode == ImageUtils.DONE_IMAGE_ACTION) {
             if (resultCode == RESULT_OK) {
                 Uri selectedImageUri = data.getData( );
                 String picturePath = getPath(AddStuffsActivity.this, selectedImageUri );
-                System.out.println("Picture Path"+ picturePath);
+//                System.out.println("Picture Path"+ picturePath);
 
                 selectPicAction(picturePath);
             }
 
         }
+
+        else if(requestCode == ImageUtils.PICK_IMAGE_FOR_EDIT){
+
+            if (resultCode == RESULT_OK) {
+                Uri selectedImageUri = data.getData( );
+                String picturePath = getPath(AddStuffsActivity.this, selectedImageUri );
+                File dir= Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES+"/"+getResources().getString(R.string.app_name));
+                dir.mkdir();
+
+                Bitmap out= BitmapFactory.decodeFile(picturePath);
+                File file = new File(dir,"tmp.png");
+                FileOutputStream fOut;
+                try {
+                    fOut = new FileOutputStream(file);
+                    out.compress(Bitmap.CompressFormat.PNG, 100, fOut);
+                    fOut.flush();
+                    fOut.close();
+                    out.recycle();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                ImageUtils.startEditImageIntent(this,AddStuffsActivity.this,file.getAbsolutePath());
+            }
+        }
     }
 
     public abstract void selectPicAction(String picturePath);
 
-    public String resizeAndGet(String realPath,String type, int id)
+    public String resizeAndGet(String realPath,String type, String name)
     {
         Bitmap b= BitmapFactory.decodeFile(realPath);
         int width = b.getWidth();
@@ -113,7 +132,7 @@ public abstract class AddStuffsActivity extends ActivityWithBackButton{
         File dir= Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES+"/"+getResources().getString(R.string.app_name));
         System.out.println("folder: "+dir);
         dir.mkdir();
-        File file = new File(dir, type+id+".png");
+        File file = new File(dir, type+name+".png");
         FileOutputStream fOut;
         try {
             fOut = new FileOutputStream(file);

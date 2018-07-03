@@ -17,6 +17,7 @@ public interface Constants {
     static final String DESTINY_MAP_FILE = "destiny.json";
     static final String TENCENT_MAP_FILE = "tencent.json";
 
+    static String mapFile = "maps.json";
     static final String KINGS_IMAGE_FOLDER = "kings_images";
     static final String DESTINY_IMAGE_FOLDER = "destiny_images";
     static final String TENCENT_IMAGE_FOLDER = "tencent_images";
@@ -53,5 +54,4 @@ public interface Constants {
     }
 
     int MY_PERMISSIONS_REQUEST_READ_EXT_STORAGE = 5555;
-    int PICK_IMAGE = 1;
 }
